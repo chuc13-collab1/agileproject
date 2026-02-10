@@ -1,0 +1,204 @@
+.container {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.cardHeader {
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0 0 0.5rem 0;
+}
+
+.meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.supervisor {
+  color: #4a5568;
+  font-weight: 600;
+}
+
+.department {
+  color: #718096;
+}
+
+.badges {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.statusBadge {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.statuspending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.statusapproved {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.statusrejected {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.cardBody {
+  padding: 1.5rem;
+}
+
+.description {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+}
+
+.info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.infoLabel {
+  color: #718096;
+  font-weight: 600;
+}
+
+.fieldBadge {
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+.rejectionReason {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #ef4444;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.approvedInfo {
+  background: #d1fae5;
+  color: #065f46;
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #10b981;
+  margin-top: 1rem;
+  font-size: 0.875rem;
+}
+
+.cardFooter {
+  padding: 1rem 1.5rem;
+  background: #f7fafc;
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.detailButton {
+  padding: 0.625rem 1.25rem;
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.detailButton:hover {
+  background: #667eea;
+  color: white;
+}
+
+.approveButton {
+  padding: 0.625rem 1.25rem;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.approveButton:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.rejectButton {
+  padding: 0.625rem 1.25rem;
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.rejectButton:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.emptyState {
+  padding: 4rem;
+  text-align: center;
+  color: #94a3b8;
+  background: white;
+  border-radius: 12px;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 1.1rem;
+}

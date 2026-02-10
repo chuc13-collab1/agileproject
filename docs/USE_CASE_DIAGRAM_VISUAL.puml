@@ -1,0 +1,168 @@
+@startuml Use Case Diagram - He Thong Quan Ly Do An
+
+' Styling
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam backgroundColor white
+skinparam shadowing false
+
+skinparam usecase {
+    BackgroundColor #2DD4BF
+    BorderColor #14B8A6
+    BorderThickness 2
+    FontColor white
+    FontStyle bold
+    FontSize 11
+}
+
+skinparam actor {
+    BackgroundColor #EF4444
+    BorderColor #DC2626
+    FontColor white
+    FontStyle bold
+}
+
+skinparam package {
+    BackgroundColor white
+    BorderColor #E5E7EB
+    BorderThickness 1
+}
+
+left to right direction
+
+' Actors - Left Side
+actor "Sinh Vien" as Student #EF4444
+actor "Giao Vien\nHuong Dan" as Supervisor #EF4444
+
+' Actors - Right Side  
+actor "Giao Vien\nPhan Bien" as Reviewer #EF4444
+actor "Quan Tri Vien" as Admin #EF4444
+
+package "He Thong Quan Ly Do An" {
+    
+    ' Column 1 - Authentication & View
+    usecase "Dang nhap\nHe thong" as UC00
+    usecase "Xem thong bao\ndo an" as UC01
+    usecase "Xem danh sach\nde tai" as UC02
+    
+    ' Column 2 - Student Actions
+    usecase "Dang ky\ndo an" as UC03
+    usecase "De xuat\nde tai moi" as UC04
+    usecase "Nop bao cao\ntien do" as UC05
+    usecase "Upload\ntai lieu" as UC07
+    usecase "Xem nhan xet\ntu GV" as UC06
+    usecase "Xem diem\ndanh gia" as UC08
+    
+    ' Column 3 - Supervisor Actions
+    usecase "De xuat\nde tai" as UC10
+    usecase "Duyet SV\ndang ky" as UC11
+    usecase "Xem DS SV\nhuong dan" as UC12
+    usecase "Theo doi\ntien do SV" as UC13
+    usecase "Nhan xet\nbao cao" as UC14
+    usecase "Cham diem\nhuong dan" as UC15
+    
+    ' Column 4 - Reviewer Actions
+    usecase "Xem do an\nduoc phan cong" as UC20
+    usecase "Xem tai lieu\ndo an" as UC21
+    usecase "Cham diem\nphan bien" as UC22
+    usecase "Nhan xet\ndanh gia" as UC23
+    
+    ' Column 5 - Admin Actions
+    usecase "Tao thong bao\ndo an" as UC30
+    usecase "Phe duyet\nde tai" as UC31
+    usecase "Phan cong GV\nphan bien" as UC32
+    usecase "Quan ly\ntien do chung" as UC33
+    usecase "Tong hop\ndiem" as UC34
+    usecase "Bao cao\nthong ke" as UC35
+    usecase "Quan ly\nnguoi dung" as UC36
+    
+    ' System services
+    usecase "Gui thong bao\nemail" as UC40
+}
+
+' STUDENT CONNECTIONS (Left side)
+Student -right-> UC00
+Student -right-> UC01
+Student -right-> UC02
+Student -right-> UC03
+Student -right-> UC04
+Student -right-> UC05
+Student -right-> UC06
+Student -right-> UC07
+Student -right-> UC08
+
+' SUPERVISOR CONNECTIONS (Left side)
+Supervisor -right-> UC00
+Supervisor -right-> UC10
+Supervisor -right-> UC11
+Supervisor -right-> UC12
+Supervisor -right-> UC13
+Supervisor -right-> UC14
+Supervisor -right-> UC15
+
+' REVIEWER CONNECTIONS (Right side)
+UC20 <-left- Reviewer
+UC21 <-left- Reviewer
+UC22 <-left- Reviewer
+UC23 <-left- Reviewer
+
+' ADMIN CONNECTIONS (Right side)
+UC30 <-left- Admin
+UC31 <-left- Admin
+UC32 <-left- Admin
+UC33 <-left- Admin
+UC34 <-left- Admin
+UC35 <-left- Admin
+UC36 <-left- Admin
+
+' INCLUDE RELATIONSHIPS (Dashed arrows)
+UC03 ..> UC00 : <<include>>
+UC03 ..> UC02 : <<include>>
+UC05 ..> UC00 : <<include>>
+UC10 ..> UC00 : <<include>>
+UC14 ..> UC00 : <<include>>
+UC15 ..> UC00 : <<include>>
+UC22 ..> UC00 : <<include>>
+UC11 ..> UC00 : <<include>>
+
+' Notification includes
+UC30 ..> UC40 : <<include>>
+UC31 ..> UC40 : <<include>>
+UC32 ..> UC40 : <<include>>
+UC11 ..> UC40 : <<include>>
+
+' EXTEND RELATIONSHIPS (Dashed arrows)
+UC04 .up.> UC03 : <<extend>>
+UC07 .up.> UC05 : <<extend>>
+UC23 .up.> UC22 : <<extend>>
+
+' LAYOUT ADJUSTMENTS
+UC00 -[hidden]down- UC01
+UC01 -[hidden]down- UC02
+
+UC03 -[hidden]down- UC04
+UC04 -[hidden]down- UC05
+UC05 -[hidden]down- UC07
+UC07 -[hidden]down- UC06
+UC06 -[hidden]down- UC08
+
+UC10 -[hidden]down- UC11
+UC11 -[hidden]down- UC12
+UC12 -[hidden]down- UC13
+UC13 -[hidden]down- UC14
+UC14 -[hidden]down- UC15
+
+UC20 -[hidden]down- UC21
+UC21 -[hidden]down- UC22
+UC22 -[hidden]down- UC23
+
+UC30 -[hidden]down- UC31
+UC31 -[hidden]down- UC32
+UC32 -[hidden]down- UC33
+UC33 -[hidden]down- UC34
+UC34 -[hidden]down- UC35
+UC35 -[hidden]down- UC36
+
+Student -[hidden]down- Supervisor
+
+@enduml

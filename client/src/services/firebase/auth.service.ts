@@ -1,0 +1,172 @@
+// Firebase Authentication Service
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  sendPasswordResetEmail,
+} from 'firebase/auth';
+import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from './config';
+import { LoginCredentials, RegisterData, User } from '../../types/auth.types';
+
+class AuthService {
+  // Đăng nhập
+  async login(credentials: LoginCredentials): Promise<User> {
+    try {
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        credentials.email,
+        credentials.password
+      );
+
+      // Lấy thông tin user từ Firestore
+      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
+      
+      if (!userDoc.exists()) {
+        throw new Error('Người dùng không tồn tại trong hệ thống');
+      }
+
+      const userData = userDoc.data();
+      
+      if (!userData.isActive) {
+        throw new Error('Tài khoản đã bị vô hiệu hóa');
+      }
+
+      return {
+        uid: userCredential.user.uid,
+        email: userData.email,
+        fullName: userData.fullName,
+        role: userData.role,
+        phone: userData.phone,
+        avatar: userData.avatar,
+        isActive: userData.isActive,
+        createdAt: userData.createdAt?.toDate(),
+        updatedAt: userData.updatedAt?.toDate(),
+      };
+    } catch (error: any) {
+      console.error('Login error:', error);
+      throw this.handleAuthError(error);
+    }
+  }
+
+  // Đăng ký (Admin tạo tài khoản)
+  async register(data: RegisterData): Promise<User> {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        data.email,
+        data.password
+      );
+
+      // Tạo document trong Firestore
+      const userData = {
+        uid: userCredential.user.uid,
+        email: data.email,
+        fullName: data.fullName,
+        role: data.role,
+        phone: data.phone || '',
+        avatar: '',
+        isActive: true,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+      };
+
+      await setDoc(doc(db, 'users', userCredential.user.uid), userData);
+
+      return {
+        ...userData,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      } as User;
+    } catch (error: any) {
+      console.error('Register error:', error);
+      throw this.handleAuthError(error);
+    }
+  }
+
+  // Đăng xuất
+  async logout(): Promise<void> {
+    try {
+      await signOut(auth);
+    } catch (error: any) {
+      console.error('Logout error:', error);
+      throw new Error('Đăng xuất thất bại');
+    }
+  }
+
+  // Quên mật khẩu
+  async resetPassword(email: string): Promise<void> {
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error: any) {
+      console.error('Reset password error:', error);
+      throw this.handleAuthError(error);
+    }
+  }
+
+  // Lấy thông tin user hiện tại
+  async getCurrentUser(): Promise<User | null> {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return null;
+
+    try {
+      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+      if (!userDoc.exists()) return null;
+
+      const userData = userDoc.data();
+      return {
+        uid: currentUser.uid,
+        email: userData.email,
+        fullName: userData.fullName,
+        role: userData.role,
+        phone: userData.phone,
+        avatar: userData.avatar,
+        isActive: userData.isActive,
+        createdAt: userData.createdAt?.toDate(),
+        updatedAt: userData.updatedAt?.toDate(),
+      };
+    } catch (error) {
+      console.error('Get current user error:', error);
+      return null;
+    }
+  }
+
+  // Xử lý lỗi Firebase Auth
+  private handleAuthError(error: any): Error {
+    const errorCode = error.code;
+    let message = 'Đã có lỗi xảy ra';
+
+    switch (errorCode) {
+      case 'auth/invalid-email':
+        message = 'Email không hợp lệ';
+        break;
+      case 'auth/user-disabled':
+        message = 'Tài khoản đã bị vô hiệu hóa';
+        break;
+      case 'auth/user-not-found':
+        message = 'Email không tồn tại trong hệ thống';
+        break;
+      case 'auth/wrong-password':
+        message = 'Mật khẩu không chính xác';
+        break;
+      case 'auth/email-already-in-use':
+        message = 'Email đã được sử dụng';
+        break;
+      case 'auth/weak-password':
+        message = 'Mật khẩu quá yếu (tối thiểu 6 ký tự)';
+        break;
+      case 'auth/network-request-failed':
+        message = 'Lỗi kết nối mạng';
+        break;
+      case 'auth/too-many-requests':
+        message = 'Quá nhiều yêu cầu. Vui lòng thử lại sau';
+        break;
+      default:
+        message = error.message || 'Đã có lỗi xảy ra';
+    }
+
+    return new Error(message);
+  }
+}
+
+export default new AuthService();

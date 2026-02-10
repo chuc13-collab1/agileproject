@@ -1,0 +1,221 @@
+/* Announcement List Styles */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: all 0.3s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 12px 0;
+}
+
+.meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.semester {
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.status {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.actionButton {
+  padding: 8px 16px;
+  border: 2px solid #e8edf5;
+  background: white;
+  color: #667eea;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.actionButton:hover {
+  background: #667eea;
+  color: white;
+  border-color: #667eea;
+}
+
+.content {
+  padding: 20px 24px;
+}
+
+.description {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 20px 24px;
+  background: #f8f9fa;
+  border-top: 2px solid #f0f0f0;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.timelineItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.timelineLabel {
+  font-size: 12px;
+  color: #999;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.timelineValue {
+  font-size: 14px;
+  color: #333;
+  font-weight: 600;
+}
+
+.timelineNote {
+  font-size: 12px;
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.attachments {
+  padding: 16px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.attachmentLabel {
+  font-size: 13px;
+  color: #666;
+  font-weight: 600;
+}
+
+.attachmentLink {
+  display: inline-block;
+  padding: 6px 12px;
+  background: #f0f0f0;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #667eea;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.attachmentLink:hover {
+  background: #667eea;
+  color: white;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  font-size: 12px;
+  color: #999;
+}
+
+.createdAt,
+.publishedAt {
+  font-style: italic;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.emptyIcon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.emptyState h3 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.emptyState p {
+  font-size: 14px;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .cardHeader {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .actions {
+    width: 100%;
+  }
+
+  .actionButton {
+    flex: 1;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .attachments {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

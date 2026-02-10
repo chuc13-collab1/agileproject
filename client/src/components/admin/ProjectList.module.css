@@ -1,0 +1,170 @@
+/* Project List Styles */
+
+.container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table thead {
+  background: #f8f9fa;
+}
+
+.table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  border-bottom: 2px solid #e8edf5;
+}
+
+.table td {
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 14px;
+  color: #333;
+}
+
+.table tbody tr {
+  transition: background-color 0.2s;
+}
+
+.table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.projectId {
+  font-family: monospace;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.projectTitle {
+  font-weight: 600;
+  color: #333;
+  max-width: 300px;
+}
+
+.userCell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userName {
+  font-weight: 500;
+  color: #333;
+}
+
+.userEmail {
+  font-size: 12px;
+  color: #999;
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+}
+
+.score {
+  font-weight: 600;
+  color: #667eea;
+  font-size: 15px;
+}
+
+.deadlineCell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.deadlineBadge {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 2px solid;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.deadlineDate {
+  font-size: 11px;
+  color: #999;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actionButton {
+  background: #f0f0f0;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.actionButton:hover {
+  background: #e0e0e0;
+  transform: scale(1.1);
+}
+
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.emptyIcon {
+  font-size: 64px;
+  margin-bottom: 20px;
+}
+
+.emptyState h3 {
+  font-size: 20px;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.emptyState p {
+  font-size: 14px;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .table {
+    font-size: 12px;
+  }
+
+  .table th,
+  .table td {
+    padding: 12px 8px;
+  }
+
+  .projectTitle {
+    max-width: 150px;
+  }
+}

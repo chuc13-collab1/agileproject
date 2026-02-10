@@ -1,0 +1,12 @@
+﻿node_modules/
+.env
+.DS_Store
+*.log
+dist/
+build/
+.firebase/
+firebase-debug.log
+firestore-debug.log
+
+# Firebase Admin SDK Private Keys
+*-firebase-adminsdk-*.json
