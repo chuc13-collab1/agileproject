@@ -1,6 +1,6 @@
 // Teacher Group Service
 import { auth } from '../firebase/config';
-import { TeacherGroup, TeacherGroupFormData, ClassGroupSummary } from '../../types/teacherGroup.types';
+import { TeacherGroup, TeacherGroupFormData } from '../../types/teacherGroup.types';
 
 const API_URL = import.meta.env.VITE_API_URL;
 

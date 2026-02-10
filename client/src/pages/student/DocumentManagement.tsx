@@ -72,11 +72,11 @@ const DocumentManagement: React.FC = () => {
         }
     };
 
-    const handleDelete = async (docId: string) => {
+    const handleDelete = async (_docId: string) => {
         if (!window.confirm('Bạn có chắc chắn muốn xóa tài liệu này?')) return;
 
         try {
-            // await documentService.deleteDocument(docId);
+            // await documentService.deleteDocument(_docId);
             alert('Đã xóa tài liệu');
             loadData();
         } catch (error) {
