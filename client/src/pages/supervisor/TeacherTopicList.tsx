@@ -25,7 +25,7 @@ const TeacherTopicList: React.FC = () => {
             // In a real app, this should filter by supervisorId=user.uid on the backend
             // For now we filter on client side if API doesn't support it directly
             const allTopics = await topicService.getAllTopics();
-            const myTopics = allTopics.filter(t => t.supervisorId === user?.uid);
+            const myTopics = allTopics.filter((t: any) => t.supervisorUid === user?.uid);
             setTopics(myTopics);
         } catch (error) {
             console.error('Failed to load topics:', error);

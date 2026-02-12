@@ -28,24 +28,24 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
           <h2>Chi Tiết Đề Tài</h2>
           <button className={styles.closeButton} onClick={onClose}>×</button>
         </div>
-        
+
         <div className={styles.modalBody}>
           {/* Status Badge */}
           <div style={{ marginBottom: '1.5rem' }}>
-            <span 
+            <span
               style={{
                 padding: '0.5rem 1rem',
                 borderRadius: '8px',
                 fontSize: '0.875rem',
                 fontWeight: 600,
-                background: 
+                background:
                   topic.status === 'approved' ? '#d1fae5' :
-                  topic.status === 'pending' ? '#fef3c7' :
-                  '#fee2e2',
+                    topic.status === 'pending' ? '#fef3c7' :
+                      '#fee2e2',
                 color:
                   topic.status === 'approved' ? '#065f46' :
-                  topic.status === 'pending' ? '#92400e' :
-                  '#991b1b',
+                    topic.status === 'pending' ? '#92400e' :
+                      '#991b1b',
               }}
             >
               {STATUS_LABELS[topic.status]}
@@ -60,12 +60,17 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
             <div style={{ color: '#64748b', fontSize: '0.875rem' }}>
               {SEMESTER_LABELS[topic.semester]} {topic.academicYear}
             </div>
+            {topic.proposedBy === 'student' && (
+              <div style={{ marginTop: '0.5rem', padding: '0.5rem', background: '#e0f2fe', borderRadius: '4px', color: '#0369a1', fontSize: '0.9rem', display: 'inline-block' }}>
+                🎓 Đề xuất bởi sinh viên: <strong>{topic.proposalStudentName}</strong> ({topic.proposalStudentCode})
+              </div>
+            )}
           </div>
 
           {/* Supervisor Info */}
-          <div style={{ 
-            background: '#f7fafc', 
-            padding: '1rem', 
+          <div style={{
+            background: '#f7fafc',
+            padding: '1rem',
             borderRadius: '8px',
             marginBottom: '1.5rem'
           }}>
@@ -104,9 +109,9 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
               </div>
             </div>
 
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(2, 1fr)', 
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, 1fr)',
               gap: '1rem',
               padding: '1rem',
               background: '#f7fafc',
@@ -141,7 +146,7 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
               borderLeft: '4px solid #ef4444',
               marginTop: '1.5rem'
             }}>
-              <strong>Lý do từ chối:</strong><br/>
+              <strong>Lý do từ chối:</strong><br />
               {topic.rejectionReason}
             </div>
           )}
@@ -156,8 +161,8 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
               borderLeft: '4px solid #10b981',
               marginTop: '1.5rem'
             }}>
-              <strong>Đã phê duyệt:</strong><br/>
-              Ngày: {topic.approvedAt.toLocaleDateString('vi-VN')}<br/>
+              <strong>Đã phê duyệt:</strong><br />
+              Ngày: {topic.approvedAt.toLocaleDateString('vi-VN')}<br />
               Bởi: {topic.approvedBy}
             </div>
           )}
@@ -190,9 +195,9 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
         {/* Footer Actions */}
         {topic.status === 'pending' && (
           <div className={styles.modalFooter}>
-            <button 
-              type="button" 
-              className={styles.cancelButton} 
+            <button
+              type="button"
+              className={styles.cancelButton}
               onClick={onClose}
             >
               Đóng
@@ -235,9 +240,9 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
 
         {topic.status !== 'pending' && (
           <div className={styles.modalFooter}>
-            <button 
-              type="button" 
-              className={styles.cancelButton} 
+            <button
+              type="button"
+              className={styles.cancelButton}
               onClick={onClose}
             >
               Đóng

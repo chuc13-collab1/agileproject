@@ -35,6 +35,11 @@ function TopicList({ topics, onApprove, onReject, onViewDetail }: TopicListProps
               </div>
             </div>
             <div className={styles.badges}>
+              {topic.proposedBy === 'student' && (
+                <span className={styles.statusBadge} style={{ backgroundColor: '#e0f2fe', color: '#0369a1', marginRight: '0.5rem' }}>
+                  🎓 SV Đề Xuất
+                </span>
+              )}
               <span className={`${styles.statusBadge} ${styles[`status${topic.status}`]}`}>
                 {STATUS_LABELS[topic.status]}
               </span>
@@ -43,7 +48,7 @@ function TopicList({ topics, onApprove, onReject, onViewDetail }: TopicListProps
 
           <div className={styles.cardBody}>
             <p className={styles.description}>{topic.description}</p>
-            
+
             <div className={styles.info}>
               <div className={styles.infoItem}>
                 <span className={styles.infoLabel}>Lĩnh vực:</span>

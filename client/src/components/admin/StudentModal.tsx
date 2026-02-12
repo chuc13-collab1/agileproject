@@ -70,16 +70,21 @@ function StudentModal({ student, classes, onClose, onSave }: StudentModalProps) 
               />
             </div>
 
-            <div className={styles.formGroup}>
-              <label>Mật khẩu {!student && '*'}</label>
-              <input
-                type="password"
-                required={!student}
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder={student ? 'Để trống nếu không đổi' : 'Mật khẩu'}
-              />
-            </div>
+            {/* Password field - only show when editing */}
+            {student && (
+              <div className={styles.formGroup}>
+                <label>Mật khẩu mới (để trống nếu không đổi)</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="Nhập mật khẩu mới hoặc để trống"
+                />
+                <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
+                  💡 Gợi ý: <strong>{student.studentId}@2026</strong>
+                </div>
+              </div>
+            )}
 
             <div className={styles.formGroup}>
               <label>Lớp *</label>

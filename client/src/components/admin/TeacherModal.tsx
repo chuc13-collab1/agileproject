@@ -89,16 +89,17 @@ function TeacherModal({ teacher, onClose, onSave }: TeacherModalProps) {
               />
             </div>
 
-            <div className={styles.formGroup}>
-              <label>Mật khẩu {!teacher && '*'}</label>
-              <input
-                type="password"
-                required={!teacher}
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder={teacher ? 'Để trống nếu không đổi' : 'Mật khẩu'}
-              />
-            </div>
+            {teacher && (
+              <div className={styles.formGroup}>
+                <label>Mật khẩu</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="Để trống nếu không đổi"
+                />
+              </div>
+            )}
 
             <div className={styles.formGroup}>
               <label>Khoa/Bộ môn *</label>

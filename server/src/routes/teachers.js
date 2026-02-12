@@ -71,10 +71,14 @@ router.post('/', async (req, res, next) => {
             });
         }
 
+        // Auto-generate password from teacherId
+        // Format: TeacherID@2026 (e.g., GV001@2026)
+        const finalPassword = password || `${teacherId}@2026`;
+        
         // Create Firebase Auth user
         const userRecord = await firebaseAuth.createUser({
             email,
-            password: password || 'teacher123',
+            password: finalPassword,
             displayName
         });
 
@@ -116,7 +120,9 @@ router.post('/', async (req, res, next) => {
                 id: userId,
                 teacherId,
                 email,
-                displayName
+                displayName,
+                // Return generated password only when creating new user
+                ...(password ? {} : { generatedPassword: finalPassword })
             }
         });
     } catch (error) {
@@ -156,6 +162,21 @@ router.put('/:id', async (req, res, next) => {
         } = req.body;
 
         await connection.beginTransaction();
+
+        // Update password if provided
+        if (req.body.password) {
+            try {
+                const [users] = await connection.query('SELECT uid FROM users WHERE id = ?', [id]);
+                if (users.length > 0) {
+                    await firebaseAuth.updateUser(users[0].uid, { password: req.body.password });
+                }
+            } catch (authError) {
+                console.error('Error updating Firebase password:', authError);
+                // Optional: decide if we want to fail the whole request or just log warning
+                // For now, let's throw to rollback (integrity first)
+                throw new Error(`Failed to update password: ${authError.message}`);
+            }
+        }
 
         // Update users table
         if (displayName || phone !== undefined) {

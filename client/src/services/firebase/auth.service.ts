@@ -5,43 +5,51 @@ import {
   signOut,
   sendPasswordResetEmail,
 } from 'firebase/auth';
-import { doc, getDoc, setDoc, serverTimestamp } from 'firebase/firestore';
-import { auth, db } from './config';
+import { auth } from './config';
 import { LoginCredentials, RegisterData, User } from '../../types/auth.types';
+
+// API Base URL  
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 class AuthService {
   // Đăng nhập
   async login(credentials: LoginCredentials): Promise<User> {
     try {
+      // 1. Authenticate with Firebase
       const userCredential = await signInWithEmailAndPassword(
         auth,
         credentials.email,
         credentials.password
       );
 
-      // Lấy thông tin user từ Firestore
-      const userDoc = await getDoc(doc(db, 'users', userCredential.user.uid));
-      
-      if (!userDoc.exists()) {
-        throw new Error('Người dùng không tồn tại trong hệ thống');
+      // 2. Get user info from MySQL via backend API
+      const token = await userCredential.user.getIdToken();
+      const response = await fetch(`${API_URL}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get user information');
       }
 
-      const userData = userDoc.data();
+      const { data } = await response.json();
       
-      if (!userData.isActive) {
+      if (!data.is_active) {
         throw new Error('Tài khoản đã bị vô hiệu hóa');
       }
 
       return {
         uid: userCredential.user.uid,
-        email: userData.email,
-        fullName: userData.fullName,
-        role: userData.role,
-        phone: userData.phone,
-        avatar: userData.avatar,
-        isActive: userData.isActive,
-        createdAt: userData.createdAt?.toDate(),
-        updatedAt: userData.updatedAt?.toDate(),
+        email: data.email,
+        fullName: data.display_name,
+        role: data.role,
+        phone: data.phone,
+        avatar: data.photo_url,
+        isActive: data.is_active,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at),
       };
     } catch (error: any) {
       console.error('Login error:', error);

@@ -12,7 +12,7 @@ export interface Topic {
   field: string;
   maxStudents: 1 | 2;
   currentStudents: number;
-  registeredStudents?: number; // Alias for currentStudents
+  registeredStudents?: number; // kept for compatibility but should use currentStudents
 
   // Supervisor info
   supervisorId: string;
@@ -37,6 +37,12 @@ export interface Topic {
   approvedBy?: string;
   reviewerId?: string;
   reviewerName?: string;
+
+  // Proposal Info
+  proposedBy?: 'student' | 'teacher';
+  proposalStudentName?: string;
+  proposalStudentCode?: string;
+  proposalStudentEmail?: string;
 }
 
 export interface TopicAttachment {

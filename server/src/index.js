@@ -19,6 +19,9 @@ import projectRoutes from './routes/projects.js';
 import progressReportRoutes from './routes/progressReports.js';
 import evaluationRoutes from './routes/evaluations.js';
 import uploadRoutes from './routes/uploads.js';
+import topicProposalRoutes from './routes/topicProposals.js';
+import debugRoutes from './routes/debug.js';
+import authRoutes from './routes/auth.js';
 
 // Load environment variables
 dotenv.config();
@@ -44,6 +47,7 @@ app.get('/health', (req, res) => {
 });
 
 // API routes (with authentication)
+app.use('/api/auth', verifyToken, authRoutes);
 app.use('/api/students', verifyToken, studentRoutes);
 app.use('/api/teachers', verifyToken, teacherRoutes);
 app.use('/api/admins', verifyToken, adminRoutes);
@@ -56,6 +60,8 @@ app.use('/api/projects', verifyToken, projectRoutes);
 app.use('/api/progress-reports', verifyToken, progressReportRoutes);
 app.use('/api/evaluations', verifyToken, evaluationRoutes);
 app.use('/api/uploads', verifyToken, uploadRoutes);
+app.use('/api/topic-proposals', verifyToken, topicProposalRoutes);
+app.use('/api/debug', debugRoutes); // Debug routes (admin only)
 
 // 404 handler
 app.use(notFoundHandler);

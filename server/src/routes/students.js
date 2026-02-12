@@ -58,8 +58,9 @@ router.post('/', async (req, res, next) => {
             });
         }
 
-        // Generate password (min 6 chars required by Firebase)
-        const finalPassword = password || (studentId.length >= 6 ? studentId : `${studentId}123456`);
+        // Auto-generate password from studentId (min 6 chars required by Firebase)
+        // Format: StudentID@2026 (e.g., B20DCCN001@2026)
+        const finalPassword = password || `${studentId}@2026`;
 
         // 1. Create Firebase Auth user
         const userRecord = await firebaseAuth.createUser({
@@ -98,7 +99,9 @@ router.post('/', async (req, res, next) => {
                 id: userId,
                 studentId,
                 email,
-                displayName
+                displayName,
+                // Return generated password only when creating new user
+                ...(password ? {} : { generatedPassword: finalPassword })
             }
         });
     } catch (error) {
@@ -137,6 +140,19 @@ router.put('/:id', async (req, res, next) => {
         } = req.body;
 
         await connection.beginTransaction();
+
+        // Update password if provided
+        if (req.body.password) {
+            try {
+                const [users] = await connection.query('SELECT uid FROM users WHERE id = ?', [id]);
+                if (users.length > 0) {
+                    await firebaseAuth.updateUser(users[0].uid, { password: req.body.password });
+                }
+            } catch (authError) {
+                console.error('Error updating Firebase password:', authError);
+                throw new Error(`Failed to update password: ${authError.message}`);
+            }
+        }
 
         // Update users table
         if (displayName || phone !== undefined) {
@@ -297,8 +313,8 @@ router.post('/batch-import', async (req, res, next) => {
             try {
                 const { email, displayName, studentId, className, academicYear, phone, major } = student;
 
-                // Generate password
-                const password = studentId.length >= 6 ? studentId : `${studentId}123456`;
+                // Auto-generate password: MSSV@2026 (same as single create)
+                const password = `${studentId}@2026`;
 
                 // Create Firebase user
                 const userRecord = await firebaseAuth.createUser({

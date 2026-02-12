@@ -8,7 +8,7 @@ interface TopicCardProps {
 }
 
 const TopicCard: React.FC<TopicCardProps> = ({ topic, onRegister, isRegistered = false }) => {
-    const availableSlots = (topic.maxStudents || 0) - (topic.registeredStudents || 0);
+    const availableSlots = (topic.maxStudents || 0) - (topic.currentStudents || 0);
     const isFull = availableSlots <= 0;
 
     return (

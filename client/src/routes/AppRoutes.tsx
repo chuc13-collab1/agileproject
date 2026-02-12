@@ -11,12 +11,14 @@ import ProgressReports from '../pages/student/ProgressReports';
 import SubmitReport from '../pages/student/SubmitReport';
 import DocumentManagement from '../pages/student/DocumentManagement';
 import ProjectResults from '../pages/student/ProjectResults';
+import StudentTopicProposal from '../pages/student/StudentTopicProposal';
 import TeacherDashboard from '../pages/supervisor/TeacherDashboard';
 import TeacherTopicList from '../pages/supervisor/TeacherTopicList';
 import TeacherStudentList from '../pages/supervisor/TeacherStudentList';
 import TeacherProjectDetail from '../pages/supervisor/TeacherProjectDetail';
 import TeacherProgressTracking from '../pages/supervisor/TeacherProgressTracking';
 import TeacherTopicProposal from '../pages/supervisor/TeacherTopicProposal';
+import TeacherProposalReview from '../pages/supervisor/TeacherProposalReview';
 import TeacherStatistics from '../pages/supervisor/TeacherStatistics';
 import TeacherCalendar from '../pages/supervisor/TeacherCalendar';
 import AdminDashboard from '../pages/admin/AdminDashboard';
@@ -135,6 +137,11 @@ const AppRoutes: React.FC = () => {
           <ProjectResults />
         </ProtectedRoute>
       } />
+      <Route path="/student/propose-topic" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <StudentTopicProposal />
+        </ProtectedRoute>
+      } />
 
       {/* Admin routes */}
       <Route
@@ -230,6 +237,14 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute allowedRoles={['teacher', 'supervisor']}>
             <TeacherTopicProposal />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/teacher/proposals"
+        element={
+          <ProtectedRoute allowedRoles={['teacher', 'supervisor']}>
+            <TeacherProposalReview />
           </ProtectedRoute>
         }
       />

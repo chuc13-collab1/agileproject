@@ -5,6 +5,57 @@ import db from '../config/database.js';
 const router = express.Router();
 
 /**
+ * GET /api/projects
+ * Get all projects
+ */
+router.get('/', async (req, res, next) => {
+    try {
+        const [projects] = await db.query(`
+      SELECT 
+        p.*,
+        t.title as topic_title,
+        t.field,
+        u.display_name as student_name,
+        u.email as student_email,
+        s.student_id as student_code,
+        s.class_name,
+        u_supervisor.display_name as supervisor_name,
+        u_supervisor.id as supervisor_user_id
+      FROM projects p
+      INNER JOIN topics t ON p.topic_id = t.id
+      INNER JOIN students s ON p.student_id = s.id
+      INNER JOIN users u ON s.user_id = u.id
+      LEFT JOIN teachers te ON p.supervisor_id = te.id
+      LEFT JOIN users u_supervisor ON te.user_id = u_supervisor.id
+      ORDER BY p.created_at DESC
+    `);
+
+        // Format response to match frontend expectations
+        const formattedProjects = projects.map(p => ({
+            id: p.id,
+            title: p.topic_title,
+            description: p.description || '',
+            studentId: p.student_id,
+            studentName: p.student_name,
+            studentEmail: p.student_email,
+            supervisor: p.supervisor_name ? {
+                id: p.supervisor_id,
+                name: p.supervisor_name
+            } : null,
+            status: p.status,
+            semester: p.semester || '1',
+            academicYear: p.academic_year || '2024-2025',
+            createdAt: p.created_at,
+            reportDeadline: p.report_deadline || new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // Default 3 months
+        }));
+
+        res.json(formattedProjects);
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
  * GET /api/teachers/:teacherId/projects
  * Get all projects supervised by a teacher
  */
@@ -47,7 +98,7 @@ router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
 
-        // Get project with related data
+        // Get detailed project information with related data
         const [projects] = await db.query(`
       SELECT 
         p.*,
@@ -59,13 +110,14 @@ router.get('/:id', async (req, res, next) => {
         s.student_id as student_code,
         s.class_name,
         u_supervisor.display_name as supervisor_name,
+        u_supervisor.id as supervisor_user_id,
         u_reviewer.display_name as reviewer_name
       FROM projects p
       INNER JOIN topics t ON p.topic_id = t.id
       INNER JOIN students s ON p.student_id = s.id
       INNER JOIN users u_student ON s.user_id = u_student.id
-      INNER JOIN teachers t_supervisor ON p.supervisor_id = t_supervisor.id
-      INNER JOIN users u_supervisor ON t_supervisor.user_id = u_supervisor.id
+      LEFT JOIN teachers t_supervisor ON p.supervisor_id = t_supervisor.id
+      LEFT JOIN users u_supervisor ON t_supervisor.user_id = u_supervisor.id
       LEFT JOIN teachers t_reviewer ON p.reviewer_id = t_reviewer.id
       LEFT JOIN users u_reviewer ON t_reviewer.user_id = u_reviewer.id
       WHERE p.id = ?
@@ -164,8 +216,11 @@ router.post('/', async (req, res, next) => {
             supervisorId,
         } = req.body;
 
-        // Validate required fields
-        if (!topicId || !studentId || !supervisorId) {
+        console.log('Registering project:', { topicId, studentId, supervisorId });
+
+
+        // Validate required fields (supervisorId can be null for student-proposed topics)
+        if (!topicId || !studentId) {
             return res.status(400).json({
                 success: false,
                 message: 'Missing required fields'
@@ -187,9 +242,9 @@ router.post('/', async (req, res, next) => {
             });
         }
 
-        // Check if topic has available slots
+        // Check if topic has available slots and get supervisor info
         const [topics] = await connection.query(
-            'SELECT current_students, max_students FROM topics WHERE id = ?',
+            'SELECT current_students, max_students, supervisor_id FROM topics WHERE id = ?',
             [topicId]
         );
 
@@ -207,26 +262,82 @@ router.post('/', async (req, res, next) => {
             });
         }
 
+        // Use supervisorId from topic if not provided (for student-proposed topics)
+        const finalSupervisorId = supervisorId || topics[0].supervisor_id;
+
+        // Allow registration even if no supervisor assigned yet (admin will assign later)
+
         await connection.beginTransaction();
 
         const projectId = uuidv4();
 
         // Create project
+        // Note: finalSupervisorId can be null. We use ? for supervisor_id value directly.
+        // If finalSupervisorId is null, we pass null. If it has value, we need to get ID from teachers table.
+
+        let supervisorDbId = null;
+        if (finalSupervisorId) {
+            const [teachers] = await connection.query('SELECT id FROM teachers WHERE user_id = ?', [finalSupervisorId]);
+            if (teachers.length > 0) {
+                supervisorDbId = teachers[0].id;
+            }
+        }
+
+        // Check if student record exists, if not create one
+        const [studentRes] = await connection.query('SELECT s.id FROM students s JOIN users u ON s.user_id = u.id WHERE u.uid = ?', [studentId]);
+        let studentDbId;
+
+        if (studentRes.length === 0) {
+            // Create missing student record
+            // First get user ID
+            // First get user ID
+            let [users] = await connection.query('SELECT id, email, display_name FROM users WHERE uid = ?', [studentId]);
+            if (users.length === 0) {
+                console.error(`User with UID ${studentId} not found in users table`);
+
+                if (req.body.studentEmail && req.body.studentName) {
+                    const newUserId = uuidv4();
+                    console.log(`Auto-creating user ${req.body.studentEmail} in users table`);
+                    await connection.query(
+                        'INSERT INTO users (id, uid, email, display_name, role, is_active) VALUES (?, ?, ?, ?, ?, ?)',
+                        [newUserId, studentId, req.body.studentEmail, req.body.studentName, 'student', true]
+                    );
+                    [users] = await connection.query('SELECT id, email, display_name FROM users WHERE uid = ?', [studentId]);
+                } else {
+                    await connection.rollback();
+                    return res.status(404).json({ message: 'User not found' });
+                }
+            }
+            const userId = users[0].id;
+            studentDbId = uuidv4();
+            const studentCode = 'S' + Math.floor(100000 + Math.random() * 900000);
+
+            await connection.query(
+                'INSERT INTO students (id, user_id, student_id, class_name, major) VALUES (?, ?, ?, ?, ?)',
+                [studentDbId, userId, studentCode, 'D20CQCN01-N', 'Software Engineering']
+            );
+        } else {
+            studentDbId = studentRes[0].id;
+        }
+
         await connection.query(`
       INSERT INTO projects (id, topic_id, student_id, supervisor_id, status)
-      VALUES (?, ?, (SELECT id FROM students WHERE user_id = ?), (SELECT id FROM teachers WHERE user_id = ?), 'registered')
-    `, [projectId, topicId, studentId, supervisorId]);
+      VALUES (?, ?, ?, ?, 'registered')
+    `, [projectId, topicId, studentDbId, supervisorDbId]);
 
-        // Update topic current_students and teacher current_students
+        // Update topic current_students
         await connection.query(
             'UPDATE topics SET current_students = current_students + 1 WHERE id = ?',
             [topicId]
         );
 
-        await connection.query(
-            'UPDATE teachers SET current_students = current_students + 1 WHERE user_id = ?',
-            [supervisorId]
-        );
+        // Update teacher current_students only if supervisor is assigned
+        if (finalSupervisorId) {
+            await connection.query(
+                'UPDATE teachers SET current_students = current_students + 1 WHERE user_id = ?',
+                [finalSupervisorId]
+            );
+        }
 
         await connection.commit();
 

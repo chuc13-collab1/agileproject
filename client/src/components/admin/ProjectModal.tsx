@@ -32,7 +32,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
         title: project.title,
         description: project.description,
         studentId: project.studentId,
-        supervisorId: project.supervisor.id,
+        supervisorId: project.supervisor ? project.supervisor.id : '', // Keep supervisorId as per ProjectFormData type
         reviewerId: project.reviewer?.id || '',
         semester: project.semester,
         academicYear: project.academicYear,
@@ -108,12 +108,11 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
             </div>
 
             <div className={styles.formGroup}>
-              <label>Giảng viên hướng dẫn *</label>
+              <label>Giảng viên hướng dẫn</label>
               <select
                 name="supervisorId"
                 value={formData.supervisorId}
                 onChange={handleChange}
-                required
               >
                 <option value="">Chọn giảng viên</option>
                 {teachers.filter(t => t.canSupervise).map(teacher => (

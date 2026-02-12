@@ -23,7 +23,7 @@ const TeacherStudentList: React.FC = () => {
             const allProjects = await projectService.getAllProjects();
             // Filter projects where supervisorId matches current user's ID
             // Note: Project type has supervisor: { id, name }
-            const myStudents = allProjects.filter(p => p.supervisor.id === user?.uid);
+            const myStudents = allProjects.filter(p => p.supervisor?.id === user?.uid);
             setStudents(myStudents);
         } catch (error) {
             console.error('Failed to load students:', error);
@@ -61,6 +61,8 @@ const TeacherStudentList: React.FC = () => {
         switch (status) {
             case 'completed': return <span className={`${styles.badge} ${styles.badgeSuccess}`}>Hoàn thành</span>;
             case 'in-progress': return <span className={`${styles.badge} ${styles.badgeWarning}`}>Đang thực hiện</span>;
+            case 'registered': return <span className={`${styles.badge} ${styles.badgeInfo}`}>Mới đăng ký</span>;
+            case 'pending': return <span className={`${styles.badge} ${styles.badgeWarning}`}>Chờ duyệt</span>;
             case 'rejected': return <span className={`${styles.badge} ${styles.badgeError}`}>Bị hủy/Từ chối</span>;
             default: return <span className={`${styles.badge} ${styles.badgeWarning}`}>{status}</span>;
         }
@@ -159,7 +161,7 @@ const TeacherStudentList: React.FC = () => {
                                                         >
                                                             👁️
                                                         </button>
-                                                        {project.status === 'pending' && (
+                                                        {(project.status === 'pending' || project.status === 'registered') && (
                                                             <>
                                                                 <button
                                                                     className={styles.iconButton}

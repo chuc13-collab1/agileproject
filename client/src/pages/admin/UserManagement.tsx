@@ -274,8 +274,21 @@ function UserManagement() {
     try {
       if (editingStudent) {
         await userService.updateStudent(editingStudent.id, data);
+        alert('Cập nhật sinh viên thành công!');
       } else {
-        await userService.createStudent(data);
+        const result = await userService.createStudent(data);
+        // Show generated password if available
+        if (result.generatedPassword) {
+          alert(
+            `Tạo sinh viên thành công!\n\n` +
+            `Email: ${result.email}\n` +
+            `Mật khẩu tạm thời: ${result.generatedPassword}\n\n` +
+            `Vui lòng lưu lại mật khẩu này và thông báo cho sinh viên.\n` +
+            `Sinh viên có thể đổi mật khẩu sau khi đăng nhập.`
+          );
+        } else {
+          alert('Tạo sinh viên thành công!');
+        }
       }
       await loadData();
       setShowStudentModal(false);
@@ -289,8 +302,21 @@ function UserManagement() {
     try {
       if (editingTeacher) {
         await userService.updateTeacher(editingTeacher.id, data);
+        alert('Cập nhật giáo viên thành công!');
       } else {
-        await userService.createTeacher(data);
+        const result = await userService.createTeacher(data);
+        // Show generated password if available
+        if (result.generatedPassword) {
+          alert(
+            `Tạo giáo viên thành công!\n\n` +
+            `Email: ${result.email}\n` +
+            `Mật khẩu tạm thời: ${result.generatedPassword}\n\n` +
+            `Vui lòng lưu lại mật khẩu này và thông báo cho giáo viên.\n` +
+            `Giáo viên có thể đổi mật khẩu sau khi đăng nhập hoặc dùng chức năng "Quên mật khẩu".`
+          );
+        } else {
+          alert('Tạo giáo viên thành công!');
+        }
       }
       await loadData();
       setShowTeacherModal(false);
@@ -304,8 +330,21 @@ function UserManagement() {
     try {
       if (editingAdmin) {
         await userService.updateAdmin(editingAdmin.id, data);
+        alert('Cập nhật admin thành công!');
       } else {
-        await userService.createAdmin(data);
+        const result = await userService.createAdmin(data);
+        // Show generated password if available
+        if (result.generatedPassword) {
+          alert(
+            `Tạo admin thành công!\n\n` +
+            `Email: ${result.email}\n` +
+            `Mật khẩu tạm thời: ${result.generatedPassword}\n\n` +
+            `Vui lòng lưu lại mật khẩu này và thông báo cho admin.\n` +
+            `Admin có thể đổi mật khẩu sau khi đăng nhập.`
+          );
+        } else {
+          alert('Tạo admin thành công!');
+        }
       }
       await loadData();
       setShowAdminModal(false);

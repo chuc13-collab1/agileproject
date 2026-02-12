@@ -88,16 +88,17 @@ function AdminModal({ admin, onClose, onSave }: AdminModalProps) {
               />
             </div>
 
-            <div className={styles.formGroup}>
-              <label>Mật khẩu {!admin && '*'}</label>
-              <input
-                type="password"
-                required={!admin}
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                placeholder={admin ? 'Để trống nếu không đổi' : 'Mật khẩu'}
-              />
-            </div>
+            {admin && (
+              <div className={styles.formGroup}>
+                <label>Mật khẩu</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  placeholder="Để trống nếu không đổi"
+                />
+              </div>
+            )}
           </div>
 
           <div className={styles.formGroup} style={{ marginTop: '1.5rem' }}>

@@ -6,7 +6,8 @@ import TopicDetailModal from '../../components/admin/TopicDetailModal';
 import TopicModal from '../../components/admin/TopicModal';
 import { Topic, TopicStatus, Semester, TopicFormData } from '../../types/topic.types';
 import * as topicService from '../../services/api/topic.service';
-// import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
+import { auth } from '../../services/firebase/config';
 import styles from './UserManagement.module.css';
 
 function TopicManagement() {
@@ -97,6 +98,79 @@ function TopicManagement() {
     }
   };
 
+  const handleResetCounts = async () => {
+    if (!window.confirm('⚠️ Reset tất cả current_students về 0? Dùng để fix bug data.')) return;
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error('No auth token');
+      const response = await fetch('http://localhost:3001/api/debug/reset-topic-counts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await (window as any).firebase?.auth?.currentUser?.getIdToken()}`
+        }
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert('✅ Reset thành công!');
+        await loadTopics();
+      } else {
+        alert('❌ Lỗi: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Failed to reset:', error);
+      alert('❌ Không thể reset');
+    }
+  };
+
+  const handleCreateTable = async () => {
+    if (!window.confirm('🔧 Tạo bảng projects trong database?')) return;
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error('No auth token');
+      const response = await fetch('http://localhost:3001/api/debug/create-projects-table', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await (window as any).firebase?.auth?.currentUser?.getIdToken()}`
+        }
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert('✅ Đã tạo bảng projects thành công!');
+      } else {
+        alert('❌ Lỗi: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Failed to create table:', error);
+      alert('❌ Không thể tạo bảng');
+    }
+  };
+
+  const handleAddColumns = async () => {
+    if (!window.confirm('🔧 Thêm cột requirements & expected_results vào bảng topics?')) return;
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      if (!token) throw new Error('No auth token');
+      const response = await fetch('http://localhost:3001/api/debug/add-topic-columns', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${await (window as any).firebase?.auth?.currentUser?.getIdToken()}`
+        }
+      });
+      const data = await response.json();
+      if (data.success) {
+        alert('✅ Đã thêm cột thành công!');
+      } else {
+        alert('❌ Lỗi: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Failed to add columns:', error);
+      alert('❌ Không thể thêm cột');
+    }
+  };
+
   const filteredTopics = topics.filter(topic => {
     const matchesSearch =
       topic.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -157,6 +231,54 @@ function TopicManagement() {
             }}
           >
             <span>+</span> Thêm Đề Tài
+          </button>
+          <button
+            onClick={handleResetCounts}
+            style={{
+              backgroundColor: '#ef4444',
+              color: 'white',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '8px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontSize: '0.85rem'
+            }}
+            title="Debug: Reset current_students về 0"
+          >
+            🔧 Reset Counts
+          </button>
+          <button
+            onClick={handleCreateTable}
+            style={{
+              backgroundColor: '#8b5cf6',
+              color: 'white',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '8px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontSize: '0.85rem'
+            }}
+            title="Debug: Tạo bảng projects"
+          >
+            🗄️ Create Table
+          </button>
+          <button
+            onClick={handleAddColumns}
+            style={{
+              backgroundColor: '#f59e0b',
+              color: 'white',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
+              borderRadius: '8px',
+              fontWeight: 600,
+              cursor: 'pointer',
+              fontSize: '0.85rem'
+            }}
+            title="Debug: Thêm cột requirements & expected_results"
+          >
+            ➕ Add Columns
           </button>
         </div>
 

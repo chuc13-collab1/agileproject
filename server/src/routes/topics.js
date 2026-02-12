@@ -17,12 +17,17 @@ router.get('/', verifyToken, async (req, res, next) => {
             SELECT t.*, 
                    u.display_name as supervisor_name,
                    u.email as supervisor_email,
-                   u.id as supervisor_user_id,
+                   u.uid as supervisor_uid,
                    r.display_name as reviewer_name,
-                   r.email as reviewer_email
+                   r.email as reviewer_email,
+                   su.display_name as student_name,
+                   su.email as student_email,
+                   s.student_id as student_code
             FROM topics t
-            JOIN users u ON t.supervisor_id = u.id
+            LEFT JOIN users u ON t.supervisor_id = u.id
             LEFT JOIN users r ON t.reviewer_id = r.id
+            LEFT JOIN students s ON t.assigned_to_student_id = s.id
+            LEFT JOIN users su ON s.user_id = su.id
             WHERE 1=1
         `;
         const params = [];
@@ -50,6 +55,7 @@ router.get('/', verifyToken, async (req, res, next) => {
             title: row.title,
             description: row.description,
             supervisorId: row.supervisor_id,
+            supervisorUid: row.supervisor_uid,
             supervisorName: row.supervisor_name,
             supervisorEmail: row.supervisor_email,
             status: row.status,
@@ -64,7 +70,11 @@ router.get('/', verifyToken, async (req, res, next) => {
             approvedAt: row.approved_at,
             approvedBy: row.approved_by,
             reviewerId: row.reviewer_id,
-            reviewerName: row.reviewer_name
+            reviewerName: row.reviewer_name,
+            proposedBy: row.proposed_by_type,
+            proposalStudentName: row.student_name,
+            proposalStudentEmail: row.student_email,
+            proposalStudentCode: row.student_code
         }));
 
         res.json({
@@ -77,28 +87,107 @@ router.get('/', verifyToken, async (req, res, next) => {
 });
 
 /**
+ * GET /api/topics/:id
+ * Get a single topic by ID
+ */
+router.get('/:id', verifyToken, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const [rows] = await pool.query(`
+            SELECT t.*, 
+                   u.display_name as supervisor_name,
+                   u.email as supervisor_email,
+                   u.uid as supervisor_uid,
+                   r.display_name as reviewer_name,
+                   r.email as reviewer_email,
+                   su.display_name as student_name,
+                   su.email as student_email,
+                   s.student_id as student_code
+            FROM topics t
+            LEFT JOIN users u ON t.supervisor_id = u.id
+            LEFT JOIN users r ON t.reviewer_id = r.id
+            LEFT JOIN students s ON t.assigned_to_student_id = s.id
+            LEFT JOIN users su ON s.user_id = su.id
+            WHERE t.id = ?
+        `, [id]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Topic not found'
+            });
+        }
+
+        const topic = {
+            id: rows[0].id,
+            title: rows[0].title,
+            description: rows[0].description,
+            requirements: rows[0].requirements,
+            expectedResults: rows[0].expected_results,
+            supervisorId: rows[0].supervisor_id,
+            supervisorUid: rows[0].supervisor_uid,
+            supervisorName: rows[0].supervisor_name,
+            supervisorEmail: rows[0].supervisor_email,
+            status: rows[0].status,
+            rejectionReason: rows[0].rejection_reason,
+            semester: rows[0].semester,
+            academicYear: rows[0].academic_year,
+            field: rows[0].field,
+            maxStudents: rows[0].max_students,
+            currentStudents: rows[0].current_students,
+            createdAt: rows[0].created_at,
+            updatedAt: rows[0].updated_at,
+            approvedAt: rows[0].approved_at,
+            approvedBy: rows[0].approved_by,
+            reviewerId: rows[0].reviewer_id,
+            reviewerName: rows[0].reviewer_name,
+            proposedBy: rows[0].proposed_by_type,
+            proposalStudentName: rows[0].student_name,
+            proposalStudentCode: rows[0].student_code
+        };
+
+        res.json({
+            success: true,
+            data: topic
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+
+/**
  * POST /api/topics
- * Create a new topic (Teacher Only - but unrestricted for now for testing)
+ * Create a new topic (Teacher or Student)
+ * - Teachers: supervisor_id = their own ID
+ * - Students: supervisor_id = null (admin will assign later)
  */
 router.post('/', verifyToken, async (req, res, next) => {
     try {
-        const { title, description, semester, academicYear, field, maxStudents } = req.body;
+        const { title, description, semester, academicYear, field, maxStudents, requirements, expectedResults } = req.body;
 
-        // In real app, check if req.user.role === 'teacher'
-
-        // Find user ID from users table using uid
-        const [users] = await pool.query('SELECT id, display_name FROM users WHERE uid = ?', [req.user.uid]);
+        // Find user ID and role from users table using uid
+        const [users] = await pool.query('SELECT id, display_name, role FROM users WHERE uid = ?', [req.user.uid]);
         if (users.length === 0) {
             return res.status(404).json({ message: 'User not found in database' });
         }
         const user = users[0];
 
+        // Determine supervisor_id based on user role
+        let supervisorId = null;
+        if (user.role === 'teacher') {
+            // Teachers propose topics they will supervise
+            supervisorId = user.id;
+        }
+        // For students, supervisorId remains null - admin will assign supervisor later
+
         const id = uuidv4();
         await pool.query(
             `INSERT INTO topics 
-            (id, title, description, supervisor_id, semester, academic_year, field, max_students, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending')`,
-            [id, title, description, user.id, semester, academicYear, field, maxStudents || 2]
+            (id, title, description, supervisor_id, semester, academic_year, field, max_students, status, requirements, expected_results)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)`,
+            [id, title, description, supervisorId, semester, academicYear, field, maxStudents || 2, requirements || '', expectedResults || '']
         );
 
         const [newTopic] = await pool.query('SELECT * FROM topics WHERE id = ?', [id]);
@@ -107,8 +196,12 @@ router.post('/', verifyToken, async (req, res, next) => {
             success: true,
             data: {
                 ...newTopic[0],
-                supervisorName: user.display_name
-            }
+                supervisorName: supervisorId ? user.display_name : null,
+                proposedBy: user.role // Include who proposed the topic
+            },
+            message: user.role === 'student'
+                ? 'Topic proposed successfully. Admin will review and assign a supervisor.'
+                : 'Topic created successfully.'
         });
     } catch (error) {
         next(error);

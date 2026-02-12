@@ -87,23 +87,44 @@ const TopicBrowsing: React.FC = () => {
         <MainLayout>
             <div className={styles.container}>
                 <div className={styles.header}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                            <button
+                                onClick={() => navigate('/')}
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    fontSize: '1.5rem',
+                                    cursor: 'pointer',
+                                    padding: '0.5rem'
+                                }}
+                            >
+                                ⬅️
+                            </button>
+                            <div>
+                                <h1 className={styles.title}>📚 Danh Sách Đề Tài</h1>
+                                <p className={styles.subtitle}>Chọn đề tài phù hợp với bạn</p>
+                            </div>
+                        </div>
                         <button
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/student/propose-topic')}
                             style={{
-                                background: 'transparent',
+                                padding: '0.75rem 1.5rem',
+                                background: '#3b82f6',
+                                color: 'white',
                                 border: 'none',
-                                fontSize: '1.5rem',
+                                borderRadius: '0.5rem',
+                                fontSize: '0.9rem',
+                                fontWeight: 500,
                                 cursor: 'pointer',
-                                padding: '0.5rem'
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
                             }}
                         >
-                            ⬅️
+                            ✨ Đề xuất đề tài mới
                         </button>
-                        <div>
-                            <h1 className={styles.title}>📚 Danh Sách Đề Tài</h1>
-                            <p className={styles.subtitle}>Chọn đề tài phù hợp với bạn</p>
-                        </div>
                     </div>
                 </div>
 

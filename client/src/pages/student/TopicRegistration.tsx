@@ -42,22 +42,24 @@ const TopicRegistration: React.FC = () => {
         setSubmitting(true);
         try {
             await projectService.createProject({
-                title: topic.title,
-                description: topic.description,
+                topicId: topicId!,
                 studentId: user.uid,
-                supervisor: { id: topic.supervisorId, name: topic.supervisorName },
-                semester: topic.semester,
-                academicYear: topic.academicYear,
-                category: topic.field || 'General',
-                startDate: new Date().toISOString().split('T')[0],
-                endDate: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] // 90 days later
-            } as any); // Using 'as any' temporarily due to type mismatch
+                studentEmail: user.email,
+                studentName: user.fullName,
+                supervisorId: topic.supervisorId
+            });
 
-            alert('Đăng ký đề tài thành công! Vui lòng chờ giảng viên duyệt.');
+            if (topic.supervisorId) {
+                alert('Đăng ký đề tài thành công! Vui lòng chờ giảng viên duyệt.');
+            } else {
+                alert('Đăng ký đề tài thành công! Vui lòng chờ Admin phân công giảng viên.');
+            }
             navigate('/student/my-project');
         } catch (error: any) {
             console.error('Failed to register:', error);
-            alert(error.response?.data?.message || 'Đăng ký thất bại. Vui lòng thử lại.');
+            // Show detailed error message from backend
+            const errorMsg = error.response?.data?.message || error.message || 'Đăng ký thất bại. Vui lòng thử lại.';
+            alert('❌ ' + errorMsg);
         } finally {
             setSubmitting(false);
         }
@@ -71,7 +73,7 @@ const TopicRegistration: React.FC = () => {
         return <MainLayout><div style={{ padding: '2rem' }}>Không tìm thấy đề tài</div></MainLayout>;
     }
 
-    const availableSlots = (topic.maxStudents || 0) - (topic.registeredStudents || 0);
+    const availableSlots = (topic.maxStudents || 0) - (topic.currentStudents || 0);
     const isFull = availableSlots <= 0;
 
     return (
@@ -106,6 +108,18 @@ const TopicRegistration: React.FC = () => {
                     <div className={styles.section}>
                         <h3 className={styles.sectionTitle}>📄 Mô tả đề tài</h3>
                         <p style={{ color: '#64748b', lineHeight: 1.6 }}>{topic.description}</p>
+                        {topic.requirements && (
+                            <>
+                                <h4 style={{ marginTop: '1rem', fontWeight: 600 }}>Yêu cầu:</h4>
+                                <p style={{ color: '#64748b', lineHeight: 1.6 }}>{topic.requirements}</p>
+                            </>
+                        )}
+                        {topic.expectedResults && (
+                            <>
+                                <h4 style={{ marginTop: '1rem', fontWeight: 600 }}>Kết quả dự kiến:</h4>
+                                <p style={{ color: '#64748b', lineHeight: 1.6 }}>{topic.expectedResults}</p>
+                            </>
+                        )}
                     </div>
 
                     <div className={styles.section}>
@@ -113,7 +127,7 @@ const TopicRegistration: React.FC = () => {
                         <div className={styles.infoGrid}>
                             <div className={styles.infoItem}>
                                 <span className={styles.infoLabel}>👨‍🏫 Giảng viên hướng dẫn</span>
-                                <span className={styles.infoValue}>{topic.supervisorName || 'N/A'}</span>
+                                <span className={styles.infoValue}>{topic.supervisorName || 'Chưa phân công'}</span>
                             </div>
 
                             <div className={styles.infoItem}>

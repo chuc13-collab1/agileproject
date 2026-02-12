@@ -29,7 +29,7 @@ const TeacherDashboard: React.FC = () => {
       ]);
 
       const myTopics = allTopics.filter(t => t.supervisorId === user?.uid);
-      const myProjects = allProjects.filter(p => p.supervisor.id === user?.uid);
+      const myProjects = allProjects.filter(p => p.supervisor?.id === user?.uid);
 
       setStats({
         studentCount: myProjects.filter(p => p.status !== 'rejected').length,
@@ -109,6 +109,13 @@ const TeacherDashboard: React.FC = () => {
             onClick={() => navigate('/teacher/topic-proposal')}
           >
             ➕ Đề Xuất Đề Tài Mới
+          </button>
+          <button
+            className={styles.actionBtn}
+            onClick={() => navigate('/teacher/proposals')}
+            style={{ backgroundColor: '#fffbeb', color: '#b45309', border: '1px solid #fcd34d' }}
+          >
+            📝 Duyệt Đề Xuất SV
           </button>
           <button
             className={styles.actionBtn}

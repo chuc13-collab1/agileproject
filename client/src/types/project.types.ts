@@ -8,7 +8,7 @@ export interface Project {
   studentEmail: string;
   supervisor: { id: string; name: string };
   reviewer?: { id: string; name: string };
-  status: 'pending' | 'approved' | 'in-progress' | 'submitted' | 'reviewing' | 'completed' | 'rejected';
+  status: 'pending' | 'approved' | 'in-progress' | 'submitted' | 'reviewing' | 'completed' | 'rejected' | 'registered';
   semester: string;
   academicYear: string;
   field: string;

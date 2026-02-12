@@ -1,0 +1,27 @@
+-- Create projects table
+CREATE TABLE IF NOT EXISTS `projects` (
+  `id` varchar(36) NOT NULL COMMENT 'UUID',
+  `topic_id` varchar(36) NOT NULL,
+  `student_id` varchar(36) NOT NULL,
+  `supervisor_id` varchar(36) NOT NULL COMMENT 'Teacher who supervises',
+  `reviewer_id` varchar(36) DEFAULT NULL COMMENT 'Teacher who reviews',
+  `status` enum('registered','in_progress','submitted','graded','completed','failed') DEFAULT 'registered',
+  `registration_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `defense_date` datetime DEFAULT NULL,
+  `final_grade` decimal(4,2) DEFAULT NULL COMMENT 'Final grade 0-10',
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `idx_topic` (`topic_id`),
+  KEY `idx_student` (`student_id`),
+  KEY `idx_supervisor` (`supervisor_id`),
+  KEY `idx_reviewer` (`reviewer_id`),
+  KEY `idx_status` (`status`),
+  CONSTRAINT `fk_projects_topic` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_projects_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_projects_supervisor` FOREIGN KEY (`supervisor_id`) REFERENCES `teachers` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `fk_projects_reviewer` FOREIGN KEY (`reviewer_id`) REFERENCES `teachers` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

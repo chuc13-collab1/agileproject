@@ -65,10 +65,14 @@ router.post('/', async (req, res, next) => {
             });
         }
 
+        // Auto-generate password from adminId
+        // Format: AdminID@2026 (e.g., ADMIN001@2026)
+        const finalPassword = password || `${adminId}@2026`;
+        
         // Create Firebase Auth user
         const userRecord = await firebaseAuth.createUser({
             email,
-            password: password || 'admin123',
+            password: finalPassword,
             displayName
         });
 
@@ -109,7 +113,9 @@ router.post('/', async (req, res, next) => {
                 id: userId,
                 adminId,
                 email,
-                displayName
+                displayName,
+                // Return generated password only when creating new user
+                ...(password ? {} : { generatedPassword: finalPassword })
             }
         });
     } catch (error) {
@@ -129,6 +135,92 @@ router.post('/', async (req, res, next) => {
 });
 
 /**
+ * PUT /api/admins/:id
+ * Update admin information
+ */
+router.put('/:id', async (req, res, next) => {
+    const connection = await db.getConnection();
+
+    try {
+        const { id } = req.params;
+        const {
+            displayName,
+            adminId,
+            permissions,
+            password
+        } = req.body;
+
+        await connection.beginTransaction();
+
+        // Update password if provided
+        if (password) {
+            try {
+                const [users] = await connection.query('SELECT uid FROM users WHERE id = ?', [id]);
+                if (users.length > 0) {
+                    await firebaseAuth.updateUser(users[0].uid, { password });
+                }
+            } catch (authError) {
+                console.error('Error updating Firebase password:', authError);
+                throw new Error(`Failed to update password: ${authError.message}`);
+            }
+        }
+
+        // Update users table
+        if (displayName) {
+            await connection.query(
+                'UPDATE users SET display_name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+                [displayName, id]
+            );
+        }
+
+        // Update admins table
+        if (adminId) {
+            await connection.query(
+                'UPDATE admins SET admin_id = ? WHERE user_id = ?',
+                [adminId, id]
+            );
+        }
+
+        // Update permissions
+        if (Array.isArray(permissions)) {
+            // Get admin record id
+            const [adminRecord] = await connection.query(
+                'SELECT id FROM admins WHERE user_id = ?',
+                [id]
+            );
+
+            if (adminRecord.length > 0) {
+                const adminRecordId = adminRecord[0].id;
+
+                // Delete old permissions
+                await connection.query(
+                    'DELETE FROM admin_permissions WHERE admin_id = ?',
+                    [adminRecordId]
+                );
+
+                // Insert new permissions
+                for (const perm of permissions) {
+                    await connection.query(
+                        'INSERT INTO admin_permissions (admin_id, permission) VALUES (?, ?)',
+                        [adminRecordId, perm]
+                    );
+                }
+            }
+        }
+
+        await connection.commit();
+
+        res.json({
+            success: true,
+            message: 'Admin updated successfully'
+        });
+    } catch (error) {
+        await connection.rollback();
+        next(error);
+    } finally {
+        connection.release();
+    }
+});/**
  * DELETE /api/admins/:id
  * Delete admin
  */

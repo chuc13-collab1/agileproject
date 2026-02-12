@@ -10,51 +10,68 @@ import {
   orderBy,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '../firebase/config';
+import { db, auth } from '../firebase/config';
 import { Project } from '../../types/project.types';
 
 const PROJECTS_COLLECTION = 'projects';
 
-// Create Project
-export const createProject = async (projectData: Omit<Project, 'id' | 'createdAt' | 'updatedAt'>): Promise<Project> => {
-  const docRef = await addDoc(collection(db, PROJECTS_COLLECTION), {
-    ...projectData,
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    registrationDate: Timestamp.fromDate(projectData.registrationDate),
-    reportDeadline: Timestamp.fromDate(projectData.reportDeadline),
-    defenseDate: projectData.defenseDate ? Timestamp.fromDate(projectData.defenseDate) : null,
+export interface CreateProjectRequest {
+  topicId: string;
+  studentId: string;
+  supervisorId: string | null;
+  studentEmail?: string;
+  studentName?: string;
+}
+
+// Create Project (via API)
+export const createProject = async (projectData: CreateProjectRequest): Promise<any> => {
+  const token = await auth.currentUser?.getIdToken();
+  if (!token) throw new Error('No authentication token');
+
+  const response = await fetch('http://localhost:3001/api/projects', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(projectData)
   });
 
-  const now = new Date();
-  return {
-    id: docRef.id,
-    ...projectData,
-    createdAt: now,
-    updatedAt: now
-  };
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || 'Failed to create project');
+  }
+
+  return response.json();
 };
 
 // Get All Projects
 export const getAllProjects = async (): Promise<Project[]> => {
-  const q = query(
-    collection(db, PROJECTS_COLLECTION),
-    orderBy('createdAt', 'desc')
-  );
+  const token = await auth.currentUser?.getIdToken();
 
-  const snapshot = await getDocs(q);
-  return snapshot.docs.map(doc => {
-    const data = doc.data();
-    return {
-      id: doc.id,
-      ...data,
-      registrationDate: data.registrationDate?.toDate() || new Date(),
-      reportDeadline: data.reportDeadline?.toDate() || new Date(),
-      defenseDate: data.defenseDate?.toDate(),
-      createdAt: data.createdAt?.toDate() || new Date(),
-      updatedAt: data.updatedAt?.toDate() || new Date(),
-    };
-  }) as Project[];
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json'
+  };
+
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
+  const response = await fetch('http://localhost:3001/api/projects', {
+    headers
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch projects');
+  }
+
+  const projects = await response.json();
+
+  return projects.map((p: any) => ({
+    ...p,
+    createdAt: new Date(p.createdAt),
+    reportDeadline: new Date(p.reportDeadline)
+  }));
 };
 
 // Get Project by ID

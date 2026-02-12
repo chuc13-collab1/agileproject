@@ -101,7 +101,7 @@ const ProjectList: React.FC<ProjectListProps> = ({
                       <div className={styles.userEmail}>{project.studentEmail}</div>
                     </div>
                   </td>
-                  <td>{project.supervisor.name}</td>
+                  <td>{project.supervisor?.name || <span style={{ color: '#999', fontStyle: 'italic' }}>Chưa phân công</span>}</td>
                   <td>
                     <span
                       className={styles.statusBadge}

@@ -190,8 +190,9 @@ const DocumentManagement: React.FC = () => {
 
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto', gap: '1rem', alignItems: 'end' }}>
                         <div className={styles.formGroup}>
-                            <label className={styles.formLabel}>Chọn file</label>
+                            <label htmlFor="file-upload" className={styles.formLabel}>Chọn file</label>
                             <input
+                                id="file-upload"
                                 type="file"
                                 onChange={handleFileSelect}
                                 className={styles.formInput}
@@ -205,8 +206,9 @@ const DocumentManagement: React.FC = () => {
                         </div>
 
                         <div className={styles.formGroup}>
-                            <label className={styles.formLabel}>Loại tài liệu</label>
+                            <label htmlFor="document-category" className={styles.formLabel}>Loại tài liệu</label>
                             <select
+                                id="document-category"
                                 value={uploadCategory}
                                 onChange={(e) => setUploadCategory(e.target.value)}
                                 className={styles.formSelect}

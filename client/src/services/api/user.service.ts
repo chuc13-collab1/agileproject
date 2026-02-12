@@ -1,4 +1,5 @@
 import { auth } from '../firebase/config';
+import { sendPasswordResetEmail } from 'firebase/auth';
 import {
   Student,
   Teacher,
@@ -65,19 +66,13 @@ export const getAllStudents = async (): Promise<Student[]> => {
   }));
 };
 
-export const createStudent = async (data: StudentFormData): Promise<Student> => {
+export const createStudent = async (data: StudentFormData): Promise<any> => {
   const result = await apiCall('students', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
-  return {
-    ...result.data,
-    role: 'student',
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  } as Student;
+  return result.data; // Return full data including generatedPassword if present
 };
 
 export const updateStudent = async (
@@ -136,23 +131,13 @@ export const getAllTeachers = async (): Promise<Teacher[]> => {
   }));
 };
 
-export const createTeacher = async (data: TeacherFormData): Promise<Teacher> => {
+export const createTeacher = async (data: TeacherFormData): Promise<any> => {
   const result = await apiCall('teachers', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
-  return {
-    ...result.data,
-    role: 'teacher',
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    maxStudents: data.maxStudents,
-    currentStudents: 0,
-    canSupervise: data.canSupervise,
-    canReview: data.canReview,
-  } as Teacher;
+  return result.data; // Return full data including generatedPassword if present
 };
 
 export const updateTeacher = async (
@@ -188,20 +173,13 @@ export const getAllAdmins = async (): Promise<Admin[]> => {
   }));
 };
 
-export const createAdmin = async (data: AdminFormData): Promise<Admin> => {
+export const createAdmin = async (data: AdminFormData): Promise<any> => {
   const result = await apiCall('admins', {
     method: 'POST',
     body: JSON.stringify(data),
   });
 
-  return {
-    ...result.data,
-    role: 'admin',
-    isActive: true,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    permissions: data.permissions,
-  } as Admin;
+  return result.data; // Return full data including generatedPassword if present
 };
 
 export const deleteAdmin = async (id: string): Promise<void> => {
@@ -221,10 +199,8 @@ export const updateAdmin = async (
 };
 
 export const resetPassword = async (email: string): Promise<void> => {
-  await apiCall('auth/reset-password', {
-    method: 'POST',
-    body: JSON.stringify({ email }),
-  });
+  // Use Firebase Auth directly instead of backend API
+  await sendPasswordResetEmail(auth, email);
 };
 
 // ============================================
