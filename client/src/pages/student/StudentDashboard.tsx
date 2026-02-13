@@ -370,6 +370,31 @@ const StudentDashboard: React.FC = () => {
                 >
                   📁 Quản Lý Tài Liệu
                 </button>
+                <button
+                  onClick={() => navigate('/student/book-meeting')}
+                  style={{
+                    padding: '0.875rem 1.5rem',
+                    background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '0.75rem',
+                    cursor: 'pointer',
+                    fontSize: '0.95rem',
+                    fontWeight: '600',
+                    boxShadow: '0 4px 12px rgba(245, 158, 11, 0.3)',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-2px)';
+                    e.currentTarget.style.boxShadow = '0 6px 16px rgba(245, 158, 11, 0.4)';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(245, 158, 11, 0.3)';
+                  }}
+                >
+                  📅 Đặt Lịch Hẹn GV
+                </button>
               </>
             )}
           </div>

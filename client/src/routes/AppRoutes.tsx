@@ -12,6 +12,8 @@ import SubmitReport from '../pages/student/SubmitReport';
 import DocumentManagement from '../pages/student/DocumentManagement';
 import ProjectResults from '../pages/student/ProjectResults';
 import StudentTopicProposal from '../pages/student/StudentTopicProposal';
+import BookMeeting from '../pages/student/BookMeeting';
+import ChatPage from '../pages/shared/ChatPage';
 import TeacherDashboard from '../pages/supervisor/TeacherDashboard';
 import TeacherTopicList from '../pages/supervisor/TeacherTopicList';
 import TeacherStudentList from '../pages/supervisor/TeacherStudentList';
@@ -140,6 +142,18 @@ const AppRoutes: React.FC = () => {
       <Route path="/student/propose-topic" element={
         <ProtectedRoute allowedRoles={['student']}>
           <StudentTopicProposal />
+        </ProtectedRoute>
+      } />
+      <Route path="/student/book-meeting" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <BookMeeting />
+        </ProtectedRoute>
+      } />
+
+      {/* Chat Routes - accessible by all authenticated users */}
+      <Route path="/chat" element={
+        <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
+          <ChatPage />
         </ProtectedRoute>
       } />
 

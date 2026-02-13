@@ -23,6 +23,7 @@ import evaluationRoutes from './routes/evaluations.js';
 import uploadRoutes from './routes/uploads.js';
 import topicProposalRoutes from './routes/topicProposals.js';
 import authRoutes from './routes/auth.js';
+import schedulingRoutes from './routes/scheduling.js';
 
 // Load environment variables
 dotenv.config();
@@ -69,6 +70,7 @@ app.use('/api/progress-reports', verifyToken, progressReportRoutes);
 app.use('/api/evaluations', verifyToken, evaluationRoutes);
 app.use('/api/uploads', verifyToken, uploadRoutes);
 app.use('/api/topic-proposals', verifyToken, topicProposalRoutes);
+app.use('/api/scheduling', verifyToken, schedulingRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

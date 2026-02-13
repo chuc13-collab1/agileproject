@@ -101,12 +101,39 @@ export const isTeacher = async (req, res, next) => {
         }
 
         if (rows[0].role !== 'teacher' && rows[0].role !== 'supervisor') { // Supervisor is also a teacher role context usually
-            return res.status(403).json({ message: `Access denied: Teacher role required` });
+            return res.status(403).json({ message: 'Access denied: Teacher role required' });
         }
 
         next();
     } catch (error) {
         console.error('Teacher verification error:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+/**
+ * Middleware to check if user is student
+ * Must be used AFTER verifyToken
+ */
+export const isStudent = async (req, res, next) => {
+    try {
+        if (!req.user || !req.user.uid) {
+            return res.status(401).json({ message: 'Unauthorized: No user info' });
+        }
+
+        const [rows] = await pool.query('SELECT role FROM users WHERE uid = ?', [req.user.uid]);
+
+        if (rows.length === 0) {
+            return res.status(403).json({ message: 'Access denied: User not found' });
+        }
+
+        if (rows[0].role !== 'student') {
+            return res.status(403).json({ message: 'Access denied: Student role required' });
+        }
+
+        next();
+    } catch (error) {
+        console.error('Student verification error:', error);
         return res.status(500).json({ message: 'Internal server error' });
     }
 };

@@ -1,0 +1,10 @@
+﻿Γ£à MySQL Database connected successfully
+=== Topics supervisor_id type check ===
+quan li rap chieu phim
+  supervisor_id: 22428871-ec14-4875-ba4a-c46d8a98005c
+  matches users.id? Agile Admin (uid: XyyiXMZhdOPEjeNmqLsKUKIxTbq2)
+  matches teachers.id? NO
+x├óy dß╗▒ng hß╗ç thß╗æng th╞░ viß╗çn dnc
+  supervisor_id: 22428871-ec14-4875-ba4a-c46d8a98005c
+  matches users.id? Agile Admin (uid: XyyiXMZhdOPEjeNmqLsKUKIxTbq2)
+  matches teachers.id? NO

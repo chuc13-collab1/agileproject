@@ -20,8 +20,8 @@ router.get('/', async (req, res, next) => {
         u.uid as student_uid,
         s.student_id as student_code,
         s.class_name,
-        u_supervisor.display_name as supervisor_name,
-        u_supervisor.uid as supervisor_uid,
+        COALESCE(u_supervisor.display_name, u_topic_supervisor.display_name) as supervisor_name,
+        COALESCE(u_supervisor.uid, u_topic_supervisor.uid) as supervisor_uid,
         u_reviewer.display_name as reviewer_name,
         u_reviewer.uid as reviewer_uid
       FROM projects p
@@ -30,6 +30,7 @@ router.get('/', async (req, res, next) => {
       INNER JOIN users u ON s.user_id = u.id
       LEFT JOIN teachers te ON p.supervisor_id = te.id
       LEFT JOIN users u_supervisor ON te.user_id = u_supervisor.id
+      LEFT JOIN users u_topic_supervisor ON t.supervisor_id = u_topic_supervisor.id
       LEFT JOIN teachers tr ON p.reviewer_id = tr.id
       LEFT JOIN users u_reviewer ON tr.user_id = u_reviewer.id
       ORDER BY p.created_at DESC
@@ -121,8 +122,8 @@ router.get('/:id', async (req, res, next) => {
         u_student.uid as student_uid,
         s.student_id as student_code,
         s.class_name,
-        u_supervisor.display_name as supervisor_name,
-        u_supervisor.uid as supervisor_uid,
+        COALESCE(u_supervisor.display_name, u_topic_supervisor.display_name) as supervisor_name,
+        COALESCE(u_supervisor.uid, u_topic_supervisor.uid) as supervisor_uid,
         u_reviewer.display_name as reviewer_name,
         u_reviewer.uid as reviewer_uid
       FROM projects p
@@ -131,6 +132,7 @@ router.get('/:id', async (req, res, next) => {
       INNER JOIN users u_student ON s.user_id = u_student.id
       LEFT JOIN teachers t_supervisor ON p.supervisor_id = t_supervisor.id
       LEFT JOIN users u_supervisor ON t_supervisor.user_id = u_supervisor.id
+      LEFT JOIN users u_topic_supervisor ON t.supervisor_id = u_topic_supervisor.id
       LEFT JOIN teachers t_reviewer ON p.reviewer_id = t_reviewer.id
       LEFT JOIN users u_reviewer ON t_reviewer.user_id = u_reviewer.id
       WHERE p.id = ?

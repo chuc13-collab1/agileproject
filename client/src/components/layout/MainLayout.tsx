@@ -50,6 +50,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <span className={styles.userName}>{user?.fullName}</span>
               <span className={styles.userRole}>{getRoleLabel(user?.role || '')}</span>
             </div>
+            <button 
+              onClick={() => navigate('/chat')} 
+              className={styles.chatButton}
+              title="Tin nhắn"
+            >
+              💬
+            </button>
             <button onClick={handleLogout} className={styles.logoutButton}>
               Đăng xuất
             </button>

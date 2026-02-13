@@ -26,7 +26,8 @@ async function runMigrations() {
         const migrations = [
             '006_create_projects_table.sql',
             '007_create_progress_reports_table.sql',
-            '008_create_comments_table.sql'
+            '008_create_comments_table.sql',
+            '015_create_scheduling_tables.sql'
         ];
 
         for (const migrationFile of migrations) {
