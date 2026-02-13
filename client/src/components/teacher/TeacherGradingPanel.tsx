@@ -4,12 +4,14 @@ import styles from '../../pages/supervisor/Supervisor.module.css';
 interface GradingPanelProps {
     projectId: string;
     currentEvaluation?: any;
+    evaluatorRole?: 'supervisor' | 'reviewer' | 'council';
     onSubmitSuccess?: () => void;
 }
 
 const TeacherGradingPanel: React.FC<GradingPanelProps> = ({
     projectId,
     currentEvaluation,
+    evaluatorRole = 'supervisor',
     onSubmitSuccess
 }) => {
     const [criteria, setCriteria] = useState({
@@ -92,7 +94,7 @@ const TeacherGradingPanel: React.FC<GradingPanelProps> = ({
                         'Authorization': `Bearer ${token}`
                     },
                     body: JSON.stringify({
-                        evaluatorType: 'supervisor',
+                        evaluatorType: evaluatorRole,
                         criteriaScore: criteria,
                         ...formData
                     })

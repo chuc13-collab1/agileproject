@@ -8,11 +8,12 @@ interface ProjectModalProps {
   project: Project | null;
   students: Student[];
   teachers: Teacher[];
+  topics: any[]; // Using any[] for now to avoid circular dependency or import issues, ideally Topic[]
   onClose: () => void;
   onSave: (data: ProjectFormData) => void;
 }
 
-const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers, onClose, onSave }) => {
+const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers, topics, onClose, onSave }) => {
   const [formData, setFormData] = useState<ProjectFormData>({
     title: '',
     description: '',
@@ -37,11 +38,60 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
         semester: project.semester,
         academicYear: project.academicYear,
         category: project.field,
-        startDate: project.registrationDate.toISOString().split('T')[0],
-        endDate: project.reportDeadline.toISOString().split('T')[0],
+        startDate: project.registrationDate ? new Date(project.registrationDate).toISOString().split('T')[0] : '',
+        endDate: project.reportDeadline ? new Date(project.reportDeadline).toISOString().split('T')[0] : '',
       });
     }
   }, [project]);
+
+  // Auto-fill logic
+  useEffect(() => {
+    console.log('Auto-fill trigger check:', {
+      studentId: formData.studentId,
+      hasProjects: !!project,
+      topicsCount: topics.length
+    });
+
+    if (formData.studentId && topics.length > 0) {
+      // Relaxed matching logic
+      const matchedTopic = topics.find(t => {
+        // Check identifying info
+        // assignedStudentId comes from API. studentId is legacy/typo check.
+        // We check if the topic is assigned to this student (via ID)
+        // OR if it was proposed by this student (via Student Code)
+        const isStudentMatch =
+          t.assignedStudentId === formData.studentId ||
+          (t.proposedBy === 'student' && students.find(s => s.id === formData.studentId)?.studentId === t.proposalStudentCode);
+
+        // Allow if approved OR if it matches perfectly (even if waiting mechanism differs)
+        return (t.status === 'approved' || t.status === 'admin_approved') && isStudentMatch;
+      });
+
+      console.log('Matched topic:', matchedTopic);
+
+      if (matchedTopic) {
+        // Only auto-fill if:
+        // 1. It's a new project (!project)
+        // 2. The selected student matches the topic's student
+        // 3. Or if title/description are empty
+        const shouldFill = !project ||
+          project.studentId !== formData.studentId ||
+          (!formData.title && !formData.description);
+
+        console.log('Should fill?', shouldFill);
+
+        if (shouldFill) {
+          setFormData(prev => ({
+            ...prev,
+            title: matchedTopic.title || prev.title,
+            description: matchedTopic.description || prev.description,
+            supervisorId: matchedTopic.supervisorId || prev.supervisorId,
+            category: matchedTopic.field || prev.category,
+          }));
+        }
+      }
+    }
+  }, [formData.studentId, project, topics, students]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -99,6 +149,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 value={formData.studentId}
                 onChange={handleChange}
                 required
+                aria-label="Chọn sinh viên"
               >
                 <option value="">Chọn sinh viên</option>
                 {students.map(student => (
@@ -113,6 +164,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 name="supervisorId"
                 value={formData.supervisorId}
                 onChange={handleChange}
+                aria-label="Chọn giảng viên hướng dẫn"
               >
                 <option value="">Chọn giảng viên</option>
                 {teachers.filter(t => t.canSupervise).map(teacher => (
@@ -129,6 +181,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 name="reviewerId"
                 value={formData.reviewerId}
                 onChange={handleChange}
+                aria-label="Chọn giảng viên phản biện"
               >
                 <option value="">Chọn giảng viên</option>
                 {teachers.filter(t => t.canReview).map(teacher => (
@@ -144,6 +197,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 value={formData.category}
                 onChange={handleChange}
                 required
+                aria-label="Chọn danh mục"
               >
                 <option value="">Chọn danh mục</option>
                 <option value="web">Phát triển Web</option>
@@ -162,6 +216,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 value={formData.semester}
                 onChange={handleChange}
                 required
+                aria-label="Chọn học kỳ"
               >
                 <option value="1">Học kỳ 1</option>
                 <option value="2">Học kỳ 2</option>
@@ -176,6 +231,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 value={formData.academicYear}
                 onChange={handleChange}
                 required
+                aria-label="Chọn năm học"
               >
                 <option value="2023-2024">2023-2024</option>
                 <option value="2024-2025">2024-2025</option>
@@ -193,6 +249,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 value={formData.startDate}
                 onChange={handleChange}
                 required
+                aria-label="Ngày bắt đầu"
               />
             </div>
 
@@ -204,6 +261,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 value={formData.endDate}
                 onChange={handleChange}
                 required
+                aria-label="Ngày kết thúc"
               />
             </div>
           </div>

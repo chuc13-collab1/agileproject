@@ -26,6 +26,7 @@ export interface Student extends BaseUser {
 export interface Teacher extends BaseUser {
   role: 'teacher' | 'supervisor' | 'reviewer';
   teacherId: string;
+  teacherDbId?: string; // Database ID for foreign key references
   department: string;
   specialization: string[];
   maxStudents: number;

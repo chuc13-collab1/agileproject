@@ -92,6 +92,7 @@ function StudentModal({ student, classes, onClose, onSave }: StudentModalProps) 
                 required
                 value={formData.className}
                 onChange={(e) => setFormData({ ...formData, className: e.target.value })}
+                aria-label="Chọn lớp"
               >
                 <option value="">-- Chọn lớp --</option>
                 {classes.filter(c => c.isActive).map(cls => (

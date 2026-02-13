@@ -7,9 +7,10 @@ interface TopicDetailModalProps {
   onClose: () => void;
   onApprove: (id: string) => void;
   onReject: (id: string, reason: string) => void;
+  onEdit?: (topic: Topic) => void;
 }
 
-function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailModalProps) {
+function TopicDetailModal({ topic, onClose, onApprove, onReject, onEdit }: TopicDetailModalProps) {
   const [rejectionReason, setRejectionReason] = useState('');
 
   const handleReject = () => {
@@ -76,7 +77,7 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
           }}>
             <div style={{ fontWeight: 600, marginBottom: '0.5rem' }}>Giáo viên hướng dẫn:</div>
             <div style={{ color: '#4a5568' }}>
-              👨‍🏫 {topic.supervisorName} - {topic.supervisorDepartment}
+              👨‍🏫 {topic.supervisorName || 'Chưa phân công'}{topic.supervisorDepartment ? ` - ${topic.supervisorDepartment}` : ''}
             </div>
           </div>
 
@@ -202,6 +203,26 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
             >
               Đóng
             </button>
+            {onEdit && (
+              <button
+                type="button"
+                onClick={() => {
+                  onEdit(topic);
+                  onClose();
+                }}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: '#3b82f6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                ✏️ Sửa
+              </button>
+            )}
             <button
               type="button"
               onClick={handleReject}
@@ -247,6 +268,26 @@ function TopicDetailModal({ topic, onClose, onApprove, onReject }: TopicDetailMo
             >
               Đóng
             </button>
+            {onEdit && (
+              <button
+                type="button"
+                onClick={() => {
+                  onEdit(topic);
+                  onClose();
+                }}
+                style={{
+                  padding: '0.75rem 1.5rem',
+                  background: '#3b82f6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                ✏️ Sửa
+              </button>
+            )}
           </div>
         )}
       </div>

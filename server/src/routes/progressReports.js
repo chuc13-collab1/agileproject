@@ -1,8 +1,40 @@
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../config/database.js';
+import upload from '../middleware/upload.js';
 
 const router = express.Router();
+
+/**
+ * GET /api/progress-reports/students/:studentId/reports
+ * Get progress reports for a student
+ */
+router.get('/students/:studentId/reports', async (req, res, next) => {
+    try {
+        const { studentId } = req.params; // This is the Firebase user_id
+
+        const [reports] = await db.query(`
+      SELECT 
+        pr.*,
+        p.id as project_id,
+        t.title as topic_title
+      FROM progress_reports pr
+      INNER JOIN projects p ON pr.project_id = p.id
+      LEFT JOIN topics t ON p.topic_id = t.id
+      INNER JOIN students s ON p.student_id = s.id
+      INNER JOIN users u ON s.user_id = u.id
+      WHERE u.uid = ?
+      ORDER BY pr.submitted_date DESC
+    `, [studentId]);
+
+        res.json({
+            success: true,
+            data: reports
+        });
+    } catch (error) {
+        next(error);
+    }
+});
 
 /**
  * GET /api/teachers/:teacherId/progress-reports
@@ -27,10 +59,15 @@ router.get('/teachers/:teacherId/progress-reports', async (req, res, next) => {
         s.student_id as student_code
       FROM progress_reports pr
       INNER JOIN projects p ON pr.project_id = p.id
-      INNER JOIN topics t ON p.topic_id = t.id
+      LEFT JOIN topics t ON p.topic_id = t.id
       INNER JOIN students s ON p.student_id = s.id
       INNER JOIN users u ON s.user_id = u.id
-      WHERE p.supervisor_id = (SELECT id FROM teachers WHERE user_id = ?)
+      WHERE p.supervisor_id = (
+        SELECT t.id 
+        FROM teachers t 
+        INNER JOIN users u2 ON t.user_id = u2.id 
+        WHERE u2.uid = ?
+      )
       ${statusFilter}
       ORDER BY pr.submitted_date DESC
     `, [teacherId]);
@@ -39,7 +76,12 @@ router.get('/teachers/:teacherId/progress-reports', async (req, res, next) => {
         const [unreviewed] = await db.query(`
       SELECT COUNT(*) as count FROM progress_reports pr
       INNER JOIN projects p ON pr.project_id = p.id
-      WHERE p.supervisor_id = (SELECT id FROM teachers WHERE user_id = ?)
+      WHERE p.supervisor_id = (
+        SELECT t.id 
+        FROM teachers t 
+        INNER JOIN users u ON t.user_id = u.id 
+        WHERE u.uid = ?
+      )
       AND pr.status = 'submitted'
     `, [teacherId]);
 
@@ -72,7 +114,7 @@ router.get('/:id', async (req, res, next) => {
         s.student_id as student_code
       FROM progress_reports pr
       INNER JOIN projects p ON pr.project_id = p.id
-      INNER JOIN topics t ON p.topic_id = t.id
+      LEFT JOIN topics t ON p.topic_id = t.id
       INNER JOIN students s ON p.student_id = s.id
       INNER JOIN users u ON s.user_id = u.id
       WHERE pr.id = ?
@@ -119,7 +161,7 @@ router.post('/:id/comments', async (req, res, next) => {
     try {
         const { id } = req.params;
         const { content, rating, status } = req.body;
-        const teacherId = req.user.id; // From auth middleware
+        const teacherUid = req.user.uid; // From auth middleware (Firebase UID)
 
         if (!content) {
             return res.status(400).json({
@@ -142,10 +184,16 @@ router.post('/:id/comments', async (req, res, next) => {
         const commentId = uuidv4();
 
         // Create comment
+        // Look up teacher ID using UID
         await connection.query(`
       INSERT INTO comments (id, report_id, teacher_id, content, rating)
-      VALUES (?, ?, (SELECT id FROM teachers WHERE user_id = ?), ?, ?)
-    `, [commentId, id, teacherId, content, rating || null]);
+      VALUES (?, ?, (
+        SELECT t.id 
+        FROM teachers t 
+        INNER JOIN users u ON t.user_id = u.id 
+        WHERE u.uid = ?
+      ), ?, ?)
+    `, [commentId, id, teacherUid, content, rating || null]);
 
         // Update report status
         if (status) {
@@ -176,7 +224,7 @@ router.post('/:id/comments', async (req, res, next) => {
  * POST /api/progress-reports
  * Submit a new progress report (used by students)
  */
-router.post('/', async (req, res, next) => {
+router.post('/', upload.single('file'), async (req, res, next) => {
     try {
         const {
             projectId,
@@ -185,11 +233,13 @@ router.post('/', async (req, res, next) => {
             content,
             achievements,
             difficulties,
-            nextSteps,
-            filePath,
-            fileName,
-            fileSize
+            nextSteps
         } = req.body;
+
+        // Extract file info from multer
+        const filePath = req.file ? req.file.path : null;
+        const fileName = req.file ? req.file.originalname : null;
+        const fileSize = req.file ? req.file.size : null;
 
         if (!projectId || !reportTitle || !content) {
             return res.status(400).json({

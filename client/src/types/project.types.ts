@@ -8,7 +8,7 @@ export interface Project {
   studentEmail: string;
   supervisor: { id: string; name: string };
   reviewer?: { id: string; name: string };
-  status: 'pending' | 'approved' | 'in-progress' | 'submitted' | 'reviewing' | 'completed' | 'rejected' | 'registered';
+  status: 'registered' | 'in_progress' | 'submitted' | 'graded' | 'completed' | 'failed';
   semester: string;
   academicYear: string;
   field: string;
@@ -21,6 +21,9 @@ export interface Project {
   createdAt: Date;
   updatedAt: Date;
   supervisorComment?: string;
+  documents?: any[]; // Array of submitted documents
+  progressReports?: any[]; // Array of weekly progress reports
+  evaluations?: any[]; // Array of evaluations
 }
 
 export interface ProjectFormData {

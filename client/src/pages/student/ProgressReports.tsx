@@ -4,6 +4,7 @@ import MainLayout from '../../components/layout/MainLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import * as projectService from '../../services/api/project.service';
 import styles from './Student.module.css';
+import { auth } from '../../services/firebase/config';
 
 interface ProgressReport {
     id: string;
@@ -29,16 +30,37 @@ const ProgressReports: React.FC = () => {
     }, [user]);
 
     const loadReports = async () => {
+        if (!user?.uid || !auth.currentUser) {
+            console.log('No authenticated user');
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         try {
-            // Get student's project first
-            const allProjects = await projectService.getAllProjects();
-            const myProject = allProjects.find(p => p.studentId === user?.uid);
+            const token = await auth.currentUser.getIdToken();
+            const url = `http://localhost:3001/api/progress-reports/students/${user.uid}/reports`;
+            console.log('Fetching reports from:', url);
 
-            if (myProject) {
-                // In a real app, we'd have a progress reports API
-                // For now, we'll show empty state or mock data
-                setReports([]);
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            console.log('Response status:', response.status);
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Reports data:', data);
+
+                if (data.success) {
+                    setReports(data.data || []);
+                } else {
+                    console.error('API returned success=false:', data.message);
+                }
+            } else {
+                console.error('HTTP error:', response.status, response.statusText);
             }
         } catch (error) {
             console.error('Failed to load reports:', error);

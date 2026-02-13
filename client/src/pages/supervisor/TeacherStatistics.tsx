@@ -48,7 +48,7 @@ const TeacherStatistics: React.FC = () => {
 
             // Calculate statistics
             const completed = myProjects.filter(p => p.status === 'completed');
-            const inProgress = myProjects.filter(p => p.status === 'in-progress');
+            const inProgress = myProjects.filter(p => p.status === 'in_progress');
 
             // Calculate average score
             const scoredProjects = myProjects.filter(p => p.supervisorScore);

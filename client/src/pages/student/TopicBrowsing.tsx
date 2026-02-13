@@ -194,6 +194,7 @@ const TopicBrowsing: React.FC = () => {
                             <select
                                 value={fieldFilter}
                                 onChange={(e) => setFieldFilter(e.target.value)}
+                                aria-label="Lọc theo lĩnh vực"
                                 style={{
                                     padding: '0.75rem 2rem 0.75rem 0.75rem',
                                     border: '1px solid #e2e8f0',

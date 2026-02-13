@@ -121,6 +121,7 @@ function TeacherModal({ teacher, onClose, onSave }: TeacherModalProps) {
                 max="50"
                 value={formData.maxStudents}
                 onChange={(e) => setFormData({ ...formData, maxStudents: parseInt(e.target.value) })}
+                aria-label="Số sinh viên tối đa"
               />
             </div>
 

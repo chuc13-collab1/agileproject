@@ -9,6 +9,8 @@ interface ProjectListProps {
   searchTerm: string;
   statusFilter: string;
   onDelete?: (project: Project) => void;
+  onApprove?: (project: Project) => void;
+  onReject?: (project: Project) => void;
 }
 
 const ProjectList: React.FC<ProjectListProps> = ({
@@ -16,17 +18,18 @@ const ProjectList: React.FC<ProjectListProps> = ({
   onEdit,
   searchTerm,
   statusFilter,
-  onDelete
+  onDelete,
+  onApprove,
+  onReject
 }) => {
   const getStatusLabel = (status: string) => {
     const statusMap: Record<string, { label: string; color: string }> = {
-      pending: { label: 'Chờ duyệt', color: '#ffa500' },
-      approved: { label: 'Đã duyệt', color: '#4CAF50' },
-      'in-progress': { label: 'Đang thực hiện', color: '#2196F3' },
+      registered: { label: 'Đã đăng ký', color: '#ffa500' },
+      in_progress: { label: 'Đang thực hiện', color: '#2196F3' },
       submitted: { label: 'Đã nộp', color: '#9C27B0' },
-      reviewing: { label: 'Đang chấm', color: '#FF9800' },
+      graded: { label: 'Đã chấm điểm', color: '#FF9800' },
       completed: { label: 'Hoàn thành', color: '#4CAF50' },
-      rejected: { label: 'Từ chối', color: '#F44336' },
+      failed: { label: 'Không đạt/Từ chối', color: '#F44336' },
     };
     return statusMap[status] || { label: status, color: '#999' };
   };
@@ -143,6 +146,26 @@ const ProjectList: React.FC<ProjectListProps> = ({
                       >
                         👁️
                       </button>
+                      {project.status === 'registered' && (
+                        <>
+                          <button
+                            className={styles.actionButton}
+                            onClick={() => onApprove && onApprove(project)}
+                            title="Duyệt"
+                            style={{ color: '#4CAF50' }}
+                          >
+                            ✓
+                          </button>
+                          <button
+                            className={styles.actionButton}
+                            onClick={() => onReject && onReject(project)}
+                            title="Từ chối"
+                            style={{ color: '#F44336' }}
+                          >
+                            ✗
+                          </button>
+                        </>
+                      )}
                       <button
                         className={styles.actionButton}
                         onClick={() => onEdit(project)}

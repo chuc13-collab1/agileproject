@@ -21,6 +21,7 @@ const ProjectManagement = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [students, setStudents] = useState<Student[]>([]);
   const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [topics, setTopics] = useState<any[]>([]); // Store all topics
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -30,14 +31,28 @@ const ProjectManagement = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [projectsData, studentsData, teachersData] = await Promise.all([
+      // Import * as topicService is not standard if we use named exports, so ensure consistency
+      // Assuming topicService is imported or import functions directly
+      // Let's assume we need to import getAllTopics.
+      // But wait, the file imports * as projectService, * as userService.
+      // I need to add import * as topicService
+      const [projectsData, studentsData, teachersData, topicsData] = await Promise.all([
         projectService.getAllProjects(),
         userService.getAllStudents(),
-        userService.getAllTeachers()
+        userService.getAllTeachers(),
+        import('../../services/api/topic.service').then(m => m.getAllTopics())
       ]);
       setProjects(projectsData);
       setStudents(studentsData);
       setTeachers(teachersData);
+      setTopics(topicsData);
+
+      console.log('Loaded Data:', {
+        projectsCount: projectsData.length,
+        studentsCount: studentsData.length,
+        teachersCount: teachersData.length,
+        topicsCount: topicsData.length
+      });
     } catch (error) {
       console.error('Failed to load data:', error);
       alert('Không thể tải dữ liệu');
@@ -52,6 +67,7 @@ const ProjectManagement = () => {
   };
 
   const handleEditProject = (project: Project) => {
+    console.log('Editing project:', project);
     setSelectedProject(project);
     setShowModal(true);
   };
@@ -68,6 +84,30 @@ const ProjectManagement = () => {
     }
   };
 
+  const handleApproveProject = async (project: Project) => {
+    if (!window.confirm(`Duyệt đồ án "${project.title}"?`)) return;
+    try {
+      await projectService.updateProject(project.id, { status: 'in_progress' });
+      alert('✅ Đã duyệt đồ án! Trạng thái: Đang thực hiện');
+      await loadData();
+    } catch (error) {
+      console.error('Failed to approve project:', error);
+      alert('Lỗi khi duyệt đồ án');
+    }
+  };
+
+  const handleRejectProject = async (project: Project) => {
+    if (!window.confirm(`Từ chối đồ án "${project.title}"?`)) return;
+    try {
+      await projectService.updateProject(project.id, { status: 'failed' });
+      alert('❌ Đã từ chối đồ án! Trạng thái: Thất bại');
+      await loadData();
+    } catch (error) {
+      console.error('Failed to reject project:', error);
+      alert('Lỗi khi từ chối đồ án');
+    }
+  };
+
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedProject(null);
@@ -79,44 +119,82 @@ const ProjectManagement = () => {
       const supervisor = teachers.find(t => t.id === formData.supervisorId);
       const reviewer = formData.reviewerId ? teachers.find(t => t.id === formData.reviewerId) : undefined;
 
-      if (!student || !supervisor) {
-        alert('Thông tin sinh viên hoặc giảng viên không hợp lệ');
+      if (!student) {
+        alert('Thông tin sinh viên không hợp lệ');
         return;
       }
 
-      const projectData = {
-        title: formData.title,
-        description: formData.description,
-        studentId: student.id,
-        studentName: student.displayName,
-        studentEmail: student.email,
-        supervisor: {
-          id: supervisor.id,
-          name: supervisor.displayName
-        },
-        reviewer: reviewer ? {
-          id: reviewer.id,
-          name: reviewer.displayName
-        } : undefined,
-        status: (selectedProject?.status || 'pending') as any, // Keep existing status or default to pending
-        semester: formData.semester,
-        academicYear: formData.academicYear,
-        field: formData.category,
-        registrationDate: new Date(formData.startDate),
-        reportDeadline: new Date(formData.endDate),
-      };
-
       if (selectedProject) {
-        await projectService.updateProject(selectedProject.id, projectData);
+        // UPDATE MODE: Only send fields that can be updated via API
+        const updateData: any = {};
+
+        // Only add supervisor if changed - use teacherDbId for database foreign key
+        if (supervisor && supervisor.teacherDbId && supervisor.teacherDbId !== selectedProject.supervisor?.id) {
+          updateData.supervisorId = supervisor.teacherDbId;
+        }
+
+        // Only add reviewer if changed - use teacherDbId for database foreign key
+        if (reviewer && reviewer.teacherDbId && reviewer.teacherDbId !== selectedProject.reviewer?.id) {
+          updateData.reviewerId = reviewer.teacherDbId;
+        } else if (!reviewer && selectedProject.reviewer) {
+          updateData.reviewerId = null; // Remove reviewer
+        }
+
+        // Add reportDeadline if changed
+        const newDeadline = new Date(formData.endDate);
+        if (newDeadline.getTime() !== new Date(selectedProject.reportDeadline).getTime()) {
+          updateData.reportDeadline = newDeadline;
+        }
+
+        // Check if there are any changes
+        if (Object.keys(updateData).length === 0) {
+          alert('Không có thay đổi nào để cập nhật');
+          handleCloseModal();
+          return;
+        }
+
+        await projectService.updateProject(selectedProject.id, updateData);
+        alert('✅ Đã cập nhật đồ án thành công!');
       } else {
+        // CREATE MODE: Need topic and all required fields
+        if (!supervisor) {
+          alert('Vui lòng chọn giảng viên hướng dẫn');
+          return;
+        }
+
+        const projectData = {
+          title: formData.title,
+          description: formData.description,
+          studentId: student.id,
+          studentName: student.displayName,
+          studentEmail: student.email,
+          supervisor: {
+            id: supervisor.id,
+            name: supervisor.displayName
+          },
+          reviewer: reviewer ? {
+            id: reviewer.id,
+            name: reviewer.displayName
+          } : undefined,
+          status: 'registered' as any,
+          semester: formData.semester,
+          academicYear: formData.academicYear,
+          field: formData.category,
+          registrationDate: new Date(formData.startDate),
+          reportDeadline: new Date(formData.endDate),
+          supervisorId: supervisor.teacherDbId || supervisor.id, // Use teacherDbId if available
+          topicId: '', // TODO: Need to select or create topic
+        };
+
         await projectService.createProject(projectData);
+        alert('✅ Đã tạo đồ án mới thành công!');
       }
 
       await loadData();
       handleCloseModal();
     } catch (error) {
       console.error('Failed to save project:', error);
-      alert('Không thể lưu đồ án');
+      alert('Không thể lưu đồ án: ' + (error instanceof Error ? error.message : 'Lỗi không xác định'));
     }
   };
 
@@ -169,13 +247,12 @@ const ProjectManagement = () => {
               className={styles.filterSelect}
             >
               <option value="all">Tất cả trạng thái</option>
-              <option value="pending">Chờ duyệt</option>
-              <option value="approved">Đã duyệt</option>
-              <option value="in-progress">Đang thực hiện</option>
+              <option value="registered">Đã đăng ký</option>
+              <option value="in_progress">Đang thực hiện</option>
               <option value="submitted">Đã nộp</option>
-              <option value="reviewing">Đang chấm</option>
+              <option value="graded">Đã chấm điểm</option>
               <option value="completed">Hoàn thành</option>
-              <option value="rejected">Từ chối</option>
+              <option value="failed">Không đạt/Từ chối</option>
             </select>
 
             <select className={styles.filterSelect}>
@@ -202,7 +279,7 @@ const ProjectManagement = () => {
           <div className={styles.statItem}>
             <span className={styles.statLabel}>Đang thực hiện:</span>
             <span className={styles.statValue}>
-              {projects.filter(p => p.status === 'in-progress').length}
+              {projects.filter(p => p.status === 'in_progress').length}
             </span>
           </div>
           <div className={styles.statItem}>
@@ -222,6 +299,8 @@ const ProjectManagement = () => {
             searchTerm={searchTerm}
             statusFilter={statusFilter}
             onDelete={handleDeleteProject}
+            onApprove={handleApproveProject}
+            onReject={handleRejectProject}
           />
         )}
 
@@ -230,6 +309,7 @@ const ProjectManagement = () => {
             project={selectedProject}
             students={students}
             teachers={teachers}
+            topics={topics} // Pass topics for auto-fill
             onClose={handleCloseModal}
             onSave={handleSaveProject}
           />

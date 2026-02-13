@@ -31,12 +31,12 @@ const MyProject: React.FC = () => {
 
     const getStatusBadge = (status: string) => {
         const statusMap: { [key: string]: { text: string; className: string } } = {
-            'pending': { text: 'Chờ duyệt', className: styles.badgeWarning },
-            'approved': { text: 'Đã duyệt', className: styles.badgeSuccess },
-            'in-progress': { text: 'Đang thực hiện', className: styles.badgeInfo },
+            'registered': { text: 'Đã đăng ký', className: styles.badgeInfo },
+            'in_progress': { text: 'Đang thực hiện', className: styles.badgeInfo },
             'submitted': { text: 'Đã nộp', className: styles.badgeWarning },
+            'graded': { text: 'Đã chấm điểm', className: styles.badgeWarning },
             'completed': { text: 'Hoàn thành', className: styles.badgeSuccess },
-            'rejected': { text: 'Bị từ chối', className: styles.badgeError }
+            'failed': { text: 'Không đạt', className: styles.badgeError }
         };
 
         const statusInfo = statusMap[status] || { text: status, className: styles.badgeWarning };

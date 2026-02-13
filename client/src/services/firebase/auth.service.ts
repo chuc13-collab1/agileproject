@@ -66,8 +66,11 @@ class AuthService {
         data.password
       );
 
-      // Tạo document trong Firestore
-      const userData = {
+      // User data is managed in MySQL via backend API
+      // This method is mainly for creating Firebase Auth account
+      // The actual user record should be created in MySQL by the backend
+      
+      return {
         uid: userCredential.user.uid,
         email: data.email,
         fullName: data.fullName,
@@ -75,14 +78,6 @@ class AuthService {
         phone: data.phone || '',
         avatar: '',
         isActive: true,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      };
-
-      await setDoc(doc(db, 'users', userCredential.user.uid), userData);
-
-      return {
-        ...userData,
         createdAt: new Date(),
         updatedAt: new Date(),
       } as User;
@@ -118,20 +113,31 @@ class AuthService {
     if (!currentUser) return null;
 
     try {
-      const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
-      if (!userDoc.exists()) return null;
+      // Get user info from MySQL via backend API
+      const token = await currentUser.getIdToken();
+      const response = await fetch(`${API_URL}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
 
-      const userData = userDoc.data();
+      if (!response.ok) {
+        console.error('Failed to get user information');
+        return null;
+      }
+
+      const { data } = await response.json();
+      
       return {
         uid: currentUser.uid,
-        email: userData.email,
-        fullName: userData.fullName,
-        role: userData.role,
-        phone: userData.phone,
-        avatar: userData.avatar,
-        isActive: userData.isActive,
-        createdAt: userData.createdAt?.toDate(),
-        updatedAt: userData.updatedAt?.toDate(),
+        email: data.email,
+        fullName: data.display_name,
+        role: data.role,
+        phone: data.phone,
+        avatar: data.photo_url,
+        isActive: data.is_active,
+        createdAt: new Date(data.created_at),
+        updatedAt: new Date(data.updated_at),
       };
     } catch (error) {
       console.error('Get current user error:', error);

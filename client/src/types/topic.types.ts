@@ -16,6 +16,7 @@ export interface Topic {
 
   // Supervisor info
   supervisorId: string;
+  supervisorUid?: string; // Firebase UID for filtering
   supervisorName: string;
   supervisorDepartment: string;
 

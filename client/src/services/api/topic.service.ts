@@ -125,7 +125,7 @@ const mapBackendTopic = (item: any): Topic => ({
   maxStudents: item.maxStudents,
   currentStudents: item.currentStudents,
   supervisorId: item.supervisorId,
-  supervisorName: item.supervisorName,
+  supervisorName: item.supervisorName || 'Chưa phân công',
   supervisorDepartment: item.supervisorDepartment || '',
   status: item.status,
   rejectionReason: item.rejectionReason,
@@ -137,4 +137,8 @@ const mapBackendTopic = (item: any): Topic => ({
   approvedBy: item.approvedBy,
   reviewerId: item.reviewerId,
   reviewerName: item.reviewerName,
+  proposedBy: item.proposedBy,
+  proposalStudentName: item.proposalStudentName,
+  proposalStudentCode: item.proposalStudentCode,
+  proposalStudentEmail: item.proposalStudentEmail,
 });

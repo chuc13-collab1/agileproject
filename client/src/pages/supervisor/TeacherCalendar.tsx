@@ -36,7 +36,7 @@ const TeacherCalendar: React.FC = () => {
 
             // Add project deadlines
             myProjects.forEach((project: Project) => {
-                if (project.status === 'in-progress' && project.reportDeadline) {
+                if (project.status === 'in_progress' && project.reportDeadline) {
                     calendarEvents.push({
                         date: new Date(project.reportDeadline),
                         title: 'Deadline nộp báo cáo',

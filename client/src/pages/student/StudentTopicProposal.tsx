@@ -148,6 +148,7 @@ const StudentTopicProposal: React.FC = () => {
                                     value={formData.requestedSupervisorId}
                                     onChange={handleChange}
                                     required
+                                    aria-label="Giảng viên hướng dẫn mong muốn"
                                     style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '0.5rem', backgroundColor: 'white' }}
                                 >
                                     <option value="">-- Chọn Giảng Viên --</option>
@@ -171,6 +172,7 @@ const StudentTopicProposal: React.FC = () => {
                                     required
                                     rows={5}
                                     placeholder="Mô tả về mục tiêu, phạm vi và công nghệ dự kiến..."
+                                    aria-label="Mô tả chi tiết"
                                     style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '0.5rem', resize: 'vertical' }}
                                 />
                             </div>
@@ -185,6 +187,7 @@ const StudentTopicProposal: React.FC = () => {
                                         value={formData.requirements}
                                         onChange={handleChange}
                                         rows={3}
+                                        aria-label="Yêu cầu kiến thức"
                                         style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '0.5rem', resize: 'vertical' }}
                                     />
                                 </div>
@@ -197,6 +200,7 @@ const StudentTopicProposal: React.FC = () => {
                                         value={formData.expectedResults}
                                         onChange={handleChange}
                                         rows={3}
+                                        aria-label="Kết quả dự kiến"
                                         style={{ width: '100%', padding: '0.75rem', border: '1px solid #d1d5db', borderRadius: '0.5rem', resize: 'vertical' }}
                                     />
                                 </div>

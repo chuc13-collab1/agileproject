@@ -74,7 +74,8 @@ router.get('/', verifyToken, async (req, res, next) => {
             proposedBy: row.proposed_by_type,
             proposalStudentName: row.student_name,
             proposalStudentEmail: row.student_email,
-            proposalStudentCode: row.student_code
+            proposalStudentCode: row.student_code,
+            assignedStudentId: row.assigned_to_student_id // Map DB column to API field
         }));
 
         res.json({

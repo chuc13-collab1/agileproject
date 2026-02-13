@@ -4,6 +4,7 @@ import MainLayout from '../../components/layout/MainLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import * as projectService from '../../services/api/project.service';
 import styles from './Student.module.css';
+import { auth } from '../../services/firebase/config';
 
 const SubmitReport: React.FC = () => {
     const navigate = useNavigate();
@@ -49,18 +50,47 @@ const SubmitReport: React.FC = () => {
             return;
         }
 
+        if (!auth.currentUser) {
+            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            return;
+        }
+
         if (!window.confirm('Bạn có chắc chắn muốn nộp báo cáo này?')) return;
 
         setSubmitting(true);
         try {
-            // In a real app, we'd call the progress reports API
-            // await progressService.submitReport({ ... });
+            // Get Firebase auth token
+            const token = await auth.currentUser.getIdToken();
 
-            // For now, simulate delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            // Create FormData for file upload
+            const submitData = new FormData();
+            submitData.append('projectId', project.id);
+            submitData.append('reportTitle', formData.title);
+            submitData.append('weekNumber', formData.weekNumber.toString());
+            submitData.append('content', formData.content);
 
-            alert('Nộp báo cáo thành công!');
-            navigate('/student/reports');
+            if (formData.attachments) {
+                submitData.append('file', formData.attachments);
+            }
+
+            // Call backend API
+            const response = await fetch('http://localhost:3001/api/progress-reports', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                    // Don't set Content-Type, browser will set it with boundary for FormData
+                },
+                body: submitData
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert('Nộp báo cáo thành công!');
+                navigate('/student/reports');
+            } else {
+                throw new Error(data.message || 'Nộp báo cáo thất bại');
+            }
         } catch (error) {
             console.error('Failed to submit report:', error);
             alert('Nộp báo cáo thất bại. Vui lòng thử lại.');

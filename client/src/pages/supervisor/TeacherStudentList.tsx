@@ -35,10 +35,7 @@ const TeacherStudentList: React.FC = () => {
     const handleApprove = async (projectId: string) => {
         if (!window.confirm('Bạn có chắc chắn muốn duyệt sinh viên này?')) return;
         try {
-            await projectService.updateProject(projectId, { status: 'in-progress' }); // Approve -> in-progress directly? or approved? Let's use 'approved' or 'in-progress' depending on flow. 'pending' -> 'approved' usually.
-            // But previous code used 'in-progress' as active. Let's use 'in-progress' to match "Đang thực hiện".
-            // Actually let's check status badge. 'approved' is not there. 'in-progress' is there.
-            // Let's set to 'in-progress'.
+            await projectService.updateProject(projectId, { status: 'in_progress' });
             await loadStudents();
         } catch (error) {
             console.error('Failed to approve project:', error);
@@ -49,7 +46,7 @@ const TeacherStudentList: React.FC = () => {
     const handleReject = async (projectId: string) => {
         if (!window.confirm('Bạn có chắc chắn muốn từ chối sinh viên này?')) return;
         try {
-            await projectService.updateProject(projectId, { status: 'rejected' });
+            await projectService.updateProject(projectId, { status: 'failed' });
             await loadStudents();
         } catch (error) {
             console.error('Failed to reject project:', error);
@@ -59,11 +56,12 @@ const TeacherStudentList: React.FC = () => {
 
     const getStatusBadge = (status: string) => {
         switch (status) {
+            case 'registered': return <span className={`${styles.badge} ${styles.badgeInfo}`}>Đã đăng ký</span>;
+            case 'in_progress': return <span className={`${styles.badge} ${styles.badgeWarning}`}>Đang thực hiện</span>;
+            case 'submitted': return <span className={`${styles.badge} ${styles.badgeWarning}`}>Đã nộp</span>;
+            case 'graded': return <span className={`${styles.badge} ${styles.badgeWarning}`}>Đã chấm điểm</span>;
             case 'completed': return <span className={`${styles.badge} ${styles.badgeSuccess}`}>Hoàn thành</span>;
-            case 'in-progress': return <span className={`${styles.badge} ${styles.badgeWarning}`}>Đang thực hiện</span>;
-            case 'registered': return <span className={`${styles.badge} ${styles.badgeInfo}`}>Mới đăng ký</span>;
-            case 'pending': return <span className={`${styles.badge} ${styles.badgeWarning}`}>Chờ duyệt</span>;
-            case 'rejected': return <span className={`${styles.badge} ${styles.badgeError}`}>Bị hủy/Từ chối</span>;
+            case 'failed': return <span className={`${styles.badge} ${styles.badgeError}`}>Không đạt</span>;
             default: return <span className={`${styles.badge} ${styles.badgeWarning}`}>{status}</span>;
         }
     };
@@ -152,37 +150,35 @@ const TeacherStudentList: React.FC = () => {
                                             </td>
                                             <td>{getStatusBadge(project.status)}</td>
                                             <td>
-                                                <td>
-                                                    <div className={styles.actions}>
-                                                        <button
-                                                            className={styles.iconButton}
-                                                            title="Xem chi tiết"
-                                                            onClick={() => navigate(`/teacher/projects/${project.id}`)}
-                                                        >
-                                                            👁️
-                                                        </button>
-                                                        {(project.status === 'pending' || project.status === 'registered') && (
-                                                            <>
-                                                                <button
-                                                                    className={styles.iconButton}
-                                                                    title="Duyệt đề tài"
-                                                                    onClick={() => handleApprove(project.id)}
-                                                                    style={{ color: '#16a34a' }}
-                                                                >
-                                                                    ✅
-                                                                </button>
-                                                                <button
-                                                                    className={styles.iconButton}
-                                                                    title="Từ chối"
-                                                                    onClick={() => handleReject(project.id)}
-                                                                    style={{ color: '#dc2626' }}
-                                                                >
-                                                                    ❌
-                                                                </button>
-                                                            </>
-                                                        )}
-                                                    </div>
-                                                </td>
+                                                <div className={styles.actions}>
+                                                    <button
+                                                        className={styles.iconButton}
+                                                        title="Xem chi tiết"
+                                                        onClick={() => navigate(`/teacher/projects/${project.id}`)}
+                                                    >
+                                                        👁️
+                                                    </button>
+                                                    {project.status === 'registered' && (
+                                                        <>
+                                                            <button
+                                                                className={styles.iconButton}
+                                                                title="Duyệt đề tài"
+                                                                onClick={() => handleApprove(project.id)}
+                                                                style={{ color: '#16a34a' }}
+                                                            >
+                                                                ✅
+                                                            </button>
+                                                            <button
+                                                                className={styles.iconButton}
+                                                                title="Từ chối"
+                                                                onClick={() => handleReject(project.id)}
+                                                                style={{ color: '#dc2626' }}
+                                                            >
+                                                                ❌
+                                                            </button>
+                                                        </>
+                                                    )}
+                                                </div>
                                             </td>
                                         </tr>
                                     ))

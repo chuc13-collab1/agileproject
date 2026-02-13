@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
       SELECT 
         u.id, u.uid, u.email, u.display_name, u.phone, u.photo_url,
         u.is_active, u.created_at, u.updated_at,
-        t.teacher_id, t.department, t.max_students, t.current_students,
+        t.id as teacher_db_id, t.teacher_id, t.department, t.max_students, t.current_students,
         t.can_supervise, t.can_review
       FROM users u
       INNER JOIN teachers t ON u.id = t.user_id
@@ -74,7 +74,7 @@ router.post('/', async (req, res, next) => {
         // Auto-generate password from teacherId
         // Format: TeacherID@2026 (e.g., GV001@2026)
         const finalPassword = password || `${teacherId}@2026`;
-        
+
         // Create Firebase Auth user
         const userRecord = await firebaseAuth.createUser({
             email,

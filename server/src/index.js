@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import './config/database.js'; // Initialize database connection
 import './config/firebase.js'; // Initialize Firebase Admin
 import { verifyToken } from './middleware/auth.js';
@@ -20,11 +22,13 @@ import progressReportRoutes from './routes/progressReports.js';
 import evaluationRoutes from './routes/evaluations.js';
 import uploadRoutes from './routes/uploads.js';
 import topicProposalRoutes from './routes/topicProposals.js';
-import debugRoutes from './routes/debug.js';
 import authRoutes from './routes/auth.js';
 
 // Load environment variables
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -34,8 +38,12 @@ app.use(cors({
     origin: process.env.ALLOWED_ORIGINS?.split(',') || 'http://localhost:5173',
     credentials: true
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Serve static files from uploads directory
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -61,7 +69,6 @@ app.use('/api/progress-reports', verifyToken, progressReportRoutes);
 app.use('/api/evaluations', verifyToken, evaluationRoutes);
 app.use('/api/uploads', verifyToken, uploadRoutes);
 app.use('/api/topic-proposals', verifyToken, topicProposalRoutes);
-app.use('/api/debug', debugRoutes); // Debug routes (admin only)
 
 // 404 handler
 app.use(notFoundHandler);

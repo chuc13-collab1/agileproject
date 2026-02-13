@@ -118,6 +118,7 @@ export const getAllTeachers = async (): Promise<Teacher[]> => {
   const result = await apiCall('teachers');
   return result.data.map((teacher: any) => ({
     ...teacher,
+    teacherDbId: teacher.teacher_db_id, // teachers table ID for foreign keys
     createdAt: new Date(teacher.created_at),
     updatedAt: new Date(teacher.updated_at),
     isActive: teacher.is_active,

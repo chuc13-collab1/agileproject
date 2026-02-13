@@ -6,7 +6,6 @@ import TopicDetailModal from '../../components/admin/TopicDetailModal';
 import TopicModal from '../../components/admin/TopicModal';
 import { Topic, TopicStatus, Semester, TopicFormData } from '../../types/topic.types';
 import * as topicService from '../../services/api/topic.service';
-import { useAuth } from '../../contexts/AuthContext';
 import { auth } from '../../services/firebase/config';
 import styles from './UserManagement.module.css';
 
@@ -20,6 +19,7 @@ function TopicManagement() {
 
   const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [editingTopic, setEditingTopic] = useState<Topic | null>(null);
   const [topics, setTopics] = useState<Topic[]>([]);
 
   useEffect(() => {
@@ -41,15 +41,27 @@ function TopicManagement() {
 
   const handleCreateTopic = async (data: TopicFormData) => {
     try {
-      await topicService.createTopic(
-        data
-      );
+      if (editingTopic) {
+        // Update existing topic
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { attachments, ...updateData } = data;
+        await topicService.updateTopic(editingTopic.id, updateData as Partial<Topic>);
+      } else {
+        // Create new topic
+        await topicService.createTopic(data);
+      }
       await loadTopics();
       setShowCreateModal(false);
+      setEditingTopic(null);
     } catch (error) {
-      console.error('Failed to create topic:', error);
-      alert('Không thể tạo đề tài');
+      console.error('Failed to save topic:', error);
+      alert(editingTopic ? 'Không thể cập nhật đề tài' : 'Không thể tạo đề tài');
     }
+  };
+
+  const handleOpenEditModal = (topic: Topic) => {
+    setEditingTopic(topic);
+    setShowCreateModal(true);
   };
 
   const handleApprove = async (topicId: string) => {
@@ -356,6 +368,7 @@ function TopicManagement() {
             className={styles.filterSelect}
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value as any)}
+            aria-label="Lọc theo trạng thái"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="pending">Chờ duyệt</option>
@@ -366,6 +379,7 @@ function TopicManagement() {
             className={styles.filterSelect}
             value={filterSemester}
             onChange={(e) => setFilterSemester(e.target.value as any)}
+            aria-label="Lọc theo học kỳ"
           >
             <option value="all">Tất cả học kỳ</option>
             <option value="1">Học kỳ 1</option>
@@ -376,6 +390,7 @@ function TopicManagement() {
             className={styles.filterSelect}
             value={filterField}
             onChange={(e) => setFilterField(e.target.value)}
+            aria-label="Lọc theo lĩnh vực"
           >
             <option value="all">Tất cả lĩnh vực</option>
             <option value="Web Development">Web Development</option>
@@ -404,13 +419,18 @@ function TopicManagement() {
             onClose={() => setSelectedTopic(null)}
             onApprove={handleApprove}
             onReject={handleReject}
+            onEdit={handleOpenEditModal}
           />
         )}
 
-        {/* Create Modal */}
+        {/* Create/Edit Modal */}
         {showCreateModal && (
           <TopicModal
-            onClose={() => setShowCreateModal(false)}
+            topic={editingTopic || undefined}
+            onClose={() => {
+              setShowCreateModal(false);
+              setEditingTopic(null);
+            }}
             onSave={handleCreateTopic}
           />
         )}

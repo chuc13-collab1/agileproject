@@ -1,0 +1,122 @@
+[
+  {
+    "COLUMN_NAME": "id",
+    "DATA_TYPE": "varchar",
+    "COLUMN_TYPE": "varchar(36)",
+    "COLLATION_NAME": "utf8mb4_unicode_ci"
+  },
+  {
+    "COLUMN_NAME": "topic_id",
+    "DATA_TYPE": "varchar",
+    "COLUMN_TYPE": "varchar(36)",
+    "COLLATION_NAME": "utf8mb4_unicode_ci"
+  },
+  {
+    "COLUMN_NAME": "student_id",
+    "DATA_TYPE": "varchar",
+    "COLUMN_TYPE": "varchar(36)",
+    "COLLATION_NAME": "utf8mb4_unicode_ci"
+  },
+  {
+    "COLUMN_NAME": "supervisor_id",
+    "DATA_TYPE": "varchar",
+    "COLUMN_TYPE": "varchar(36)",
+    "COLLATION_NAME": "utf8mb4_unicode_ci"
+  },
+  {
+    "COLUMN_NAME": "reviewer_id",
+    "DATA_TYPE": "varchar",
+    "COLUMN_TYPE": "varchar(36)",
+    "COLLATION_NAME": "utf8mb4_unicode_ci"
+  },
+  {
+    "COLUMN_NAME": "status",
+    "DATA_TYPE": "enum",
+    "COLUMN_TYPE": "enum('registered','in_progress','submitted','graded','completed','failed')",
+    "COLLATION_NAME": "utf8mb4_unicode_ci"
+  },
+  {
+    "COLUMN_NAME": "registration_date",
+    "DATA_TYPE": "timestamp",
+    "COLUMN_TYPE": "timestamp",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "start_date",
+    "DATA_TYPE": "date",
+    "COLUMN_TYPE": "date",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "end_date",
+    "DATA_TYPE": "date",
+    "COLUMN_TYPE": "date",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "defense_date",
+    "DATA_TYPE": "datetime",
+    "COLUMN_TYPE": "datetime",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "final_grade",
+    "DATA_TYPE": "decimal",
+    "COLUMN_TYPE": "decimal(4,2)",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "notes",
+    "DATA_TYPE": "text",
+    "COLUMN_TYPE": "text",
+    "COLLATION_NAME": "utf8mb4_unicode_ci"
+  },
+  {
+    "COLUMN_NAME": "created_at",
+    "DATA_TYPE": "timestamp",
+    "COLUMN_TYPE": "timestamp",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "updated_at",
+    "DATA_TYPE": "timestamp",
+    "COLUMN_TYPE": "timestamp",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "report_deadline",
+    "DATA_TYPE": "datetime",
+    "COLUMN_TYPE": "datetime",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "supervisor_score",
+    "DATA_TYPE": "decimal",
+    "COLUMN_TYPE": "decimal(4,2)",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "reviewer_score",
+    "DATA_TYPE": "decimal",
+    "COLUMN_TYPE": "decimal(4,2)",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "council_score",
+    "DATA_TYPE": "decimal",
+    "COLUMN_TYPE": "decimal(4,2)",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "final_score",
+    "DATA_TYPE": "decimal",
+    "COLUMN_TYPE": "decimal(4,2)",
+    "COLLATION_NAME": null
+  },
+  {
+    "COLUMN_NAME": "grade",
+    "DATA_TYPE": "varchar",
+    "COLUMN_TYPE": "varchar(10)",
+    "COLLATION_NAME": "utf8mb4_unicode_ci"
+  }
+]

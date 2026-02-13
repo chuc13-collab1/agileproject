@@ -17,16 +17,21 @@ router.get('/', async (req, res, next) => {
         t.field,
         u.display_name as student_name,
         u.email as student_email,
+        u.uid as student_uid,
         s.student_id as student_code,
         s.class_name,
         u_supervisor.display_name as supervisor_name,
-        u_supervisor.id as supervisor_user_id
+        u_supervisor.uid as supervisor_uid,
+        u_reviewer.display_name as reviewer_name,
+        u_reviewer.uid as reviewer_uid
       FROM projects p
       INNER JOIN topics t ON p.topic_id = t.id
       INNER JOIN students s ON p.student_id = s.id
       INNER JOIN users u ON s.user_id = u.id
       LEFT JOIN teachers te ON p.supervisor_id = te.id
       LEFT JOIN users u_supervisor ON te.user_id = u_supervisor.id
+      LEFT JOIN teachers tr ON p.reviewer_id = tr.id
+      LEFT JOIN users u_reviewer ON tr.user_id = u_reviewer.id
       ORDER BY p.created_at DESC
     `);
 
@@ -35,13 +40,19 @@ router.get('/', async (req, res, next) => {
             id: p.id,
             title: p.topic_title,
             description: p.description || '',
-            studentId: p.student_id,
+            studentId: p.student_uid,
             studentName: p.student_name,
             studentEmail: p.student_email,
             supervisor: p.supervisor_name ? {
-                id: p.supervisor_id,
+                id: p.supervisor_uid,
                 name: p.supervisor_name
             } : null,
+            reviewer: p.reviewer_name ? {
+                id: p.reviewer_uid,
+                name: p.reviewer_name
+            } : null,
+            field: p.field,
+            registrationDate: p.registration_date,
             status: p.status,
             semester: p.semester || '1',
             academicYear: p.academic_year || '2024-2025',
@@ -107,11 +118,13 @@ router.get('/:id', async (req, res, next) => {
         t.field,
         u_student.display_name as student_name,
         u_student.email as student_email,
+        u_student.uid as student_uid,
         s.student_id as student_code,
         s.class_name,
         u_supervisor.display_name as supervisor_name,
-        u_supervisor.id as supervisor_user_id,
-        u_reviewer.display_name as reviewer_name
+        u_supervisor.uid as supervisor_uid,
+        u_reviewer.display_name as reviewer_name,
+        u_reviewer.uid as reviewer_uid
       FROM projects p
       INNER JOIN topics t ON p.topic_id = t.id
       INNER JOIN students s ON p.student_id = s.id
@@ -132,41 +145,92 @@ router.get('/:id', async (req, res, next) => {
 
         const project = projects[0];
 
-        // Get progress reports
-        const [progressReports] = await db.query(`
-      SELECT * FROM progress_reports
-      WHERE project_id = ?
-      ORDER BY week_number ASC
-    `, [id]);
+        // Get progress reports (optional - table may not exist yet)
+        let progressReports = [];
+        try {
+            const [reports] = await db.query(`
+                SELECT * FROM progress_reports
+                WHERE project_id = ?
+                ORDER BY week_number ASC
+            `, [id]);
+            progressReports = reports;
+        } catch (error) {
+            if (error.code !== 'ER_NO_SUCH_TABLE') throw error;
+            console.log('⚠️ progress_reports table does not exist yet');
+        }
 
-        // Get documents
-        const [documents] = await db.query(`
-      SELECT * FROM documents
-      WHERE project_id = ? AND is_latest = TRUE
-      ORDER BY document_type, uploaded_at DESC
-    `, [id]);
+        // Get documents (optional - table may not exist yet)
+        let documents = [];
+        try {
+            const [docs] = await db.query(`
+                SELECT * FROM documents
+                WHERE project_id = ? AND is_latest = TRUE
+                ORDER BY document_type, uploaded_at DESC
+            `, [id]);
+            documents = docs;
+        } catch (error) {
+            if (error.code !== 'ER_NO_SUCH_TABLE') throw error;
+            console.log('⚠️ documents table does not exist yet');
+        }
 
-        // Get evaluations
-        const [evaluations] = await db.query(`
-      SELECT 
-        e.*,
-        u.display_name as evaluator_name
-      FROM evaluations e
-      INNER JOIN teachers t ON e.evaluator_id = t.id
-      INNER JOIN users u ON t.user_id = u.id
-      WHERE e.project_id = ?
-    `, [id]);
+        // Get evaluations (optional - table may not exist yet)
+        let evaluations = [];
+        try {
+            const [evals] = await db.query(`
+                SELECT 
+                    e.*,
+                    u.display_name as evaluator_name
+                FROM evaluations e
+                INNER JOIN teachers t ON e.evaluator_id = t.id
+                INNER JOIN users u ON t.user_id = u.id
+                WHERE e.project_id = ?
+            `, [id]);
+            evaluations = evals;
+        } catch (error) {
+            if (error.code !== 'ER_NO_SUCH_TABLE') throw error;
+            console.log('⚠️ evaluations table does not exist yet');
+        }
 
+        // Format response to match frontend expectations
         res.json({
             success: true,
             data: {
-                ...project,
-                progress_reports: progressReports,
+                id: project.id,
+                title: project.topic_title,
+                description: project.description || project.topic_description || '',
+                studentId: project.student_uid,
+                studentName: project.student_name,
+                studentEmail: project.student_email,
+                supervisor: project.supervisor_name ? {
+                    id: project.supervisor_uid,
+                    name: project.supervisor_name
+                } : null,
+                reviewer: project.reviewer_name ? {
+                    id: project.reviewer_uid,
+                    name: project.reviewer_name
+                } : null,
+                field: project.field,
+                registrationDate: project.registration_date,
+                status: project.status,
+                semester: project.semester || '1',
+                academicYear: project.academic_year || '2024-2025',
+                createdAt: project.created_at,
+                reportDeadline: project.report_deadline,
+                supervisorComment: project.supervisor_comment || '',
+                supervisorScore: project.supervisor_score || null,
+                reviewerScore: project.reviewer_score || null,
+                councilScore: project.council_score || null,
+                finalScore: project.final_score || null,
+                grade: project.grade || null,
+                progressReports: progressReports,
                 documents: documents,
                 evaluations: evaluations
             }
         });
     } catch (error) {
+        console.error('❌ Error in GET /api/projects/:id:', error.message);
+        console.error('SQL Error Code:', error.code);
+        console.error('SQL Message:', error.sqlMessage);
         next(error);
     }
 });
@@ -351,6 +415,271 @@ router.post('/', async (req, res, next) => {
         next(error);
     } finally {
         connection.release();
+    }
+});
+
+/**
+ * PUT /api/projects/:id
+ * Update project details
+ */
+router.put('/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const {
+            title,
+            description,
+            supervisorId,
+            reviewerId,
+            semester,
+            academicYear,
+            reportDeadline,
+            defenseDate,
+            score,
+            field,
+            status
+        } = req.body;
+
+        // Build update query dynamically
+        const updates = [];
+        const values = [];
+
+        // Handle status updates
+        if (status !== undefined) {
+            const validStatuses = ['registered', 'in_progress', 'submitted', 'graded', 'completed', 'failed'];
+            if (!validStatuses.includes(status)) {
+                return res.status(400).json({
+                    success: false,
+                    message: `Invalid status. Must be one of: ${validStatuses.join(', ')}`
+                });
+            }
+            updates.push('status = ?');
+            values.push(status);
+        }
+
+        if (supervisorId !== undefined) {
+            updates.push('supervisor_id = ?');
+            // We need to resolve teacher ID from user ID if supervisorId is a UUID
+            // Assuming supervisorId passed is the teacher's ID or user ID.
+            // Client passes teacher.id which is likely the table ID.
+            values.push(supervisorId);
+        }
+        if (reviewerId !== undefined) {
+            updates.push('reviewer_id = ?');
+            values.push(reviewerId);
+        }
+        // Projects table doesn't have semester/academic_year, they are in topics.
+        // We ignore them here to avoid SQL errors.
+        // If we needed to update them, we would need to update the related topic, but that has side effects.
+
+        if (reportDeadline !== undefined) {
+            updates.push('report_deadline = ?');
+            values.push(new Date(reportDeadline));
+        }
+        if (defenseDate !== undefined) {
+            updates.push('defense_date = ?');
+            values.push(new Date(defenseDate));
+        }
+        if (score !== undefined) {
+            updates.push('final_score = ?'); // Mapped to final_score, or maybe supervisor_score?
+            // Let's assume 'score' maps to final_score for now, or just ignore if not sure.
+            // The schema has supervisor_score, reviewer_score, council_score, final_score.
+            // The frontend might be sending a generic score. Let's map it to final_score if provided.
+            values.push(score);
+        }
+
+        // If there are no updates
+        if (updates.length === 0) {
+            return res.json({ success: true, message: 'No changes detected (or fields are not updatable)' });
+        }
+
+        values.push(id);
+
+        await db.query(`UPDATE projects SET ${updates.join(', ')} WHERE id = ?`, values);
+
+        res.json({ success: true, message: 'Project updated successfully' });
+    } catch (error) {
+        next(error);
+    }
+});
+/**
+ * POST /api/projects/:id/evaluate
+ * Submit an evaluation for a project
+ */
+router.post('/:id/evaluate', async (req, res, next) => {
+    const connection = await db.getConnection();
+    try {
+        const { id } = req.params;
+        const {
+            evaluatorType, // 'supervisor', 'reviewer', 'council'
+            criteriaScore,
+            totalScore, // Optional, can be calculated
+            comments,
+            strengths,
+            weaknesses,
+            suggestions
+        } = req.body;
+
+        const userId = req.user.uid; // Firebase UID
+
+        // 1. Validate inputs
+        if (!['supervisor', 'reviewer', 'council'].includes(evaluatorType)) {
+            return res.status(400).json({ success: false, message: 'Invalid evaluator type' });
+        }
+
+        await connection.beginTransaction();
+
+        // 2. Identify the evaluator (Teacher)
+        const [teachers] = await connection.query(
+            'SELECT t.id, t.user_id FROM teachers t JOIN users u ON t.user_id = u.id WHERE u.uid = ?',
+            [userId]
+        );
+
+        if (teachers.length === 0) {
+            await connection.rollback();
+            return res.status(403).json({ success: false, message: 'User is not a teacher' });
+        }
+        const teacherId = teachers[0].id;
+
+        // 3. Check permission (Example: is this teacher the supervisor?)
+        const [projects] = await connection.query('SELECT * FROM projects WHERE id = ?', [id]);
+        if (projects.length === 0) {
+            await connection.rollback();
+            return res.status(404).json({ success: false, message: 'Project not found' });
+        }
+        const project = projects[0];
+
+        // Specific checks based on role
+        if (evaluatorType === 'supervisor' && project.supervisor_id !== teacherId) {
+            // Allow if admin or specific override, otherwise block
+            // For now, let's strict check
+            await connection.rollback();
+            return res.status(403).json({ success: false, message: 'You are not the supervisor of this project' });
+        }
+        if (evaluatorType === 'reviewer' && project.reviewer_id !== teacherId) {
+            await connection.rollback();
+            return res.status(403).json({ success: false, message: 'You are not the reviewer of this project' });
+        }
+        // Council check could be more complex (is teacher in the council assigned to this student?)
+        // For now, simplify council to allow any teacher (or specific logic if council table exists)
+
+        // 4. Calculate total score if not provided
+        let createTotalScore = totalScore;
+        if (createTotalScore === undefined && criteriaScore) {
+            // Default weights if not handled by frontend
+            // Logic matches frontend: Content 40%, Technical 30%, Presentation 20%, Defense 10%
+            const { content = 0, technical = 0, presentation = 0, defense = 0 } = criteriaScore;
+            createTotalScore = (content * 0.4) + (technical * 0.3) + (presentation * 0.2) + (defense * 0.1);
+        }
+
+        // 5. Insert/Update Evaluation
+        const evaluationId = uuidv4();
+
+        // Check if exists first to update or insert
+        const [existing] = await connection.query(
+            'SELECT id FROM evaluations WHERE project_id = ? AND evaluator_id = ? AND evaluator_type = ?',
+            [id, teacherId, evaluatorType]
+        );
+
+        if (existing.length > 0) {
+            // Update
+            await connection.query(`
+                UPDATE evaluations 
+                SET criteria_score = ?, total_score = ?, comments = ?, strengths = ?, weaknesses = ?, suggestions = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE id = ?
+            `, [JSON.stringify(criteriaScore), createTotalScore, comments, strengths, weaknesses, suggestions, existing[0].id]);
+        } else {
+            // Insert
+            await connection.query(`
+                INSERT INTO evaluations (id, project_id, evaluator_id, evaluator_type, criteria_score, total_score, comments, strengths, weaknesses, suggestions)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `, [evaluationId, id, teacherId, evaluatorType, JSON.stringify(criteriaScore), createTotalScore, comments, strengths, weaknesses, suggestions]);
+        }
+
+        // 6. Update Project Score columns (Denormalization)
+        let updateField = '';
+        if (evaluatorType === 'supervisor') updateField = 'supervisor_score';
+        if (evaluatorType === 'reviewer') updateField = 'reviewer_score';
+        if (evaluatorType === 'council') updateField = 'council_score';
+
+        if (updateField) {
+            await connection.query(`UPDATE projects SET ${updateField} = ? WHERE id = ?`, [createTotalScore, id]);
+        }
+
+        // 7. Calculate Final Score (if all components present)
+        // Re-fetch project scores
+        const [updatedProject] = await connection.query('SELECT supervisor_score, reviewer_score, council_score FROM projects WHERE id = ?', [id]);
+        const p = updatedProject[0];
+
+        if (p.supervisor_score !== null && p.reviewer_score !== null && p.council_score !== null) {
+            // Example Formula: Supervisor 25%, Reviewer 25%, Council 50%
+            const final = (p.supervisor_score * 0.25) + (p.reviewer_score * 0.25) + (p.council_score * 0.5);
+            let grade = 'F';
+            if (final >= 9.0) grade = 'A';
+            else if (final >= 8.5) grade = 'B+';
+            else if (final >= 8.0) grade = 'B';
+            else if (final >= 7.0) grade = 'C';
+            else if (final >= 5.0) grade = 'D';
+
+            await connection.query('UPDATE projects SET final_score = ?, grade = ?, status = ? WHERE id = ?', [final, grade, 'completed', id]);
+        } else if (updateField) {
+            // If we just graded, maybe update status to 'graded' if it was 'submitted'
+            await connection.query("UPDATE projects SET status = 'graded' WHERE id = ? AND status = 'submitted'", [id]);
+        }
+
+        await connection.commit();
+
+        res.json({
+            success: true,
+            message: 'Evaluation submitted successfully',
+            data: {
+                id: existing.length > 0 ? existing[0].id : evaluationId,
+                totalScore: createTotalScore
+            }
+        });
+
+    } catch (error) {
+        await connection.rollback();
+        next(error);
+    } finally {
+        connection.release();
+    }
+});
+
+/**
+ * DELETE /api/projects/:id
+ * Delete a project
+ */
+router.delete('/:id', async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        // Check if project exists
+        const [projects] = await db.query('SELECT * FROM projects WHERE id = ?', [id]);
+        if (projects.length === 0) {
+            return res.status(404).json({ success: false, message: 'Project not found' });
+        }
+
+        // Logic: Should we hard delete or soft delete? 
+        // Let's hard delete for now, but we might need to handle foreign keys (documents, reports).
+        // Using cascading deletes in DB or manual.
+
+        // Delete related records first (if no cascade)
+        await db.query('DELETE FROM progress_reports WHERE project_id = ?', [id]);
+        await db.query('DELETE FROM documents WHERE project_id = ?', [id]);
+        await db.query('DELETE FROM evaluations WHERE project_id = ?', [id]);
+
+        // Delete project
+        await db.query('DELETE FROM projects WHERE id = ?', [id]);
+
+        // Decrement current_students in topics?
+        const project = projects[0];
+        if (project.topic_id) {
+            await db.query('UPDATE topics SET current_students = GREATEST(current_students - 1, 0) WHERE id = ?', [project.topic_id]);
+        }
+
+        res.json({ success: true, message: 'Project deleted successfully' });
+    } catch (error) {
+        next(error);
     }
 });
 

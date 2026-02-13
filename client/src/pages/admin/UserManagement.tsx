@@ -427,6 +427,7 @@ function UserManagement() {
             className={styles.filterSelect}
             value={filterActive}
             onChange={(e) => setFilterActive(e.target.value as any)}
+            aria-label="Lọc theo trạng thái người dùng"
           >
             <option value="all">Tất cả trạng thái</option>
             <option value="active">Đang hoạt động</option>

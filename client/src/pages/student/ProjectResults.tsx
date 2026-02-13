@@ -33,33 +33,17 @@ const ProjectResults: React.FC = () => {
             setProject(myProject || null);
 
             if (myProject) {
-                // In real app: fetch evaluations from API
-                // const evals = await evaluationService.getEvaluations(myProject.id);
-
-                // Mock evaluations based on project scores
-                const mockEvals: Evaluation[] = [];
-
-                if (myProject.supervisorScore) {
-                    mockEvals.push({
-                        evaluatorName: myProject.supervisor.name,
-                        evaluatorRole: 'supervisor',
-                        score: myProject.supervisorScore,
-                        comment: myProject.supervisorComment || 'Sinh viên hoàn thành tốt đồ án',
-                        evaluatedAt: new Date()
-                    });
+                // Map evaluations from project data
+                if (myProject.evaluations && myProject.evaluations.length > 0) {
+                    const mappedEvals: Evaluation[] = myProject.evaluations.map((e: any) => ({
+                        evaluatorName: e.evaluator_name || 'Giảng viên',
+                        evaluatorRole: e.evaluator_type,
+                        score: parseFloat(e.total_score),
+                        comment: e.comments || '',
+                        evaluatedAt: new Date(e.created_at)
+                    }));
+                    setEvaluations(mappedEvals);
                 }
-
-                if (myProject.reviewerScore && myProject.reviewer) {
-                    mockEvals.push({
-                        evaluatorName: myProject.reviewer.name,
-                        evaluatorRole: 'reviewer',
-                        score: myProject.reviewerScore,
-                        comment: 'Đồ án đạt yêu cầu, trình bày rõ ràng',
-                        evaluatedAt: new Date()
-                    });
-                }
-
-                setEvaluations(mockEvals);
             }
         } catch (error) {
             console.error('Failed to load data:', error);
