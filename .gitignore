@@ -10,3 +10,7 @@ firestore-debug.log
 
 # Firebase Admin SDK Private Keys
 *-firebase-adminsdk-*.json
+
+# Debug & temp files
+debug-*.js
+typescript_errors*.txt
