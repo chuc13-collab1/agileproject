@@ -8,6 +8,7 @@ import { Project, ProjectFormData } from '../../types/project.types';
 import { Student, Teacher } from '../../types/user.types';
 import * as projectService from '../../services/api/project.service';
 import * as userService from '../../services/api/user.service';
+import { exportProjectList } from '../../utils/pdfExport';
 import styles from './ProjectManagement.module.css';
 
 const ProjectManagement = () => {
@@ -224,9 +225,17 @@ const ProjectManagement = () => {
               <p>Quản lý tất cả đồ án trong hệ thống</p>
             </div>
           </div>
-          <button className={styles.createButton} onClick={handleCreateProject}>
-            + Tạo đồ án mới
-          </button>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              onClick={() => exportProjectList(projects)}
+              style={{ padding: '0.6rem 1.2rem', background: '#f59e0b', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '0.9rem' }}
+            >
+              📄 Xuất PDF
+            </button>
+            <button className={styles.createButton} onClick={handleCreateProject}>
+              + Tạo đồ án mới
+            </button>
+          </div>
         </div>
 
         <div className={styles.filterSection}>

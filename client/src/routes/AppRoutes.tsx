@@ -13,7 +13,11 @@ import DocumentManagement from '../pages/student/DocumentManagement';
 import ProjectResults from '../pages/student/ProjectResults';
 import StudentTopicProposal from '../pages/student/StudentTopicProposal';
 import BookMeeting from '../pages/student/BookMeeting';
+import SprintPlanning from '../pages/student/SprintPlanning';
 import ChatPage from '../pages/shared/ChatPage';
+import NotificationsPage from '../pages/shared/NotificationsPage';
+import ArchivePage from '../pages/shared/ArchivePage';
+import AiAssistant from '../pages/shared/AiAssistant';
 import TeacherDashboard from '../pages/supervisor/TeacherDashboard';
 import TeacherTopicList from '../pages/supervisor/TeacherTopicList';
 import TeacherStudentList from '../pages/supervisor/TeacherStudentList';
@@ -149,6 +153,11 @@ const AppRoutes: React.FC = () => {
           <BookMeeting />
         </ProtectedRoute>
       } />
+      <Route path="/student/sprints" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <SprintPlanning />
+        </ProtectedRoute>
+      } />
 
       {/* Chat Routes - accessible by all authenticated users */}
       <Route path="/chat" element={
@@ -157,7 +166,26 @@ const AppRoutes: React.FC = () => {
         </ProtectedRoute>
       } />
 
-      {/* Admin routes */}
+      {/* Notifications - accessible by all authenticated users */}
+      <Route path="/notifications" element={
+        <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
+          <NotificationsPage />
+        </ProtectedRoute>
+      } />
+
+      {/* Archive / Library - accessible by all authenticated users */}
+      <Route path="/archive" element={
+        <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
+          <ArchivePage />
+        </ProtectedRoute>
+      } />
+
+      {/* AI Assistant - accessible by all authenticated users */}
+      <Route path="/ai-assistant" element={
+        <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
+          <AiAssistant />
+        </ProtectedRoute>
+      } />
       <Route
         path="/admin/users"
         element={

@@ -2,6 +2,7 @@
 import React from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import NotificationBell from './NotificationBell';
 import styles from './MainLayout.module.css';
 
 interface MainLayoutProps {
@@ -50,8 +51,23 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <span className={styles.userName}>{user?.fullName}</span>
               <span className={styles.userRole}>{getRoleLabel(user?.role || '')}</span>
             </div>
-            <button 
-              onClick={() => navigate('/chat')} 
+            <button
+              onClick={() => navigate('/archive')}
+              className={styles.chatButton}
+              title="Thư viện đồ án"
+            >
+              📚
+            </button>
+            <NotificationBell />
+            <button
+              onClick={() => navigate('/ai-assistant')}
+              className={styles.chatButton}
+              title="Trợ lý AI"
+            >
+              🤖
+            </button>
+            <button
+              onClick={() => navigate('/chat')}
               className={styles.chatButton}
               title="Tin nhắn"
             >

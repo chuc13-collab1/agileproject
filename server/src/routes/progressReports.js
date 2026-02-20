@@ -2,6 +2,7 @@ import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../config/database.js';
 import upload from '../middleware/upload.js';
+import { createNotification } from '../utils/notificationHelper.js';
 
 const router = express.Router();
 
@@ -203,7 +204,28 @@ router.post('/:id/comments', async (req, res, next) => {
             );
         }
 
-        // TODO: Send notification to student
+        // Send notification to student about teacher feedback
+        const [reportStudent] = await connection.query(
+            `SELECT u.uid as student_uid, t.title as topic_title
+             FROM progress_reports pr
+             INNER JOIN projects p ON pr.project_id = p.id
+             INNER JOIN students s ON p.student_id = s.id
+             INNER JOIN users u ON s.user_id = u.id
+             INNER JOIN topics t ON p.topic_id = t.id
+             WHERE pr.id = ?`, [id]
+        );
+
+        if (reportStudent.length > 0) {
+            const statusLabel = status === 'approved' ? 'đã duyệt' : status === 'revision_needed' ? 'cần chỉnh sửa' : 'đã nhận xét';
+            await createNotification({
+                userUid: reportStudent[0].student_uid,
+                title: `Giảng viên ${statusLabel} báo cáo`,
+                message: `Báo cáo tiến độ đồ án "${reportStudent[0].topic_title}" ${statusLabel}.`,
+                type: status === 'approved' ? 'success' : status === 'revision_needed' ? 'warning' : 'report',
+                link: '/student/reports',
+                connection,
+            });
+        }
 
         await connection.commit();
 
@@ -262,6 +284,26 @@ router.post('/', upload.single('file'), async (req, res, next) => {
             achievements || null, difficulties || null, nextSteps || null,
             filePath || null, fileName || null, fileSize || null
         ]);
+
+        // Send notification to supervisor about new report
+        const [supervisorInfo] = await db.query(
+            `SELECT u.uid as supervisor_uid, t.title as topic_title
+             FROM projects p
+             INNER JOIN teachers te ON p.supervisor_id = te.id
+             INNER JOIN users u ON te.user_id = u.id
+             INNER JOIN topics t ON p.topic_id = t.id
+             WHERE p.id = ?`, [projectId]
+        );
+
+        if (supervisorInfo.length > 0) {
+            await createNotification({
+                userUid: supervisorInfo[0].supervisor_uid,
+                title: 'Sinh viên nộp báo cáo tiến độ',
+                message: `Có báo cáo tiến độ mới cho đồ án "${supervisorInfo[0].topic_title}".`,
+                type: 'report',
+                link: '/teacher/progress-tracking',
+            });
+        }
 
         res.status(201).json({
             success: true,

@@ -1,6 +1,8 @@
+import dotenv from 'dotenv';
+dotenv.config(); // Must be FIRST before any other imports
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import './config/database.js'; // Initialize database connection
@@ -24,9 +26,10 @@ import uploadRoutes from './routes/uploads.js';
 import topicProposalRoutes from './routes/topicProposals.js';
 import authRoutes from './routes/auth.js';
 import schedulingRoutes from './routes/scheduling.js';
-
-// Load environment variables
-dotenv.config();
+import notificationRoutes from './routes/notifications.js';
+import archiveRoutes from './routes/archive.js';
+import aiRoutes from './routes/ai.js';
+import sprintRoutes from './routes/sprints.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -71,6 +74,10 @@ app.use('/api/evaluations', verifyToken, evaluationRoutes);
 app.use('/api/uploads', verifyToken, uploadRoutes);
 app.use('/api/topic-proposals', verifyToken, topicProposalRoutes);
 app.use('/api/scheduling', verifyToken, schedulingRoutes);
+app.use('/api/notifications', verifyToken, notificationRoutes);
+app.use('/api/archive', verifyToken, archiveRoutes);
+app.use('/api/ai', verifyToken, aiRoutes);
+app.use('/api/sprints', verifyToken, sprintRoutes);
 
 // 404 handler
 app.use(notFoundHandler);

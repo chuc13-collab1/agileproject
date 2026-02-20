@@ -3,6 +3,7 @@ import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import pool from '../config/database.js';
 import { verifyToken, isTeacher } from '../middleware/auth.js';
+import { createNotification, getUserUidById } from '../utils/notificationHelper.js';
 
 const router = express.Router();
 
@@ -53,6 +54,20 @@ router.post('/', verifyToken, async (req, res, next) => {
         );
 
         res.status(201).json({ success: true, message: 'Proposal submitted successfully', data: { id } });
+
+        // Send notification to requested supervisor (non-blocking, after response)
+        if (requestedSupervisorId) {
+            const supervisorUid = await getUserUidById('teachers', requestedSupervisorId);
+            if (supervisorUid) {
+                await createNotification({
+                    userUid: supervisorUid,
+                    title: 'Đề xuất đề tài mới',
+                    message: `Sinh viên đề xuất đề tài "${title}". Vui lòng xem xét.`,
+                    type: 'project',
+                    link: '/teacher/proposals',
+                });
+            }
+        }
 
     } catch (error) {
         next(error);
@@ -178,6 +193,28 @@ router.patch('/:id/review', verifyToken, isTeacher, async (req, res, next) => {
             await connection.query('UPDATE topic_proposals SET status = ?, teacher_feedback = ?, reviewed_at = NOW() WHERE id = ?', ['rejected', feedback, id]);
         } else if (action === 'request_revision') {
             await connection.query('UPDATE topic_proposals SET status = ?, teacher_feedback = ?, reviewed_at = NOW() WHERE id = ?', ['revision_requested', feedback, id]);
+        }
+
+        // Send notification to student about proposal review
+        const studentUid = await getUserUidById('students', proposals[0].proposed_by_student_id, connection);
+        if (studentUid) {
+            const actionMessages = {
+                approve: { title: 'Đề xuất được duyệt', message: `Đề xuất đề tài "${proposals[0].title}" đã được giảng viên duyệt!`, type: 'success' },
+                reject: { title: 'Đề xuất bị từ chối', message: `Đề xuất đề tài "${proposals[0].title}" bị từ chối.${feedback ? ' Lý do: ' + feedback : ''}`, type: 'error' },
+                request_revision: { title: 'Đề xuất cần chỉnh sửa', message: `Đề xuất đề tài "${proposals[0].title}" cần chỉnh sửa.${feedback ? ' Góp ý: ' + feedback : ''}`, type: 'warning' },
+            };
+
+            const notifData = actionMessages[action];
+            if (notifData) {
+                await createNotification({
+                    userUid: studentUid,
+                    title: notifData.title,
+                    message: notifData.message,
+                    type: notifData.type,
+                    link: '/student/propose-topic',
+                    connection,
+                });
+            }
         }
 
         await connection.commit();

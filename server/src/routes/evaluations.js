@@ -1,6 +1,7 @@
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../config/database.js';
+import { createNotification } from '../utils/notificationHelper.js';
 
 const router = express.Router();
 
@@ -117,7 +118,27 @@ router.post('/projects/:projectId/evaluate', async (req, res, next) => {
             }
         }
 
-        // TODO: Send notification to student
+        // Send notification to student about evaluation
+        const [evalStudent] = await connection.query(
+            `SELECT u.uid as student_uid, t.title as topic_title
+             FROM projects p
+             INNER JOIN students s ON p.student_id = s.id
+             INNER JOIN users u ON s.user_id = u.id
+             INNER JOIN topics t ON p.topic_id = t.id
+             WHERE p.id = ?`, [projectId]
+        );
+
+        if (evalStudent.length > 0) {
+            const roleLabel = evaluatorType === 'supervisor' ? 'GVHD' : 'GVPB';
+            await createNotification({
+                userUid: evalStudent[0].student_uid,
+                title: `${roleLabel} đã chấm điểm`,
+                message: `Đồ án "${evalStudent[0].topic_title}" đã được ${roleLabel} chấm: ${totalScore} điểm.`,
+                type: 'success',
+                link: '/student/results',
+                connection,
+            });
+        }
 
         await connection.commit();
 

@@ -1,6 +1,7 @@
 import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../config/database.js';
+import { createNotification, getUserUidById } from '../utils/notificationHelper.js';
 
 const router = express.Router();
 
@@ -259,6 +260,36 @@ router.patch('/:id/status', async (req, res, next) => {
             [status, id]
         );
 
+        // Send notification to student about status change
+        const [projectInfo] = await db.query(
+            `SELECT u.uid as student_uid, t.title as topic_title
+             FROM projects p
+             INNER JOIN students s ON p.student_id = s.id
+             INNER JOIN users u ON s.user_id = u.id
+             INNER JOIN topics t ON p.topic_id = t.id
+             WHERE p.id = ?`, [id]
+        );
+
+        if (projectInfo.length > 0) {
+            const statusMessages = {
+                in_progress: { title: 'Đồ án được duyệt', message: `Đồ án "${projectInfo[0].topic_title}" đã được duyệt và đang thực hiện.`, type: 'success' },
+                submitted: { title: 'Đồ án đã nộp', message: `Đồ án "${projectInfo[0].topic_title}" đã chuyển sang trạng thái nộp.`, type: 'info' },
+                completed: { title: 'Đồ án hoàn thành', message: `Đồ án "${projectInfo[0].topic_title}" đã hoàn thành. Chúc mừng bạn!`, type: 'success' },
+                failed: { title: 'Đồ án không đạt', message: `Đồ án "${projectInfo[0].topic_title}" không đạt yêu cầu.`, type: 'error' },
+            };
+
+            const notifData = statusMessages[status];
+            if (notifData) {
+                await createNotification({
+                    userUid: projectInfo[0].student_uid,
+                    title: notifData.title,
+                    message: notifData.message,
+                    type: notifData.type,
+                    link: '/student/my-project',
+                });
+            }
+        }
+
         res.json({
             success: true,
             message: 'Project status updated successfully'
@@ -403,6 +434,25 @@ router.post('/', async (req, res, next) => {
                 'UPDATE teachers SET current_students = current_students + 1 WHERE user_id = ?',
                 [finalSupervisorId]
             );
+        }
+
+        // Send notification to supervisor about new project registration
+        if (finalSupervisorId) {
+            const [supervisorUid] = await connection.query(
+                'SELECT u.uid FROM users u WHERE u.id = ?', [finalSupervisorId]
+            );
+            if (supervisorUid.length > 0) {
+                const [topicInfo] = await connection.query('SELECT title FROM topics WHERE id = ?', [topicId]);
+                const topicTitle = topicInfo.length > 0 ? topicInfo[0].title : 'Không xác định';
+                await createNotification({
+                    userUid: supervisorUid[0].uid,
+                    title: 'Sinh viên đăng ký đồ án',
+                    message: `Có sinh viên mới đăng ký đồ án "${topicTitle}".`,
+                    type: 'project',
+                    link: '/teacher/topics',
+                    connection,
+                });
+            }
         }
 
         await connection.commit();
@@ -626,6 +676,28 @@ router.post('/:id/evaluate', async (req, res, next) => {
         } else if (updateField) {
             // If we just graded, maybe update status to 'graded' if it was 'submitted'
             await connection.query("UPDATE projects SET status = 'graded' WHERE id = ? AND status = 'submitted'", [id]);
+        }
+
+        // Send notification to student about evaluation
+        const [studentInfo] = await connection.query(
+            `SELECT u.uid as student_uid, t.title as topic_title
+             FROM projects p
+             INNER JOIN students s ON p.student_id = s.id
+             INNER JOIN users u ON s.user_id = u.id
+             INNER JOIN topics t ON p.topic_id = t.id
+             WHERE p.id = ?`, [id]
+        );
+
+        if (studentInfo.length > 0) {
+            const roleLabel = evaluatorType === 'supervisor' ? 'GVHD' : evaluatorType === 'reviewer' ? 'GVPB' : 'Hội đồng';
+            await createNotification({
+                userUid: studentInfo[0].student_uid,
+                title: `${roleLabel} đã chấm điểm`,
+                message: `Đồ án "${studentInfo[0].topic_title}" đã được ${roleLabel} chấm điểm: ${createTotalScore?.toFixed(1) || 'N/A'} điểm.`,
+                type: 'success',
+                link: '/student/results',
+                connection,
+            });
         }
 
         await connection.commit();
