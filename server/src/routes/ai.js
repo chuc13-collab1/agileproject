@@ -6,14 +6,16 @@ const router = express.Router();
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const MODEL = 'llama-3.3-70b-versatile';
 
-const SYSTEM_PROMPT = `Bạn là trợ lý AI của Hệ Thống Quản Lý Đồ Án tốt nghiệp.
+// Role-based system prompts
+const STUDENT_PROMPT = `Bạn là trợ lý AI cho SINH VIÊN trong Hệ Thống Quản Lý Đồ Án tốt nghiệp.
 
 ĐƯỢC PHÉP:
 - Tóm tắt báo cáo tiến độ
-- Đánh giá tiến độ sinh viên (nhanh/chậm/đúng kế hoạch)
 - Gợi ý đề tài dựa trên lĩnh vực và sở thích
 - Hướng dẫn viết báo cáo, cấu trúc đồ án
 - Giải đáp thắc mắc về quy trình làm đồ án
+- Gợi ý phân chia task cho Sprint
+- Kiểm tra ngữ pháp tiếng Anh
 - Trả lời bằng tiếng Việt
 
 KHÔNG ĐƯỢC:
@@ -23,8 +25,29 @@ KHÔNG ĐƯỢC:
 
 Hãy trả lời ngắn gọn, rõ ràng, hữu ích.`;
 
+const TEACHER_PROMPT = `Bạn là trợ lý AI cho GIẢNG VIÊN trong Hệ Thống Quản Lý Đồ Án tốt nghiệp.
+
+ĐƯỢC PHÉP:
+- Đánh giá tiến độ sinh viên (nhanh/chậm/đúng kế hoạch)
+- Tóm tắt tổng quan tiến độ nhóm
+- So sánh tiến độ giữa các nhóm
+- Gợi ý phản hồi cho sinh viên
+- Phân tích Sprint planning của sinh viên
+- Trả lời bằng tiếng Việt
+
+KHÔNG ĐƯỢC:
+- Đưa ra điểm số cụ thể hoặc chấm điểm thay giảng viên
+- Trả lời câu hỏi không liên quan đến quản lý đồ án
+
+Hãy trả lời chuyên nghiệp, ngắn gọn, hữu ích.`;
+
+// Generic fallback prompt
+const SYSTEM_PROMPT = `Bạn là trợ lý AI của Hệ Thống Quản Lý Đồ Án tốt nghiệp.
+Trả lời bằng tiếng Việt, ngắn gọn, rõ ràng, hữu ích.
+Không viết code, không đưa điểm số, không trả lời ngoài phạm vi đồ án/học tập.`;
+
 // Call Groq API
-const callGroq = async (prompt, maxTokens = 600, temperature = 0.5) => {
+const callGroq = async (prompt, systemPrompt = SYSTEM_PROMPT, maxTokens = 600, temperature = 0.5) => {
     const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
         throw new Error('GROQ_API_KEY chưa được cấu hình trong file .env');
@@ -39,7 +62,7 @@ const callGroq = async (prompt, maxTokens = 600, temperature = 0.5) => {
         body: JSON.stringify({
             model: MODEL,
             messages: [
-                { role: 'system', content: SYSTEM_PROMPT },
+                { role: 'system', content: systemPrompt },
                 { role: 'user', content: prompt },
             ],
             max_tokens: maxTokens,
@@ -73,7 +96,7 @@ const handleAIError = (error, res) => {
 };
 
 /**
- * POST /api/ai/summarize
+ * POST /api/ai/summarize (Student)
  */
 router.post('/summarize', async (req, res) => {
     try {
@@ -89,7 +112,7 @@ Tiêu đề: ${reportTitle || 'Không có'}
 Nội dung:
 ${content}`;
 
-        const summary = await callGroq(prompt, 500, 0.3);
+        const summary = await callGroq(prompt, STUDENT_PROMPT, 500, 0.3);
         res.json({ success: true, data: { summary } });
     } catch (error) {
         handleAIError(error, res);
@@ -97,7 +120,7 @@ ${content}`;
 });
 
 /**
- * POST /api/ai/assess-progress
+ * POST /api/ai/assess-progress (Teacher) — Enhanced with Sprint data
  */
 router.post('/assess-progress', async (req, res) => {
     try {
@@ -116,22 +139,46 @@ router.post('/assess-progress', async (req, res) => {
         if (projects.length === 0) return res.status(404).json({ success: false, message: 'Project not found' });
 
         const [reports] = await db.query('SELECT report_title, week_number, status, created_at FROM progress_reports WHERE project_id = ? ORDER BY week_number ASC', [projectId]);
-        const [sprints] = await db.query('SELECT sprint_number, title, weight_percent, status, actual_progress FROM sprints WHERE project_id = ? ORDER BY sprint_number ASC', [projectId]).catch(() => [[]]);
+        const [sprints] = await db.query('SELECT sprint_number, title, goals, start_week, end_week, weight_percent, status, actual_progress FROM sprints WHERE project_id = ? ORDER BY sprint_number ASC', [projectId]).catch(() => [[]]);
 
         const project = projects[0];
-        const prompt = `Đánh giá tiến độ đồ án:
+
+        // Calculate overall progress
+        const totalProgress = sprints.reduce((sum, s) => sum + (s.actual_progress / 100) * s.weight_percent, 0);
+        const completedSprints = sprints.filter(s => s.status === 'completed').length;
+        const inProgressSprints = sprints.filter(s => s.status === 'in_progress').length;
+
+        const prompt = `Đánh giá chi tiết tiến độ đồ án:
+
 ĐỒ ÁN: ${project.topic_title}
 SINH VIÊN: ${project.student_name}
 TRẠNG THÁI: ${project.status}
-${sprints.length > 0 ? `SPRINT: ${sprints.map(s => `Sprint ${s.sprint_number}: ${s.title} (${s.weight_percent}%) - ${s.actual_progress || 0}%`).join('; ')}` : ''}
-BÁO CÁO: ${reports.length > 0 ? reports.map(r => `Tuần ${r.week_number}: ${r.report_title} - ${r.status}`).join('; ') : 'Chưa có'}
 
-Đánh giá: 1) Tiến độ chung 2) Điểm mạnh 3) Cần cải thiện 4) Đề xuất tiếp theo`;
+SPRINT PLANNING (${sprints.length} sprints, tiến độ tổng: ${Math.round(totalProgress)}%):
+${sprints.length > 0 ? sprints.map(s => `- Sprint ${s.sprint_number}: "${s.title}" (tuần ${s.start_week}-${s.end_week}, ${s.weight_percent}%) → Thực tế: ${s.actual_progress}% [${s.status}]${s.goals ? ` | Mục tiêu: ${s.goals}` : ''}`).join('\n') : 'Chưa có Sprint nào.'}
 
-        const assessment = await callGroq(prompt, 800, 0.4);
+Hoàn thành: ${completedSprints}/${sprints.length} sprints | Đang chạy: ${inProgressSprints}
+
+BÁO CÁO TUẦN (${reports.length} bài):
+${reports.length > 0 ? reports.map(r => `- Tuần ${r.week_number}: ${r.report_title} [${r.status}]`).join('\n') : 'Chưa có báo cáo.'}
+
+Đánh giá:
+1) Tiến độ tổng thể so với kế hoạch Sprint
+2) Điểm mạnh trong quá trình thực hiện  
+3) Rủi ro hoặc vấn đề cần lưu ý
+4) Đề xuất cụ thể cho giai đoạn tiếp theo`;
+
+        const assessment = await callGroq(prompt, TEACHER_PROMPT, 1000, 0.4);
         res.json({
             success: true,
-            data: { assessment, projectTitle: project.topic_title, studentName: project.student_name, totalReports: reports.length, totalSprints: sprints.length }
+            data: {
+                assessment,
+                projectTitle: project.topic_title,
+                studentName: project.student_name,
+                totalReports: reports.length,
+                totalSprints: sprints.length,
+                totalProgress: Math.round(totalProgress)
+            }
         });
     } catch (error) {
         handleAIError(error, res);
@@ -139,7 +186,7 @@ BÁO CÁO: ${reports.length > 0 ? reports.map(r => `Tuần ${r.week_number}: ${r
 });
 
 /**
- * POST /api/ai/suggest-topics
+ * POST /api/ai/suggest-topics (Student)
  */
 router.post('/suggest-topics', async (req, res) => {
     try {
@@ -154,7 +201,7 @@ ${field ? `Lĩnh vực: ${field}` : ''}
 
 Gợi ý 5 đề tài đồ án (không trùng). Mỗi đề tài gồm: tên, mô tả ngắn, công nghệ, độ khó.`;
 
-        const suggestions = await callGroq(prompt, 1000, 0.7);
+        const suggestions = await callGroq(prompt, STUDENT_PROMPT, 1000, 0.7);
         res.json({ success: true, data: { suggestions } });
     } catch (error) {
         handleAIError(error, res);
@@ -162,14 +209,74 @@ Gợi ý 5 đề tài đồ án (không trùng). Mỗi đề tài gồm: tên, m
 });
 
 /**
- * POST /api/ai/chat
+ * POST /api/ai/suggest-tasks (Student) — NEW: Gợi ý task cho Sprint
+ */
+router.post('/suggest-tasks', async (req, res) => {
+    try {
+        const { sprintTitle, sprintGoals, projectTitle, projectDescription } = req.body;
+        if (!sprintTitle) return res.status(400).json({ success: false, message: 'Sprint title is required' });
+
+        const prompt = `Sinh viên cần phân chia công việc cho Sprint.
+
+ĐỒ ÁN: ${projectTitle || 'Không có'}
+${projectDescription ? `MÔ TẢ: ${projectDescription}` : ''}
+SPRINT: ${sprintTitle}
+${sprintGoals ? `MỤC TIÊU SPRINT: ${sprintGoals}` : ''}
+
+Gợi ý 5-8 task cụ thể, mỗi task gồm:
+1. Tên task (ngắn gọn)
+2. Mô tả chi tiết (1-2 dòng)
+3. Ước tính thời gian (giờ)
+4. Ưu tiên (Cao/Trung/Thấp)
+
+Sắp xếp theo thứ tự ưu tiên.`;
+
+        const suggestions = await callGroq(prompt, STUDENT_PROMPT, 800, 0.6);
+        res.json({ success: true, data: { suggestions } });
+    } catch (error) {
+        handleAIError(error, res);
+    }
+});
+
+/**
+ * POST /api/ai/check-grammar (Student) — NEW: Kiểm tra ngữ pháp tiếng Anh
+ */
+router.post('/check-grammar', async (req, res) => {
+    try {
+        const { text } = req.body;
+        if (!text) return res.status(400).json({ success: false, message: 'Text is required' });
+
+        const prompt = `Kiểm tra ngữ pháp tiếng Anh cho đoạn văn sau. Trả lời bằng tiếng Việt.
+
+Đoạn văn:
+"${text}"
+
+Hãy:
+1. Liệt kê từng lỗi ngữ pháp (nếu có) và cách sửa
+2. Đề xuất cách viết lại tốt hơn (nếu cần)
+3. Đánh giá tổng thể chất lượng ngữ pháp (Tốt/Khá/Cần cải thiện)`;
+
+        const result = await callGroq(prompt, STUDENT_PROMPT, 800, 0.3);
+        res.json({ success: true, data: { result } });
+    } catch (error) {
+        handleAIError(error, res);
+    }
+});
+
+/**
+ * POST /api/ai/chat (All roles)
  */
 router.post('/chat', async (req, res) => {
     try {
-        const { message } = req.body;
+        const { message, role } = req.body;
         if (!message) return res.status(400).json({ success: false, message: 'Message is required' });
 
-        const reply = await callGroq(message, 600, 0.5);
+        // Pick system prompt based on caller role
+        const systemPrompt = role === 'teacher' ? TEACHER_PROMPT
+            : role === 'student' ? STUDENT_PROMPT
+                : SYSTEM_PROMPT;
+
+        const reply = await callGroq(message, systemPrompt, 600, 0.5);
         res.json({ success: true, data: { reply } });
     } catch (error) {
         handleAIError(error, res);

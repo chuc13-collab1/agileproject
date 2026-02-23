@@ -193,7 +193,7 @@ router.post('/', async (req, res, next) => {
  */
 router.post('/batch', async (req, res, next) => {
     try {
-        const { academicYear, semester } = req.body;
+        const { academicYear, semester, softDelete = true } = req.body;
 
         if (!academicYear) {
             return res.status(400).json({
@@ -223,10 +223,11 @@ router.post('/batch', async (req, res, next) => {
             LEFT JOIN users u_supervisor ON te.user_id = u_supervisor.id
             LEFT JOIN teachers tr ON p.reviewer_id = tr.id
             LEFT JOIN users u_reviewer ON tr.user_id = u_reviewer.id
-            WHERE p.status = 'completed'
+            WHERE p.status = 'completed' AND p.archived_at IS NULL
         `);
 
         let archived = 0;
+        const archivedIds = [];
         for (const p of completedProjects) {
             // Skip if already archived
             const [[{ exists }]] = await db.query(
@@ -244,13 +245,22 @@ router.post('/batch', async (req, res, next) => {
                 p.class_name, p.supervisor_name, p.reviewer_name,
                     academicYear, semester || null, p.final_score, p.grade, p.description]
             );
+            archivedIds.push(p.project_id);
             archived++;
+        }
+
+        // Soft-delete: mark original projects as archived
+        if (softDelete && archivedIds.length > 0) {
+            await db.query(
+                `UPDATE projects SET archived_at = CURRENT_TIMESTAMP WHERE id IN (?)`,
+                [archivedIds]
+            );
         }
 
         res.json({
             success: true,
-            message: `Archived ${archived} projects`,
-            data: { archived, total: completedProjects.length },
+            message: `Archived ${archived} projects${softDelete ? ' (soft-deleted originals)' : ''}`,
+            data: { archived, total: completedProjects.length, softDeleted: softDelete ? archivedIds.length : 0 },
         });
     } catch (error) {
         next(error);

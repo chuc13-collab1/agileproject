@@ -222,6 +222,13 @@ const TeacherDashboard: React.FC = () => {
           >
             📅 Lịch Làm Việc
           </button>
+          <button
+            className={styles.actionBtn}
+            onClick={() => navigate('/teacher/review-projects')}
+            style={{ backgroundColor: '#fef3c7', color: '#92400e', border: '1px solid #fbbf24' }}
+          >
+            👨‍⚖️ Đồ Án Phản Biện
+          </button>
         </div>
 
         <div className={styles.contentSection}>

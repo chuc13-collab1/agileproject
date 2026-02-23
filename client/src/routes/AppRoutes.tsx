@@ -27,6 +27,7 @@ import TeacherTopicProposal from '../pages/supervisor/TeacherTopicProposal';
 import TeacherProposalReview from '../pages/supervisor/TeacherProposalReview';
 import TeacherStatistics from '../pages/supervisor/TeacherStatistics';
 import TeacherCalendar from '../pages/supervisor/TeacherCalendar';
+import TeacherReviewList from '../pages/supervisor/TeacherReviewList';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import ProjectManagement from '../pages/admin/ProjectManagement';
 import AnnouncementManagement from '../pages/admin/AnnouncementManagement';
@@ -303,6 +304,14 @@ const AppRoutes: React.FC = () => {
         element={
           <ProtectedRoute allowedRoles={['teacher', 'supervisor']}>
             <TeacherCalendar />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/teacher/review-projects"
+        element={
+          <ProtectedRoute allowedRoles={['teacher', 'supervisor']}>
+            <TeacherReviewList />
           </ProtectedRoute>
         }
       />

@@ -205,4 +205,79 @@ router.get('/:projectId/burndown', async (req, res, next) => {
     }
 });
 
+// Auto-create sprint_comments table
+const createSprintCommentsTable = async () => {
+    try {
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS sprint_comments (
+                id VARCHAR(36) PRIMARY KEY,
+                sprint_id VARCHAR(36) NOT NULL,
+                project_id VARCHAR(36) NOT NULL,
+                author_uid VARCHAR(255) NOT NULL,
+                author_name VARCHAR(255) NOT NULL,
+                author_role ENUM('teacher', 'student') NOT NULL DEFAULT 'teacher',
+                content TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                INDEX idx_sprint_comments_sprint (sprint_id),
+                INDEX idx_sprint_comments_project (project_id)
+            )
+        `);
+    } catch (error) {
+        console.error('Error creating sprint_comments table:', error.message);
+    }
+};
+createSprintCommentsTable();
+
+/**
+ * GET /api/sprints/:projectId/comments
+ * Get all sprint comments for a project
+ */
+router.get('/:projectId/comments', async (req, res, next) => {
+    try {
+        const { projectId } = req.params;
+
+        const [comments] = await db.query(
+            `SELECT * FROM sprint_comments
+             WHERE project_id = ?
+             ORDER BY created_at DESC`,
+            [projectId]
+        );
+
+        res.json({ success: true, data: comments });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * POST /api/sprints/:sprintId/comments
+ * Add a comment to a sprint
+ */
+router.post('/:sprintId/comments', async (req, res, next) => {
+    try {
+        const { sprintId } = req.params;
+        const { projectId, authorUid, authorName, authorRole, content } = req.body;
+
+        if (!content || !content.trim()) {
+            return res.status(400).json({ success: false, message: 'Content is required' });
+        }
+        if (!projectId || !authorUid || !authorName) {
+            return res.status(400).json({ success: false, message: 'Missing required fields' });
+        }
+
+        const id = uuidv4();
+        await db.query(`
+            INSERT INTO sprint_comments (id, sprint_id, project_id, author_uid, author_name, author_role, content)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        `, [id, sprintId, projectId, authorUid, authorName, authorRole || 'teacher', content.trim()]);
+
+        const [newComment] = await db.query('SELECT * FROM sprint_comments WHERE id = ?', [id]);
+
+        res.status(201).json({ success: true, data: newComment[0] });
+    } catch (error) {
+        next(error);
+    }
+});
+
 export default router;

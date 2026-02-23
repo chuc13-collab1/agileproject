@@ -286,7 +286,7 @@ router.patch('/:id/toggle-active', async (req, res, next) => {
 
 /**
  * POST /api/students/batch-import
- * Batch import students from Excel
+ * Batch import students from Excel with server-side validation
  */
 router.post('/batch-import', async (req, res, next) => {
     try {
@@ -299,44 +299,112 @@ router.post('/batch-import', async (req, res, next) => {
             });
         }
 
+        // === Phase 1: Server-side duplicate check ===
+        const emails = students.map(s => s.email).filter(Boolean);
+        const studentIds = students.map(s => s.studentId).filter(Boolean);
+
+        // Check duplicate emails in DB
+        let existingEmails = new Set();
+        if (emails.length > 0) {
+            const [rows] = await db.query(
+                `SELECT email FROM users WHERE email IN (?)`, [emails]
+            );
+            existingEmails = new Set(rows.map(r => r.email));
+        }
+
+        // Check duplicate student IDs in DB
+        let existingStudentIds = new Set();
+        if (studentIds.length > 0) {
+            const [rows] = await db.query(
+                `SELECT student_id FROM students WHERE student_id IN (?)`, [studentIds]
+            );
+            existingStudentIds = new Set(rows.map(r => r.student_id));
+        }
+
+        // Check duplicates within the batch itself
+        const batchEmails = new Set();
+        const batchStudentIds = new Set();
+
         const result = {
             success: 0,
             failed: 0,
+            skipped: 0,
             errors: []
         };
 
-        // Process each student
+        // === Phase 2: Process each student (skip duplicates) ===
         for (let i = 0; i < students.length; i++) {
             const student = students[i];
+            const { email, displayName, studentId, className, academicYear, phone, major } = student;
+
+            // Server-side validation
+            if (!email || !displayName || !studentId || !className) {
+                result.failed++;
+                result.errors.push({
+                    row: i + 2, email: email || '?',
+                    reason: 'Thiếu thông tin bắt buộc (email/tên/MSSV/lớp)'
+                });
+                continue;
+            }
+
+            // Check duplicate in DB
+            if (existingEmails.has(email)) {
+                result.skipped++;
+                result.errors.push({
+                    row: i + 2, email,
+                    reason: `Email "${email}" đã tồn tại trong hệ thống`
+                });
+                continue;
+            }
+            if (existingStudentIds.has(studentId)) {
+                result.skipped++;
+                result.errors.push({
+                    row: i + 2, email,
+                    reason: `Mã SV "${studentId}" đã tồn tại trong hệ thống`
+                });
+                continue;
+            }
+
+            // Check duplicate within batch
+            if (batchEmails.has(email)) {
+                result.skipped++;
+                result.errors.push({
+                    row: i + 2, email,
+                    reason: `Email "${email}" bị trùng trong file Excel`
+                });
+                continue;
+            }
+            if (batchStudentIds.has(studentId)) {
+                result.skipped++;
+                result.errors.push({
+                    row: i + 2, email,
+                    reason: `Mã SV "${studentId}" bị trùng trong file Excel`
+                });
+                continue;
+            }
+
+            batchEmails.add(email);
+            batchStudentIds.add(studentId);
+
             const connection = await db.getConnection();
-
             try {
-                const { email, displayName, studentId, className, academicYear, phone, major } = student;
-
-                // Auto-generate password: MSSV@2026 (same as single create)
                 const password = `${studentId}@2026`;
 
-                // Create Firebase user
                 const userRecord = await firebaseAuth.createUser({
-                    email,
-                    password,
-                    displayName
+                    email, password, displayName
                 });
 
                 const userId = uuidv4();
                 const studentRecordId = uuidv4();
 
-                // Start transaction
                 await connection.beginTransaction();
 
-                // Insert user
                 await connection.query(
                     `INSERT INTO users (id, uid, email, display_name, phone, role, is_active)
            VALUES (?, ?, ?, ?, ?, 'student', TRUE)`,
                     [userId, userRecord.uid, email, displayName, phone || null]
                 );
 
-                // Insert student (WITHOUT GPA)
                 await connection.query(
                     `INSERT INTO students (id, user_id, student_id, class_name, major, academic_year)
            VALUES (?, ?, ?, ?, ?, ?)`,
@@ -349,9 +417,10 @@ router.post('/batch-import', async (req, res, next) => {
                 await connection.rollback();
                 result.failed++;
                 result.errors.push({
-                    row: i + 2,
-                    email: student.email,
-                    reason: error.message
+                    row: i + 2, email,
+                    reason: error.code === 'auth/email-already-exists'
+                        ? `Email "${email}" đã tồn tại trên Firebase`
+                        : error.message
                 });
             } finally {
                 connection.release();

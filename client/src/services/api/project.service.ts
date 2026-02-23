@@ -150,6 +150,19 @@ export const assignReviewer = async (
   await updateProject(projectId, { reviewerId: reviewer.id } as any);
 };
 
+// Get Projects as Reviewer
+export const getReviewProjects = async (teacherUid: string): Promise<any[]> => {
+  const token = await auth.currentUser?.getIdToken();
+  const headers: HeadersInit = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const response = await fetch(`http://localhost:3001/api/projects/teachers/${teacherUid}/review-projects`, { headers });
+  if (!response.ok) throw new Error('Failed to fetch review projects');
+
+  const result = await response.json();
+  return result.data || [];
+};
+
 // Delete Project
 export const deleteProject = async (projectId: string): Promise<void> => {
   const token = await auth.currentUser?.getIdToken();

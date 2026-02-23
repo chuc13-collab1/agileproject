@@ -6,7 +6,7 @@ import styles from './AiAssistant.module.css';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
-type Tab = 'chat' | 'summarize' | 'suggest';
+type Tab = 'chat' | 'summarize' | 'suggest' | 'suggest-tasks' | 'grammar' | 'assess';
 
 interface Message {
     role: 'user' | 'ai';
@@ -15,6 +15,9 @@ interface Message {
 
 const AiAssistant: React.FC = () => {
     const { user } = useAuth();
+    const isTeacher = user?.role === 'teacher' || user?.role === 'supervisor';
+    const isStudent = user?.role === 'student';
+
     const [activeTab, setActiveTab] = useState<Tab>('chat');
     const [loading, setLoading] = useState(false);
 
@@ -27,10 +30,24 @@ const AiAssistant: React.FC = () => {
     const [reportTitle, setReportTitle] = useState('');
     const [summary, setSummary] = useState('');
 
-    // Suggest state
+    // Suggest topics state
     const [interests, setInterests] = useState('');
     const [field, setField] = useState('');
     const [suggestions, setSuggestions] = useState('');
+
+    // Suggest tasks state (NEW)
+    const [sprintTitle, setSprintTitle] = useState('');
+    const [sprintGoals, setSprintGoals] = useState('');
+    const [projectTitle, setProjectTitle] = useState('');
+    const [taskSuggestions, setTaskSuggestions] = useState('');
+
+    // Grammar state (NEW)
+    const [grammarText, setGrammarText] = useState('');
+    const [grammarResult, setGrammarResult] = useState('');
+
+    // Assess state (Teacher)
+    const [assessProjectId, setAssessProjectId] = useState('');
+    const [assessResult, setAssessResult] = useState('');
 
     const getToken = async () => {
         if (!auth.currentUser) throw new Error('Not authenticated');
@@ -49,7 +66,7 @@ const AiAssistant: React.FC = () => {
             const res = await fetch(`${API_URL}/ai/chat`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                body: JSON.stringify({ message: userMsg }),
+                body: JSON.stringify({ message: userMsg, role: isTeacher ? 'teacher' : 'student' }),
             });
             const data = await res.json();
             if (data.success) {
@@ -104,6 +121,71 @@ const AiAssistant: React.FC = () => {
         }
     };
 
+    const handleSuggestTasks = async () => {
+        if (!sprintTitle.trim() || loading) return;
+        setLoading(true);
+        setTaskSuggestions('');
+        try {
+            const token = await getToken();
+            const res = await fetch(`${API_URL}/ai/suggest-tasks`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ sprintTitle, sprintGoals, projectTitle }),
+            });
+            const data = await res.json();
+            setTaskSuggestions(data.success ? data.data.suggestions : '❌ ' + data.message);
+        } catch {
+            setTaskSuggestions('❌ Không thể kết nối AI.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCheckGrammar = async () => {
+        if (!grammarText.trim() || loading) return;
+        setLoading(true);
+        setGrammarResult('');
+        try {
+            const token = await getToken();
+            const res = await fetch(`${API_URL}/ai/check-grammar`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ text: grammarText }),
+            });
+            const data = await res.json();
+            setGrammarResult(data.success ? data.data.result : '❌ ' + data.message);
+        } catch {
+            setGrammarResult('❌ Không thể kết nối AI.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleAssess = async () => {
+        if (!assessProjectId.trim() || loading) return;
+        setLoading(true);
+        setAssessResult('');
+        try {
+            const token = await getToken();
+            const res = await fetch(`${API_URL}/ai/assess-progress`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+                body: JSON.stringify({ projectId: assessProjectId }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                const info = data.data;
+                setAssessResult(`📊 ${info.projectTitle} — ${info.studentName}\nSprints: ${info.totalSprints} | Báo cáo: ${info.totalReports} | Tiến độ: ${info.totalProgress}%\n\n${info.assessment}`);
+            } else {
+                setAssessResult('❌ ' + data.message);
+            }
+        } catch {
+            setAssessResult('❌ Không thể kết nối AI.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handleKeyDown = (e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
@@ -111,24 +193,42 @@ const AiAssistant: React.FC = () => {
         }
     };
 
+    // Define tabs based on user role
+    const tabs: { key: Tab; label: string; roles: string[] }[] = [
+        { key: 'chat', label: '💬 Hỏi đáp', roles: ['all'] },
+        { key: 'summarize', label: '📋 Tóm tắt', roles: ['student', 'teacher'] },
+        { key: 'suggest', label: '💡 Gợi ý đề tài', roles: ['student'] },
+        { key: 'suggest-tasks', label: '📝 Gợi ý Task', roles: ['student'] },
+        { key: 'grammar', label: '🔤 Ngữ pháp EN', roles: ['student'] },
+        { key: 'assess', label: '📊 Đánh giá tiến độ', roles: ['teacher'] },
+    ];
+
+    const visibleTabs = tabs.filter(t =>
+        t.roles.includes('all') ||
+        (isTeacher && t.roles.includes('teacher')) ||
+        (isStudent && t.roles.includes('student'))
+    );
+
     return (
         <MainLayout>
             <div className={styles.container}>
                 <div className={styles.header}>
                     <h1 className={styles.title}>🤖 Trợ Lý AI</h1>
-                    <p className={styles.subtitle}>Hỗ trợ quản lý đồ án bằng AI Gemini</p>
+                    <p className={styles.subtitle}>
+                        {isTeacher ? 'Hỗ trợ giảng viên quản lý & đánh giá đồ án' : 'Hỗ trợ sinh viên thực hiện đồ án'}
+                    </p>
                 </div>
 
                 <div className={styles.tabs}>
-                    <button className={`${styles.tab} ${activeTab === 'chat' ? styles.active : ''}`} onClick={() => setActiveTab('chat')}>
-                        💬 Hỏi đáp
-                    </button>
-                    <button className={`${styles.tab} ${activeTab === 'summarize' ? styles.active : ''}`} onClick={() => setActiveTab('summarize')}>
-                        📋 Tóm tắt báo cáo
-                    </button>
-                    <button className={`${styles.tab} ${activeTab === 'suggest' ? styles.active : ''}`} onClick={() => setActiveTab('suggest')}>
-                        💡 Gợi ý đề tài
-                    </button>
+                    {visibleTabs.map(tab => (
+                        <button
+                            key={tab.key}
+                            className={`${styles.tab} ${activeTab === tab.key ? styles.active : ''}`}
+                            onClick={() => setActiveTab(tab.key)}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
 
                 <div className={styles.content}>
@@ -138,9 +238,11 @@ const AiAssistant: React.FC = () => {
                                 {messages.length === 0 && (
                                     <div className={styles.emptyChat}>
                                         <p style={{ fontSize: '3rem' }}>🤖</p>
-                                        <p>Xin chào! Tôi là trợ lý AI quản lý đồ án.</p>
+                                        <p>Xin chào{isTeacher ? ' thầy/cô' : ''}! Tôi là trợ lý AI quản lý đồ án.</p>
                                         <p style={{ color: '#64748b', fontSize: '0.875rem' }}>
-                                            Hỏi tôi về quy trình đồ án, cách viết báo cáo, hoặc bất kỳ thắc mắc nào liên quan.
+                                            {isTeacher
+                                                ? 'Hỏi tôi về tiến độ sinh viên, đánh giá Sprint, hoặc gợi ý phản hồi.'
+                                                : 'Hỏi tôi về quy trình đồ án, cách viết báo cáo, hoặc bất kỳ thắc mắc nào.'}
                                         </p>
                                     </div>
                                 )}
@@ -185,21 +287,11 @@ const AiAssistant: React.FC = () => {
                         <div className={styles.formSection}>
                             <div className={styles.formGroup}>
                                 <label>📝 Tiêu đề báo cáo</label>
-                                <input
-                                    type="text"
-                                    value={reportTitle}
-                                    onChange={e => setReportTitle(e.target.value)}
-                                    placeholder="VD: Báo cáo tuần 3"
-                                />
+                                <input type="text" value={reportTitle} onChange={e => setReportTitle(e.target.value)} placeholder="VD: Báo cáo tuần 3" />
                             </div>
                             <div className={styles.formGroup}>
                                 <label>📄 Nội dung báo cáo <span style={{ color: '#dc2626' }}>*</span></label>
-                                <textarea
-                                    value={reportContent}
-                                    onChange={e => setReportContent(e.target.value)}
-                                    placeholder="Paste nội dung báo cáo vào đây..."
-                                    rows={10}
-                                />
+                                <textarea value={reportContent} onChange={e => setReportContent(e.target.value)} placeholder="Paste nội dung báo cáo vào đây..." rows={10} />
                             </div>
                             <button className={styles.actionBtn} onClick={handleSummarize} disabled={loading || !reportContent.trim()}>
                                 {loading ? '⏳ Đang xử lý...' : '🤖 Tóm tắt bằng AI'}
@@ -217,21 +309,11 @@ const AiAssistant: React.FC = () => {
                         <div className={styles.formSection}>
                             <div className={styles.formGroup}>
                                 <label>🎯 Sở thích / Kỹ năng <span style={{ color: '#dc2626' }}>*</span></label>
-                                <input
-                                    type="text"
-                                    value={interests}
-                                    onChange={e => setInterests(e.target.value)}
-                                    placeholder="VD: Web, React, AI, Mobile..."
-                                />
+                                <input type="text" value={interests} onChange={e => setInterests(e.target.value)} placeholder="VD: Web, React, AI, Mobile..." />
                             </div>
                             <div className={styles.formGroup}>
                                 <label>📂 Lĩnh vực mong muốn</label>
-                                <input
-                                    type="text"
-                                    value={field}
-                                    onChange={e => setField(e.target.value)}
-                                    placeholder="VD: Công nghệ phần mềm, Trí tuệ nhân tạo..."
-                                />
+                                <input type="text" value={field} onChange={e => setField(e.target.value)} placeholder="VD: Công nghệ phần mềm, Trí tuệ nhân tạo..." />
                             </div>
                             <button className={styles.actionBtn} onClick={handleSuggest} disabled={loading || !interests.trim()}>
                                 {loading ? '⏳ Đang xử lý...' : '💡 Gợi ý đề tài'}
@@ -240,6 +322,78 @@ const AiAssistant: React.FC = () => {
                                 <div className={styles.resultBox}>
                                     <h3>💡 Đề tài gợi ý</h3>
                                     <pre className={styles.resultText}>{suggestions}</pre>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'suggest-tasks' && (
+                        <div className={styles.formSection}>
+                            <div className={styles.formGroup}>
+                                <label>🏃 Tên Sprint <span style={{ color: '#dc2626' }}>*</span></label>
+                                <input type="text" value={sprintTitle} onChange={e => setSprintTitle(e.target.value)} placeholder="VD: Sprint 2 - Phát triển Backend" />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>🎯 Mục tiêu Sprint</label>
+                                <input type="text" value={sprintGoals} onChange={e => setSprintGoals(e.target.value)} placeholder="VD: Hoàn thành API CRUD, tích hợp cơ sở dữ liệu" />
+                            </div>
+                            <div className={styles.formGroup}>
+                                <label>📚 Tên đồ án</label>
+                                <input type="text" value={projectTitle} onChange={e => setProjectTitle(e.target.value)} placeholder="VD: Hệ thống quản lý thư viện" />
+                            </div>
+                            <button className={styles.actionBtn} onClick={handleSuggestTasks} disabled={loading || !sprintTitle.trim()}>
+                                {loading ? '⏳ Đang xử lý...' : '📝 Gợi ý Task'}
+                            </button>
+                            {taskSuggestions && (
+                                <div className={styles.resultBox}>
+                                    <h3>📝 Task gợi ý</h3>
+                                    <pre className={styles.resultText}>{taskSuggestions}</pre>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'grammar' && (
+                        <div className={styles.formSection}>
+                            <div className={styles.formGroup}>
+                                <label>🔤 Đoạn văn tiếng Anh <span style={{ color: '#dc2626' }}>*</span></label>
+                                <textarea
+                                    value={grammarText}
+                                    onChange={e => setGrammarText(e.target.value)}
+                                    placeholder="Paste đoạn văn tiếng Anh cần kiểm tra vào đây..."
+                                    rows={8}
+                                />
+                            </div>
+                            <button className={styles.actionBtn} onClick={handleCheckGrammar} disabled={loading || !grammarText.trim()}>
+                                {loading ? '⏳ Đang kiểm tra...' : '🔤 Kiểm tra ngữ pháp'}
+                            </button>
+                            {grammarResult && (
+                                <div className={styles.resultBox}>
+                                    <h3>🔤 Kết quả kiểm tra</h3>
+                                    <pre className={styles.resultText}>{grammarResult}</pre>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {activeTab === 'assess' && (
+                        <div className={styles.formSection}>
+                            <div className={styles.formGroup}>
+                                <label>🆔 Project ID <span style={{ color: '#dc2626' }}>*</span></label>
+                                <input
+                                    type="text"
+                                    value={assessProjectId}
+                                    onChange={e => setAssessProjectId(e.target.value)}
+                                    placeholder="Nhập ID đồ án cần đánh giá..."
+                                />
+                            </div>
+                            <button className={styles.actionBtn} onClick={handleAssess} disabled={loading || !assessProjectId.trim()}>
+                                {loading ? '⏳ Đang đánh giá...' : '📊 Đánh giá tiến độ'}
+                            </button>
+                            {assessResult && (
+                                <div className={styles.resultBox}>
+                                    <h3>📊 Kết quả đánh giá</h3>
+                                    <pre className={styles.resultText}>{assessResult}</pre>
                                 </div>
                             )}
                         </div>

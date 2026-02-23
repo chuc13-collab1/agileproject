@@ -34,6 +34,7 @@ router.get('/', async (req, res, next) => {
       LEFT JOIN users u_topic_supervisor ON t.supervisor_id = u_topic_supervisor.id
       LEFT JOIN teachers tr ON p.reviewer_id = tr.id
       LEFT JOIN users u_reviewer ON tr.user_id = u_reviewer.id
+      WHERE p.archived_at IS NULL
       ORDER BY p.created_at DESC
     `);
 
@@ -98,6 +99,57 @@ router.get('/teachers/:teacherId/projects', async (req, res, next) => {
             success: true,
             data: projects
         });
+    } catch (error) {
+        next(error);
+    }
+});
+
+/**
+ * GET /api/projects/teachers/:teacherId/review-projects
+ * Get all projects assigned to a teacher as reviewer
+ */
+router.get('/teachers/:teacherId/review-projects', async (req, res, next) => {
+    try {
+        const { teacherId } = req.params;
+
+        const [projects] = await db.query(`
+      SELECT 
+        p.*,
+        t.title as topic_title,
+        t.field,
+        u.display_name as student_name,
+        u.email as student_email,
+        s.student_id as student_code,
+        s.class_name,
+        u_supervisor.display_name as supervisor_name
+      FROM projects p
+      INNER JOIN topics t ON p.topic_id = t.id
+      INNER JOIN students s ON p.student_id = s.id
+      INNER JOIN users u ON s.user_id = u.id
+      LEFT JOIN teachers te ON p.supervisor_id = te.id
+      LEFT JOIN users u_supervisor ON te.user_id = u_supervisor.id
+      WHERE p.reviewer_id = (SELECT id FROM teachers WHERE user_id = ?)
+      ORDER BY p.created_at DESC
+    `, [teacherId]);
+
+        const formattedProjects = projects.map(p => ({
+            id: p.id,
+            title: p.topic_title,
+            studentName: p.student_name,
+            studentEmail: p.student_email,
+            studentCode: p.student_code,
+            className: p.class_name,
+            field: p.field,
+            status: p.status,
+            supervisorName: p.supervisor_name,
+            supervisorScore: p.supervisor_score,
+            reviewerScore: p.reviewer_score,
+            finalScore: p.final_score,
+            grade: p.grade,
+            createdAt: p.created_at,
+        }));
+
+        res.json({ success: true, data: formattedProjects });
     } catch (error) {
         next(error);
     }
