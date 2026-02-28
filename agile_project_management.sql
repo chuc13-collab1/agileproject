@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th2 12, 2026 lúc 01:36 PM
+-- Thời gian đã tạo: Th2 25, 2026 lúc 08:34 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -74,6 +74,23 @@ INSERT INTO `announcements` (`id`, `title`, `content`, `semester`, `academic_yea
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `bookings`
+--
+
+CREATE TABLE `bookings` (
+  `id` varchar(36) NOT NULL COMMENT 'UUID',
+  `slot_id` varchar(36) NOT NULL,
+  `student_id` varchar(36) NOT NULL,
+  `project_id` varchar(36) DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `status` enum('pending','confirmed','cancelled','completed') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `classes`
 --
 
@@ -102,6 +119,107 @@ INSERT INTO `classes` (`id`, `class_code`, `class_name`, `academic_year`, `advis
 -- --------------------------------------------------------
 
 --
+-- Cấu trúc bảng cho bảng `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` varchar(36) NOT NULL COMMENT 'UUID',
+  `report_id` varchar(36) NOT NULL COMMENT 'Reference to progress_reports table',
+  `teacher_id` varchar(36) NOT NULL COMMENT 'Teacher who commented',
+  `content` text NOT NULL COMMENT 'Comment text',
+  `rating` int(11) DEFAULT NULL COMMENT 'Rating 1-5 stars',
+  `comment_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ;
+
+--
+-- Đang đổ dữ liệu cho bảng `comments`
+--
+
+INSERT INTO `comments` (`id`, `report_id`, `teacher_id`, `content`, `rating`, `comment_date`, `created_at`, `updated_at`) VALUES
+('33efe5fd-09c4-4f5f-8d82-3ccce97bf023', '130a7f95-c543-4929-8a03-3257c9a57353', '0b4dc15a-b582-4c3a-bd39-ee117160ae93', 'dc', 5, '2026-02-13 03:12:19', '2026-02-13 03:12:19', '2026-02-13 03:12:19');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `meeting_slots`
+--
+
+CREATE TABLE `meeting_slots` (
+  `id` varchar(36) NOT NULL COMMENT 'UUID',
+  `teacher_id` varchar(36) NOT NULL,
+  `start_time` datetime NOT NULL,
+  `end_time` datetime NOT NULL,
+  `location` varchar(255) DEFAULT NULL COMMENT 'Physical room or Meeting Link',
+  `max_students` int(11) DEFAULT 1,
+  `is_booked` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `meeting_slots`
+--
+
+INSERT INTO `meeting_slots` (`id`, `teacher_id`, `start_time`, `end_time`, `location`, `max_students`, `is_booked`, `created_at`) VALUES
+('7401dba8-4df1-4ef3-870e-802b74eccd64', '0b4dc15a-b582-4c3a-bd39-ee117160ae93', '2026-02-27 15:41:00', '2026-02-27 16:44:00', 'Online (Google Meet)', 1, 0, '2026-02-13 05:39:52');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` varchar(36) NOT NULL,
+  `user_uid` varchar(128) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `type` enum('info','success','warning','error','project','report','chat','system') DEFAULT 'info',
+  `link` varchar(500) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `progress_reports`
+--
+
+CREATE TABLE `progress_reports` (
+  `id` varchar(36) NOT NULL COMMENT 'UUID',
+  `project_id` varchar(36) NOT NULL COMMENT 'Reference to projects table',
+  `report_title` varchar(200) NOT NULL COMMENT 'Report title',
+  `week_number` int(11) DEFAULT NULL COMMENT 'Week number (e.g., 1-15)',
+  `content` text NOT NULL COMMENT 'Report content/description',
+  `achievements` text DEFAULT NULL COMMENT 'What was achieved this period',
+  `difficulties` text DEFAULT NULL COMMENT 'Difficulties encountered',
+  `next_steps` text DEFAULT NULL COMMENT 'Plan for next period',
+  `file_path` varchar(500) DEFAULT NULL COMMENT 'Firebase Storage path to uploaded file',
+  `file_name` varchar(255) DEFAULT NULL COMMENT 'Original filename',
+  `file_size` bigint(20) DEFAULT NULL COMMENT 'File size in bytes',
+  `status` enum('submitted','reviewed','approved','revision_needed') NOT NULL DEFAULT 'submitted',
+  `submitted_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `reviewed_date` timestamp NULL DEFAULT NULL COMMENT 'When teacher reviewed',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `progress_reports`
+--
+
+INSERT INTO `progress_reports` (`id`, `project_id`, `report_title`, `week_number`, `content`, `achievements`, `difficulties`, `next_steps`, `file_path`, `file_name`, `file_size`, `status`, `submitted_date`, `reviewed_date`, `created_at`, `updated_at`) VALUES
+('130a7f95-c543-4929-8a03-3257c9a57353', '7d14c6f2-ca70-42be-bfd4-ffd5bba2690c', 'dang nhap', 1, 'Tết là khoảng thời gian đẹp nhất trong năm, khi mọi bộn bề dường như lắng lại để nhường chỗ cho sự sum vầy và yêu thương. Những ngày cuối năm, ai cũng tất bật dọn dẹp nhà cửa, chuẩn bị mâm cỗ, trang trí cành mai, cành đào như một cách chào đón điều mới mẻ. Không khí Tết không chỉ nằm ở mùi bánh chưng đang sôi trên bếp, mà còn ở tiếng cười nói rộn ràng của gia đình khi cùng nhau ngồi lại.\r\n\r\nTết còn là dịp để mỗi người nhìn lại một năm đã qua, với những nỗ lực, thành công và cả những điều chưa trọn vẹn. Khoảnh khắc giao thừa thiêng liêng khiến ta cảm nhận rõ ràng sự chuyển giao giữa cũ và mới, giữa lo toan và hy vọng. Trẻ con háo hức nhận lì xì, người lớn gửi nhau lời chúc bình an, sức khỏe và may mắn.\r\n\r\nDù cuộc sống có thay đổi thế nào, Tết vẫn luôn giữ một vị trí đặc biệt trong lòng mỗi người Việt – đó là thời điểm của đoàn tụ, của lòng biết ơn và của những khởi đầu đầy hi vọng.', NULL, NULL, NULL, 'E:\\agile-project-management\\server\\uploads\\progress-reports\\file-1770951848755-603698128.zip', 'CinemaManagement.zip', 17199613, 'approved', '2026-02-13 03:04:08', '2026-02-13 03:12:19', '2026-02-13 03:04:08', '2026-02-13 03:12:19'),
+('26ac573f-f49b-4216-8099-b6c2d8a54c03', '7d14c6f2-ca70-42be-bfd4-ffd5bba2690c', 'đăng nhập', 1, 'Goal\r\nReview, enhance, and verify the existing student interface pages to match the modern design standards used in Admin and Teacher interfaces.\r\n\r\nCurrent Status\r\n✅ Existing Pages (9 pages)\r\nStudentDashboard - Basic dashboard with stats\r\nMyProject - View project details\r\nDocumentManagement - Upload/manage documents ✅\r\nProgressReports - View progress reports\r\nSubmitReport - Submit new progress report\r\nTopicBrowsing - Browse available topics\r\nTopicRegistration - Register for a topic\r\nStudentTopicProposal - Propose new topic\r\nProjectResults - View results/grades\r\nProposed Changes\r\nPhase 1: UI Enhancements (Priority HIGH)\r\n[MODIFY] \r\nStudentDashboard.tsx\r\nCurrent: Basic layout with plain stats cards Changes:\r\n\r\nAdd gradient header (similar to Teacher/Admin)\r\nImprove stat cards with better colors and icons\r\nAdd live data for pending reports\r\nBetter quick action buttons with gradients\r\nAdd project preview section\r\n[MODIFY] \r\nDocumentManagement.tsx\r\nCurrent: Has upload functionality Changes:\r\n\r\nVerify file upload actually works with backend\r\nAdd drag & drop UI\r\nBetter file type badges\r\nProgress bar for uploads\r\nModern gradients and spacing\r\n[MODIFY] \r\nProgressReports.tsx\r\nCurrent: Basic list of reports Changes:\r\n\r\nModern card layout\r\nBetter status badges with colors\r\nView supervisor comments in modal\r\nRating display (stars)\r\nFilter by status\r\n[MODIFY] \r\nSubmitReport.tsx\r\nCurrent: Form to submit report Changes:\r\n\r\nModern gradient design\r\nBetter textarea styling\r\nSuccess animation after submit\r\nAuto-save draft (optional)\r\nPhase 2: API Integration (Priority MEDIUM)\r\nBackend Endpoints to Verify/Create\r\nDocuments API:\r\n\r\nPOST /api/documents/upload - Upload file\r\nGET /api/projects/:id/documents - Get documents\r\nDELETE /api/documents/:id - Delete document\r\nProgress Reports API:\r\n\r\nGET /api/students/:studentId/progress-reports - Get student reports\r\nPOST /api/progress-reports - Submit new report\r\nGET /api/progress-reports/:id - Get report details\r\nProjects API (already exists):\r\n\r\nGET /api/projects?studentId=:id - Get student\'s project\r\nPhase 3: Additional Features (Priority LOW)\r\n[MODIFY] \r\nMyProject.tsx\r\nAdd supervisor contact info\r\nQuick upload button\r\nTimeline visualization\r\nDeadline countdown\r\n[MODIFY] \r\nTopicBrowsing.tsx\r\nSearch and filter\r\nTopic details modal\r\nBetter card layout\r\nVerification Plan\r\nManual Testing\r\nLogin as Student\r\n\r\nNavigate to /student/dashboard\r\nVerify stats load correctly\r\nUpload Document\r\n\r\nGo to /student/documents\r\nTry uploading a file (.pdf, .zip)\r\nVerify file appears in list\r\nTry downloading\r\nSubmit Progress Report\r\n\r\nGo to /student/reports/submit\r\nFill form and submit\r\nVerify appears in reports list\r\nCheck if teacher can see it\r\nView Project\r\n\r\nGo to /student/my-project\r\nVerify project details display\r\nCheck supervisor comments', NULL, NULL, NULL, 'E:\\agile-project-management\\server\\uploads\\progress-reports\\file-1770950800104-543133750.zip', 'CinemaManagement.zip', 17199613, 'submitted', '2026-02-13 02:46:40', NULL, '2026-02-13 02:46:40', '2026-02-13 02:46:40'),
+('9522046d-9fdc-4988-9ac5-87a765de315b', '7d14c6f2-ca70-42be-bfd4-ffd5bba2690c', 'đăng nhập', 1, 'Goal\r\nReview, enhance, and verify the existing student interface pages to match the modern design standards used in Admin and Teacher interfaces.\r\n\r\nCurrent Status\r\n✅ Existing Pages (9 pages)\r\nStudentDashboard - Basic dashboard with stats\r\nMyProject - View project details\r\nDocumentManagement - Upload/manage documents ✅\r\nProgressReports - View progress reports\r\nSubmitReport - Submit new progress report\r\nTopicBrowsing - Browse available topics\r\nTopicRegistration - Register for a topic\r\nStudentTopicProposal - Propose new topic\r\nProjectResults - View results/grades\r\nProposed Changes\r\nPhase 1: UI Enhancements (Priority HIGH)\r\n[MODIFY] \r\nStudentDashboard.tsx\r\nCurrent: Basic layout with plain stats cards Changes:\r\n\r\nAdd gradient header (similar to Teacher/Admin)\r\nImprove stat cards with better colors and icons\r\nAdd live data for pending reports\r\nBetter quick action buttons with gradients\r\nAdd project preview section\r\n[MODIFY] \r\nDocumentManagement.tsx\r\nCurrent: Has upload functionality Changes:\r\n\r\nVerify file upload actually works with backend\r\nAdd drag & drop UI\r\nBetter file type badges\r\nProgress bar for uploads\r\nModern gradients and spacing\r\n[MODIFY] \r\nProgressReports.tsx\r\nCurrent: Basic list of reports Changes:\r\n\r\nModern card layout\r\nBetter status badges with colors\r\nView supervisor comments in modal\r\nRating display (stars)\r\nFilter by status\r\n[MODIFY] \r\nSubmitReport.tsx\r\nCurrent: Form to submit report Changes:\r\n\r\nModern gradient design\r\nBetter textarea styling\r\nSuccess animation after submit\r\nAuto-save draft (optional)\r\nPhase 2: API Integration (Priority MEDIUM)\r\nBackend Endpoints to Verify/Create\r\nDocuments API:\r\n\r\nPOST /api/documents/upload - Upload file\r\nGET /api/projects/:id/documents - Get documents\r\nDELETE /api/documents/:id - Delete document\r\nProgress Reports API:\r\n\r\nGET /api/students/:studentId/progress-reports - Get student reports\r\nPOST /api/progress-reports - Submit new report\r\nGET /api/progress-reports/:id - Get report details\r\nProjects API (already exists):\r\n\r\nGET /api/projects?studentId=:id - Get student\'s project\r\nPhase 3: Additional Features (Priority LOW)\r\n[MODIFY] \r\nMyProject.tsx\r\nAdd supervisor contact info\r\nQuick upload button\r\nTimeline visualization\r\nDeadline countdown\r\n[MODIFY] \r\nTopicBrowsing.tsx\r\nSearch and filter\r\nTopic details modal\r\nBetter card layout\r\nVerification Plan\r\nManual Testing\r\nLogin as Student\r\n\r\nNavigate to /student/dashboard\r\nVerify stats load correctly\r\nUpload Document\r\n\r\nGo to /student/documents\r\nTry uploading a file (.pdf, .zip)\r\nVerify file appears in list\r\nTry downloading\r\nSubmit Progress Report\r\n\r\nGo to /student/reports/submit\r\nFill form and submit\r\nVerify appears in reports list\r\nCheck if teacher can see it\r\nView Project\r\n\r\nGo to /student/my-project\r\nVerify project details display\r\nCheck supervisor comments', NULL, NULL, NULL, 'E:\\agile-project-management\\server\\uploads\\progress-reports\\file-1770950581010-532632719.zip', 'CinemaManagement.zip', 17199613, 'submitted', '2026-02-13 02:43:01', NULL, '2026-02-13 02:43:01', '2026-02-13 02:43:01'),
+('9ea69024-55cd-4024-996c-1034637a3379', '7d14c6f2-ca70-42be-bfd4-ffd5bba2690c', 'hoàn thanh dang nhap', 1, 'Tết là khoảng thời gian đẹp nhất trong năm, khi mọi bộn bề dường như lắng lại để nhường chỗ cho sự sum vầy và yêu thương. Những ngày cuối năm, ai cũng tất bật dọn dẹp nhà cửa, chuẩn bị mâm cỗ, trang trí cành mai, cành đào như một cách chào đón điều mới mẻ. Không khí Tết không chỉ nằm ở mùi bánh chưng đang sôi trên bếp, mà còn ở tiếng cười nói rộn ràng của gia đình khi cùng nhau ngồi lại.\r\n\r\nTết còn là dịp để mỗi người nhìn lại một năm đã qua, với những nỗ lực, thành công và cả những điều chưa trọn vẹn. Khoảnh khắc giao thừa thiêng liêng khiến ta cảm nhận rõ ràng sự chuyển giao giữa cũ và mới, giữa lo toan và hy vọng. Trẻ con háo hức nhận lì xì, người lớn gửi nhau lời chúc bình an, sức khỏe và may mắn.\r\n\r\nDù cuộc sống có thay đổi thế nào, Tết vẫn luôn giữ một vị trí đặc biệt trong lòng mỗi người Việt – đó là thời điểm của đoàn tụ, của lòng biết ơn và của những khởi đầu đầy hi vọng.', NULL, NULL, NULL, 'E:\\agile-project-management\\server\\uploads\\progress-reports\\file-1770951185930-649450032.zip', 'CinemaManagement.zip', 17199613, 'submitted', '2026-02-13 02:53:06', NULL, '2026-02-13 02:53:06', '2026-02-13 02:53:06'),
+('fa8c8a51-e17b-401e-af6b-f16ad394131b', '7d14c6f2-ca70-42be-bfd4-ffd5bba2690c', 'dang nhap', 1, 'Tết là khoảng thời gian đẹp nhất trong năm, khi mọi bộn bề dường như lắng lại để nhường chỗ cho sự sum vầy và yêu thương. Những ngày cuối năm, ai cũng tất bật dọn dẹp nhà cửa, chuẩn bị mâm cỗ, trang trí cành mai, cành đào như một cách chào đón điều mới mẻ. Không khí Tết không chỉ nằm ở mùi bánh chưng đang sôi trên bếp, mà còn ở tiếng cười nói rộn ràng của gia đình khi cùng nhau ngồi lại.\r\n\r\nTết còn là dịp để mỗi người nhìn lại một năm đã qua, với những nỗ lực, thành công và cả những điều chưa trọn vẹn. Khoảnh khắc giao thừa thiêng liêng khiến ta cảm nhận rõ ràng sự chuyển giao giữa cũ và mới, giữa lo toan và hy vọng. Trẻ con háo hức nhận lì xì, người lớn gửi nhau lời chúc bình an, sức khỏe và may mắn.\r\n\r\nDù cuộc sống có thay đổi thế nào, Tết vẫn luôn giữ một vị trí đặc biệt trong lòng mỗi người Việt – đó là thời điểm của đoàn tụ, của lòng biết ơn và của những khởi đầu đầy hi vọng.', NULL, NULL, NULL, 'E:\\agile-project-management\\server\\uploads\\progress-reports\\file-1770951551057-3819162.docx', 'KNNN_NHÃM17.docx', 2986840, 'submitted', '2026-02-13 02:59:11', NULL, '2026-02-13 02:59:11', '2026-02-13 02:59:11');
+
+-- --------------------------------------------------------
+
+--
 -- Cấu trúc bảng cho bảng `projects`
 --
 
@@ -125,17 +243,83 @@ CREATE TABLE `projects` (
   `reviewer_score` decimal(4,2) DEFAULT NULL,
   `council_score` decimal(4,2) DEFAULT NULL,
   `final_score` decimal(4,2) DEFAULT NULL,
-  `grade` varchar(10) DEFAULT NULL
+  `grade` varchar(10) DEFAULT NULL,
+  `archived_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Đang đổ dữ liệu cho bảng `projects`
 --
 
-INSERT INTO `projects` (`id`, `topic_id`, `student_id`, `supervisor_id`, `reviewer_id`, `status`, `registration_date`, `start_date`, `end_date`, `defense_date`, `final_grade`, `notes`, `created_at`, `updated_at`, `report_deadline`, `supervisor_score`, `reviewer_score`, `council_score`, `final_score`, `grade`) VALUES
-('1655ceab-6c12-4b85-bab0-019b4d041a31', '9dacc2ec-cb56-4564-8cd0-8f1daeef7ace', 'f472e34b-9358-4132-846e-32df17a612d9', NULL, NULL, 'registered', '2026-02-11 07:34:37', NULL, NULL, NULL, NULL, NULL, '2026-02-11 07:34:37', '2026-02-11 07:34:37', NULL, NULL, NULL, NULL, NULL, NULL),
-('53c03c1a-3445-4cf9-ab4f-01735e0a1122', '12172c00-839a-44b8-a0a5-d8b2e33f17e9', 'f472e34b-9358-4132-846e-32df17a612d9', NULL, NULL, 'registered', '2026-02-11 07:36:25', NULL, NULL, NULL, NULL, NULL, '2026-02-11 07:36:25', '2026-02-11 07:36:25', NULL, NULL, NULL, NULL, NULL, NULL),
-('7d14c6f2-ca70-42be-bfd4-ffd5bba2690c', '9dacc2ec-cb56-4564-8cd0-8f1daeef7ace', '4590af2d-1ff9-4206-ab8a-e499f9337fbe', NULL, NULL, 'registered', '2026-02-12 04:17:34', NULL, NULL, NULL, NULL, NULL, '2026-02-12 04:17:34', '2026-02-12 05:26:41', NULL, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `projects` (`id`, `topic_id`, `student_id`, `supervisor_id`, `reviewer_id`, `status`, `registration_date`, `start_date`, `end_date`, `defense_date`, `final_grade`, `notes`, `created_at`, `updated_at`, `report_deadline`, `supervisor_score`, `reviewer_score`, `council_score`, `final_score`, `grade`, `archived_at`) VALUES
+('1655ceab-6c12-4b85-bab0-019b4d041a31', '9dacc2ec-cb56-4564-8cd0-8f1daeef7ace', 'f472e34b-9358-4132-846e-32df17a612d9', NULL, NULL, 'registered', '2026-02-11 07:34:37', NULL, NULL, NULL, NULL, NULL, '2026-02-11 07:34:37', '2026-02-11 07:34:37', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+('53c03c1a-3445-4cf9-ab4f-01735e0a1122', '12172c00-839a-44b8-a0a5-d8b2e33f17e9', 'f472e34b-9358-4132-846e-32df17a612d9', '0b4dc15a-b582-4c3a-bd39-ee117160ae93', '0b4dc15a-b582-4c3a-bd39-ee117160ae93', 'in_progress', '2026-02-11 07:36:25', NULL, NULL, NULL, NULL, NULL, '2026-02-11 07:36:25', '2026-02-13 09:13:03', '2026-05-14 07:00:00', NULL, NULL, NULL, NULL, NULL, NULL),
+('7d14c6f2-ca70-42be-bfd4-ffd5bba2690c', '9dacc2ec-cb56-4564-8cd0-8f1daeef7ace', '4590af2d-1ff9-4206-ab8a-e499f9337fbe', '0b4dc15a-b582-4c3a-bd39-ee117160ae93', '0b4dc15a-b582-4c3a-bd39-ee117160ae93', 'in_progress', '2026-02-12 04:17:34', NULL, NULL, NULL, NULL, NULL, '2026-02-12 04:17:34', '2026-02-12 13:00:59', '2026-05-13 07:00:00', NULL, NULL, NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `project_archive`
+--
+
+CREATE TABLE `project_archive` (
+  `id` int(11) NOT NULL,
+  `project_id` varchar(36) NOT NULL,
+  `topic_title` varchar(500) NOT NULL,
+  `topic_field` varchar(255) DEFAULT NULL,
+  `student_name` varchar(255) NOT NULL,
+  `student_code` varchar(50) DEFAULT NULL,
+  `class_name` varchar(50) DEFAULT NULL,
+  `supervisor_name` varchar(255) DEFAULT NULL,
+  `reviewer_name` varchar(255) DEFAULT NULL,
+  `academic_year` varchar(20) NOT NULL,
+  `semester` varchar(20) DEFAULT NULL,
+  `final_score` decimal(5,2) DEFAULT NULL,
+  `grade` varchar(5) DEFAULT NULL,
+  `status` varchar(50) DEFAULT 'completed',
+  `description` text DEFAULT NULL,
+  `document_url` varchar(500) DEFAULT NULL,
+  `archived_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `sprints`
+--
+
+CREATE TABLE `sprints` (
+  `id` varchar(36) NOT NULL,
+  `project_id` varchar(36) NOT NULL,
+  `sprint_number` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `goals` text DEFAULT NULL,
+  `start_week` int(11) NOT NULL,
+  `end_week` int(11) NOT NULL,
+  `weight_percent` int(11) DEFAULT 0,
+  `status` enum('not_started','in_progress','completed') DEFAULT 'not_started',
+  `actual_progress` int(11) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `sprint_comments`
+--
+
+CREATE TABLE `sprint_comments` (
+  `id` varchar(36) NOT NULL,
+  `sprint_id` varchar(36) NOT NULL,
+  `project_id` varchar(36) NOT NULL,
+  `author_uid` varchar(255) NOT NULL,
+  `author_name` varchar(255) NOT NULL,
+  `author_role` enum('teacher','student') NOT NULL DEFAULT 'teacher',
+  `content` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -434,6 +618,15 @@ ALTER TABLE `announcements`
   ADD KEY `idx_status` (`status`);
 
 --
+-- Chỉ mục cho bảng `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_bookings_slot` (`slot_id`),
+  ADD KEY `fk_bookings_student` (`student_id`),
+  ADD KEY `fk_bookings_project` (`project_id`);
+
+--
 -- Chỉ mục cho bảng `classes`
 --
 ALTER TABLE `classes`
@@ -445,6 +638,41 @@ ALTER TABLE `classes`
   ADD KEY `idx_active` (`is_active`);
 
 --
+-- Chỉ mục cho bảng `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_report` (`report_id`),
+  ADD KEY `idx_teacher` (`teacher_id`),
+  ADD KEY `idx_comment_date` (`comment_date`);
+
+--
+-- Chỉ mục cho bảng `meeting_slots`
+--
+ALTER TABLE `meeting_slots`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_slots_teacher` (`teacher_id`);
+
+--
+-- Chỉ mục cho bảng `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_user_uid` (`user_uid`),
+  ADD KEY `idx_is_read` (`is_read`),
+  ADD KEY `idx_created_at` (`created_at`);
+
+--
+-- Chỉ mục cho bảng `progress_reports`
+--
+ALTER TABLE `progress_reports`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_project` (`project_id`),
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_week` (`week_number`),
+  ADD KEY `idx_submitted_date` (`submitted_date`);
+
+--
 -- Chỉ mục cho bảng `projects`
 --
 ALTER TABLE `projects`
@@ -453,7 +681,33 @@ ALTER TABLE `projects`
   ADD KEY `idx_student` (`student_id`),
   ADD KEY `idx_supervisor` (`supervisor_id`),
   ADD KEY `idx_reviewer` (`reviewer_id`),
-  ADD KEY `idx_status` (`status`);
+  ADD KEY `idx_status` (`status`),
+  ADD KEY `idx_projects_archived` (`archived_at`);
+
+--
+-- Chỉ mục cho bảng `project_archive`
+--
+ALTER TABLE `project_archive`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_academic_year` (`academic_year`),
+  ADD KEY `idx_topic_field` (`topic_field`),
+  ADD KEY `idx_grade` (`grade`);
+ALTER TABLE `project_archive` ADD FULLTEXT KEY `idx_search` (`topic_title`,`student_name`,`supervisor_name`);
+
+--
+-- Chỉ mục cho bảng `sprints`
+--
+ALTER TABLE `sprints`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unique_sprint` (`project_id`,`sprint_number`);
+
+--
+-- Chỉ mục cho bảng `sprint_comments`
+--
+ALTER TABLE `sprint_comments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_sprint_comments_sprint` (`sprint_id`),
+  ADD KEY `idx_sprint_comments_project` (`project_id`);
 
 --
 -- Chỉ mục cho bảng `students`
@@ -516,6 +770,16 @@ ALTER TABLE `users`
   ADD KEY `idx_active` (`is_active`);
 
 --
+-- AUTO_INCREMENT cho các bảng đã đổ
+--
+
+--
+-- AUTO_INCREMENT cho bảng `project_archive`
+--
+ALTER TABLE `project_archive`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- Các ràng buộc cho các bảng đã đổ
 --
 
@@ -532,10 +796,37 @@ ALTER TABLE `admin_permissions`
   ADD CONSTRAINT `admin_permissions_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `admins` (`id`) ON DELETE CASCADE;
 
 --
+-- Các ràng buộc cho bảng `bookings`
+--
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `fk_bookings_project` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE SET NULL,
+  ADD CONSTRAINT `fk_bookings_slot` FOREIGN KEY (`slot_id`) REFERENCES `meeting_slots` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_bookings_student` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`) ON DELETE CASCADE;
+
+--
 -- Các ràng buộc cho bảng `classes`
 --
 ALTER TABLE `classes`
   ADD CONSTRAINT `fk_class_advisor` FOREIGN KEY (`advisor_teacher_id`) REFERENCES `teachers` (`user_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `comments`
+--
+ALTER TABLE `comments`
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`report_id`) REFERENCES `progress_reports` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`);
+
+--
+-- Các ràng buộc cho bảng `meeting_slots`
+--
+ALTER TABLE `meeting_slots`
+  ADD CONSTRAINT `fk_slots_teacher` FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `progress_reports`
+--
+ALTER TABLE `progress_reports`
+  ADD CONSTRAINT `progress_reports_ibfk_1` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `projects`

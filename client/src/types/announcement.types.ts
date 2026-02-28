@@ -32,4 +32,5 @@ export interface AnnouncementFormData {
   reportDeadline?: string;
   defenseDate?: string;
   attachments?: File[];
+  sendEmail?: boolean;
 }

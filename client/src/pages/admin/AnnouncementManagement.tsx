@@ -22,6 +22,7 @@ function AnnouncementManagement() {
     registrationEnd: '',
     status: 'draft'
   });
+  const [sendEmail, setSendEmail] = useState(false);
 
   useEffect(() => {
     loadAnnouncements();
@@ -50,6 +51,7 @@ function AnnouncementManagement() {
       registrationEnd: '',
       status: 'draft'
     });
+    setSendEmail(false);
     setShowModal(true);
   };
 
@@ -69,6 +71,7 @@ function AnnouncementManagement() {
       registrationEnd: formatDate(item.registrationEnd),
       status: item.status
     });
+    setSendEmail(false);
     setShowModal(true);
   };
 
@@ -84,14 +87,26 @@ function AnnouncementManagement() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (sendEmail && formData.status === 'published') {
+      const confirmed = window.confirm(
+        'Bạn có chắc muốn gửi email thông báo đến TẤT CẢ sinh viên?\n\nEmail sẽ được gửi ngay sau khi lưu thông báo.'
+      );
+      if (!confirmed) return;
+    }
+
     try {
+      const payload = { ...formData, sendEmail: sendEmail && formData.status === 'published' };
       if (editingItem) {
-        await announcementService.updateAnnouncement(editingItem.id, formData);
+        await announcementService.updateAnnouncement(editingItem.id, payload);
       } else {
-        await announcementService.createAnnouncement(formData);
+        await announcementService.createAnnouncement(payload);
       }
       setShowModal(false);
       await loadAnnouncements();
+      if (sendEmail && formData.status === 'published') {
+        alert('✅ Thông báo đã được lưu và email đang được gửi đến sinh viên!');
+      }
     } catch (error: any) {
       console.error(error);
       alert(error.message || 'Có lỗi xảy ra');
@@ -227,6 +242,29 @@ function AnnouncementManagement() {
                     <option value="closed">Đã đóng</option>
                   </select>
                 </div>
+
+                {/* Email notification checkbox */}
+                {formData.status === 'published' && (
+                  <div style={{
+                    marginBottom: '1.5rem', padding: '1rem', background: '#f0f9ff',
+                    borderRadius: '8px', border: '1px solid #bae6fd'
+                  }}>
+                    <label style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', cursor: 'pointer' }}>
+                      <input
+                        type="checkbox"
+                        checked={sendEmail}
+                        onChange={e => setSendEmail(e.target.checked)}
+                        style={{ width: '18px', height: '18px', accentColor: '#3b82f6', cursor: 'pointer' }}
+                      />
+                      <div>
+                        <span style={{ fontWeight: 600, color: '#0369a1' }}>📧 Gửi email thông báo đến sinh viên</span>
+                        <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: '#64748b' }}>
+                          Email sẽ được gửi đến tất cả sinh viên đang hoạt động trong hệ thống
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
                   <button type="button" onClick={() => setShowModal(false)} style={{ padding: '0.75rem 1.5rem', background: 'transparent', border: 'none', cursor: 'pointer' }}>Hủy</button>
                   <button type="submit" style={{ padding: '0.75rem 1.5rem', background: '#3b82f6', color: 'white', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 600 }}>

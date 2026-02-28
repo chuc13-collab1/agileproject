@@ -2,6 +2,7 @@ import express from 'express';
 import pool from '../config/database.js';
 import { verifyToken, isAdmin } from '../middleware/auth.js';
 import { v4 as uuidv4 } from 'uuid';
+import { sendAnnouncementEmail } from '../utils/emailService.js';
 
 const router = express.Router();
 
@@ -36,7 +37,7 @@ router.get('/active', verifyToken, async (req, res, next) => {
 // POST create announcement
 router.post('/', verifyToken, isAdmin, async (req, res, next) => {
     try {
-        const { title, content, semester, academicYear, registrationStart, registrationEnd, status } = req.body;
+        const { title, content, semester, academicYear, registrationStart, registrationEnd, status, sendEmail } = req.body;
 
         if (!title || !semester || !academicYear || !registrationStart || !registrationEnd) {
             return res.status(400).json({ message: 'Missing required fields' });
@@ -52,6 +53,13 @@ router.post('/', verifyToken, isAdmin, async (req, res, next) => {
 
         const [newAnnouncement] = await pool.query('SELECT * FROM announcements WHERE id = ?', [id]);
 
+        // Send email async (non-blocking)
+        if (sendEmail && status === 'published') {
+            sendAnnouncementEmail({ title, content, semester, academicYear, registrationStart, registrationEnd })
+                .then(result => console.log('📧 Email result:', result))
+                .catch(err => console.error('📧 Email error:', err.message));
+        }
+
         res.status(201).json({
             success: true,
             data: newAnnouncement[0]
@@ -65,7 +73,7 @@ router.post('/', verifyToken, isAdmin, async (req, res, next) => {
 router.put('/:id', verifyToken, isAdmin, async (req, res, next) => {
     try {
         const { id } = req.params;
-        const { title, content, semester, academicYear, registrationStart, registrationEnd, status } = req.body;
+        const { title, content, semester, academicYear, registrationStart, registrationEnd, status, sendEmail } = req.body;
 
         await pool.query(
             `UPDATE announcements 
@@ -79,6 +87,13 @@ router.put('/:id', verifyToken, isAdmin, async (req, res, next) => {
 
         if (updatedAnnouncement.length === 0) {
             return res.status(404).json({ message: 'Announcement not found' });
+        }
+
+        // Send email async (non-blocking)
+        if (sendEmail && status === 'published') {
+            sendAnnouncementEmail({ title, content, semester, academicYear, registrationStart, registrationEnd })
+                .then(result => console.log('📧 Email result:', result))
+                .catch(err => console.error('📧 Email error:', err.message));
         }
 
         res.json({
