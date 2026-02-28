@@ -2,6 +2,7 @@ import express from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import db from '../config/database.js';
 import { verifyToken, isTeacher, isStudent } from '../middleware/auth.js';
+import { createNotification } from '../utils/notificationHelper.js';
 
 const router = express.Router();
 
@@ -129,6 +130,26 @@ router.post('/bookings', verifyToken, isStudent, async (req, res) => {
         // Update slot to is_booked (simple logic for now, later check max_students)
         await db.query('UPDATE meeting_slots SET is_booked = 1 WHERE id = ?', [slot_id]);
 
+        // Notify teacher about new booking
+        const [teacherInfo] = await db.query(
+            `SELECT u.uid, u.display_name as student_name FROM users u WHERE u.uid = ?`, [firebase_uid]
+        );
+        const [slotTeacher] = await db.query(
+            `SELECT u.uid as teacher_uid FROM meeting_slots ms
+             JOIN teachers t ON ms.teacher_id = t.id
+             JOIN users u ON t.user_id = u.id
+             WHERE ms.id = ?`, [slot_id]
+        );
+        if (slotTeacher.length > 0) {
+            createNotification({
+                userUid: slotTeacher[0].teacher_uid,
+                title: '📅 Yêu cầu đặt lịch họp',
+                message: `Sinh viên ${teacherInfo[0]?.student_name || ''} đã đặt lịch họp. Vui lòng xác nhận.`,
+                type: 'info',
+                link: '/teacher/calendar',
+            });
+        }
+
         res.status(201).json({ message: 'Booking requested', id });
     } catch (error) {
         console.error('Error booking slot:', error);
@@ -216,6 +237,29 @@ router.put('/bookings/:id', verifyToken, async (req, res) => {
             const [bookings] = await db.query('SELECT slot_id FROM bookings WHERE id = ?', [id]);
             if (bookings.length > 0) {
                 await db.query('UPDATE meeting_slots SET is_booked = 0 WHERE id = ?', [bookings[0].slot_id]);
+            }
+        }
+
+        // Notify student about booking status change
+        const [bookingInfo] = await db.query(
+            `SELECT u.uid as student_uid FROM bookings b
+             JOIN students s ON b.student_id = s.id
+             JOIN users u ON s.user_id = u.id
+             WHERE b.id = ?`, [id]
+        );
+        if (bookingInfo.length > 0) {
+            const statusMessages = {
+                confirmed: { title: '✅ Lịch họp được xác nhận', message: 'Giảng viên đã xác nhận lịch họp của bạn.', type: 'success' },
+                cancelled: { title: '❌ Lịch họp bị hủy', message: 'Lịch họp của bạn đã bị hủy.', type: 'warning' },
+                completed: { title: '✅ Buổi họp hoàn thành', message: 'Buổi họp đã được đánh dấu hoàn thành.', type: 'success' },
+            };
+            const msg = statusMessages[status];
+            if (msg) {
+                createNotification({
+                    userUid: bookingInfo[0].student_uid,
+                    ...msg,
+                    link: '/student/book-meeting',
+                });
             }
         }
 

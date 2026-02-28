@@ -3,6 +3,29 @@ import pool from '../config/database.js';
 import { verifyToken, isAdmin } from '../middleware/auth.js';
 import { v4 as uuidv4 } from 'uuid';
 import { sendAnnouncementEmail } from '../utils/emailService.js';
+import { createBulkNotifications } from '../utils/notificationHelper.js';
+
+// Helper: notify all active students in-app
+const notifyAllStudents = async (title, message, link = null) => {
+    try {
+        const [students] = await pool.query(
+            `SELECT u.uid FROM users u INNER JOIN students s ON s.user_id = u.id WHERE u.is_active = TRUE`
+        );
+        if (students.length === 0) return;
+
+        const notifications = students.map(s => ({
+            userUid: s.uid,
+            title,
+            message,
+            type: 'system',
+            link,
+        }));
+        await createBulkNotifications(notifications);
+        console.log(`🔔 In-app notification sent to ${students.length} students`);
+    } catch (err) {
+        console.error('🔔 Failed to send in-app notifications:', err.message);
+    }
+};
 
 const router = express.Router();
 
@@ -53,11 +76,18 @@ router.post('/', verifyToken, isAdmin, async (req, res, next) => {
 
         const [newAnnouncement] = await pool.query('SELECT * FROM announcements WHERE id = ?', [id]);
 
-        // Send email async (non-blocking)
-        if (sendEmail && status === 'published') {
-            sendAnnouncementEmail({ title, content, semester, academicYear, registrationStart, registrationEnd })
-                .then(result => console.log('📧 Email result:', result))
-                .catch(err => console.error('📧 Email error:', err.message));
+        // Send email + in-app notification async (non-blocking)
+        if (status === 'published') {
+            notifyAllStudents(
+                `📋 ${title}`,
+                `Thông báo mới: ${title} - ${semester}/${academicYear}`,
+                '/notifications'
+            );
+            if (sendEmail) {
+                sendAnnouncementEmail({ title, content, semester, academicYear, registrationStart, registrationEnd })
+                    .then(result => console.log('📧 Email result:', result))
+                    .catch(err => console.error('📧 Email error:', err.message));
+            }
         }
 
         res.status(201).json({
@@ -89,11 +119,18 @@ router.put('/:id', verifyToken, isAdmin, async (req, res, next) => {
             return res.status(404).json({ message: 'Announcement not found' });
         }
 
-        // Send email async (non-blocking)
-        if (sendEmail && status === 'published') {
-            sendAnnouncementEmail({ title, content, semester, academicYear, registrationStart, registrationEnd })
-                .then(result => console.log('📧 Email result:', result))
-                .catch(err => console.error('📧 Email error:', err.message));
+        // Send email + in-app notification async (non-blocking)
+        if (status === 'published') {
+            notifyAllStudents(
+                `📋 ${title}`,
+                `Thông báo mới: ${title} - ${semester}/${academicYear}`,
+                '/notifications'
+            );
+            if (sendEmail) {
+                sendAnnouncementEmail({ title, content, semester, academicYear, registrationStart, registrationEnd })
+                    .then(result => console.log('📧 Email result:', result))
+                    .catch(err => console.error('📧 Email error:', err.message));
+            }
         }
 
         res.json({
