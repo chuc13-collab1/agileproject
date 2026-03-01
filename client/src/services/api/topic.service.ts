@@ -125,6 +125,7 @@ const mapBackendTopic = (item: any): Topic => ({
   maxStudents: item.maxStudents,
   currentStudents: item.currentStudents,
   supervisorId: item.supervisorId,
+  supervisorUid: item.supervisorUid,
   supervisorName: item.supervisorName || 'Chưa phân công',
   supervisorDepartment: item.supervisorDepartment || '',
   status: item.status,

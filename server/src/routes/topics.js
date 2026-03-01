@@ -183,12 +183,15 @@ router.post('/', verifyToken, async (req, res, next) => {
         }
         // For students, supervisorId remains null - admin will assign supervisor later
 
+        // Teachers: auto-approved, Students: pending (need admin approval)
+        const topicStatus = user.role === 'teacher' ? 'approved' : 'pending';
+
         const id = uuidv4();
         await pool.query(
             `INSERT INTO topics 
-            (id, title, description, supervisor_id, semester, academic_year, field, max_students, status, requirements, expected_results)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?)`,
-            [id, title, description, supervisorId, semester, academicYear, field, maxStudents || 2, requirements || '', expectedResults || '']
+            (id, title, description, supervisor_id, semester, academic_year, field, max_students, status, requirements, expected_results${topicStatus === 'approved' ? ', approved_at' : ''})
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?${topicStatus === 'approved' ? ', CURRENT_TIMESTAMP' : ''}, ?, ?)`,
+            [id, title, description, supervisorId, semester, academicYear, field, maxStudents || 2, topicStatus, requirements || '', expectedResults || '']
         );
 
         const [newTopic] = await pool.query('SELECT * FROM topics WHERE id = ?', [id]);

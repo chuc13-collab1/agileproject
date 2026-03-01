@@ -43,8 +43,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     <div className={styles.layout}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <div className={styles.logo}>
-            <h1>📚 Hệ Thống Quản Lý Đồ Án</h1>
+          <div className={styles.logo} onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+            <img src="/logo.jpg" alt="Logo" style={{ height: '40px', borderRadius: '6px', marginRight: '10px' }} />
+            <h1>Hệ Thống Quản Lý Đồ Án</h1>
           </div>
           <div className={styles.userInfo}>
             <div className={styles.userDetails}>

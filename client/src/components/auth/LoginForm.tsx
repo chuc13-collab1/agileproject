@@ -44,7 +44,10 @@ const LoginForm: React.FC = () => {
         <div className={styles.formSide}>
           <div className={styles.formWrapper}>
             <div className={styles.formHeader}>
-              <div className={styles.brandLogo}>QUANLYDOAN</div>
+              <div className={styles.brandLogo} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                <img src="/logo.jpg" alt="Logo" style={{ height: '150px', borderRadius: '10px' }} />
+                QUANLYDOAN
+              </div>
               <h2>Đăng Nhập</h2>
               <p>Chào mừng bạn quay trở lại hệ thống</p>
             </div>

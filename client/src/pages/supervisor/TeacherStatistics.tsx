@@ -43,8 +43,8 @@ const TeacherStatistics: React.FC = () => {
             ]);
 
             // Filter by current teacher
-            const myProjects = allProjects.filter(p => p.supervisor.id === user?.uid);
-            const myTopics = allTopics.filter(t => t.supervisorId === user?.uid);
+            const myProjects = allProjects.filter(p => p.supervisor && p.supervisor.id === user?.uid);
+            const myTopics = allTopics.filter(t => t.supervisorUid === user?.uid);
 
             // Calculate statistics
             const completed = myProjects.filter(p => p.status === 'completed');

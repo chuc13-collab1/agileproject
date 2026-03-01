@@ -209,6 +209,72 @@ Gợi ý 5 đề tài đồ án (không trùng). Mỗi đề tài gồm: tên, m
 });
 
 /**
+ * POST /api/ai/generate-topic (Teacher) — AI tạo nhiều đề tài cùng lúc
+ */
+router.post('/generate-topic', async (req, res) => {
+    try {
+        const { field, keyword, semester, academicYear, count = 3 } = req.body;
+        if (!field) return res.status(400).json({ success: false, message: 'Lĩnh vực (field) là bắt buộc' });
+
+        const numTopics = Math.min(Math.max(parseInt(count) || 3, 1), 5);
+
+        // Get existing topics to avoid duplication
+        const [existingTopics] = await db.query('SELECT title FROM topics ORDER BY created_at DESC LIMIT 30');
+        const existingList = existingTopics.map(t => t.title).join(', ');
+
+        const prompt = `Bạn là giảng viên đại học, hãy đề xuất ${numTopics} đề tài đồ án tốt nghiệp KHÁC NHAU.
+
+LĨNH VỰC: ${field}
+${keyword ? `GỢI Ý/TỪ KHÓA: ${keyword}` : ''}
+${semester ? `HỌC KỲ: ${semester}` : ''}
+${academicYear ? `NĂM HỌC: ${academicYear}` : ''}
+
+ĐỀ TÀI ĐÃ CÓ (tránh trùng): ${existingList || 'Chưa có'}
+
+Trả về ĐÚNG format JSON array (KHÔNG markdown, KHÔNG \`\`\`json, chỉ JSON thuần):
+[
+  {
+    "title": "Tên đề tài 1",
+    "description": "Mô tả chi tiết 3-5 câu",
+    "requirements": "Yêu cầu sinh viên 2-3 dòng"
+  },
+  {
+    "title": "Tên đề tài 2",
+    "description": "Mô tả chi tiết 3-5 câu",
+    "requirements": "Yêu cầu sinh viên 2-3 dòng"
+  }
+]
+
+Các đề tài phải đa dạng, thực tế, có tính ứng dụng cao.`;
+
+        const result = await callGroq(prompt, TEACHER_PROMPT, 2000, 0.8);
+
+        // Parse JSON array from AI response
+        try {
+            const jsonMatch = result.match(/\[[\s\S]*\]/);
+            if (jsonMatch) {
+                const parsed = JSON.parse(jsonMatch[0]);
+                if (Array.isArray(parsed) && parsed.length > 0) {
+                    return res.json({ success: true, data: { topics: parsed } });
+                }
+            }
+            // Fallback: try single object
+            const objMatch = result.match(/\{[\s\S]*\}/);
+            if (objMatch) {
+                const parsed = JSON.parse(objMatch[0]);
+                return res.json({ success: true, data: { topics: [parsed] } });
+            }
+        } catch (parseErr) {
+            // If parsing fails, return raw text
+        }
+
+        res.json({ success: true, data: { raw: result } });
+    } catch (error) {
+        handleAIError(error, res);
+    }
+});
+
+/**
  * POST /api/ai/suggest-tasks (Student) — NEW: Gợi ý task cho Sprint
  */
 router.post('/suggest-tasks', async (req, res) => {
