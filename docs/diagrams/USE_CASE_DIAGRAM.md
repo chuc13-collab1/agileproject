@@ -6,12 +6,12 @@
 
 | Actor | Mô tả |
 |-------|-------|
-| **Student** | Sinh viên thực hiện đồ án |
-| **Supervisor** | Giáo viên hướng dẫn |
-| **Reviewer** | Giáo viên phản biện |
-| **Admin** | Quản trị viên hệ thống |
-| **Firebase Auth** | Hệ thống xác thực (External) |
-| **Gemini AI** | Trợ lý AI (External) |
+| **Student** | Sinh viên thực hiện đồ án (Sử dụng Web/Mobile App) |
+| **Supervisor** | Giáo viên hướng dẫn (Sử dụng Web) |
+| **Reviewer** | Giáo viên phản biện (Sử dụng Web) |
+| **Admin** | Quản trị viên hệ thống (Sử dụng Web) |
+| **Firebase Auth** | Hệ thống xác thực (External Service) |
+| **Gemini AI** | Trợ lý AI (External Service) |
 
 ---
 
@@ -162,6 +162,10 @@ AD --> UC73
 UC01 ..> FA : <<use>>
 UC62 ..> AI : <<use>>
 UC63 ..> AI : <<use>>
+
+' ── Notes ──
+note right of SV : Hỗ trợ trên cả nền tảng\nWeb (React) và Mobile (Flutter)
+note right of AD : Các Actor Admin, GVHD, GVPB\nchủ yếu thao tác trên Web App
 
 ' ── include / extend ──
 UC13 ..> UC10 : <<include>>
@@ -497,7 +501,7 @@ UC73 ..> UC73b : <<include>>
 
 | ID | Tên Use Case | Actor chính | Mức độ |
 |----|-------------|-------------|--------|
-| UC01 | Đăng nhập | Tất cả | Cao |
+| UC01 | Đăng nhập hệ thống (Web/Mobile) | Tất cả | Cao |
 | UC02 | Đăng xuất | Tất cả | Thấp |
 | UC03 | Cập nhật thông tin cá nhân | Tất cả | Thấp |
 | UC10 | Xem thông báo kỳ đồ án | SV, GVHD | Trung bình |
@@ -506,28 +510,28 @@ UC73 ..> UC73b : <<include>>
 | UC13 | Đăng ký đề tài | SV | Cao |
 | UC14 | Xem trạng thái đăng ký | SV | Thấp |
 | UC20 | Xem thông tin đồ án | SV, GVHD | Trung bình |
-| UC21 | Quản lý sprint | SV, GVHD | Trung bình |
+| UC21 | Quản lý sprint (Agile) | SV, GVHD | Trung bình |
 | UC22 | Upload tài liệu | SV, GVHD | Trung bình |
 | UC23 | Download tài liệu | SV, GVHD, GVPB | Trung bình |
 | UC24 | Phân công GV phản biện | Admin | Cao |
 | UC25 | Lập lịch bảo vệ | Admin | Trung bình |
-| UC26 | Archive đồ án | Admin | Thấp |
+| UC26 | Lưu trữ (Archive) đồ án | Admin | Thấp |
 | UC30 | Nộp báo cáo tiến độ | SV | Cao |
 | UC31 | Nhận xét báo cáo tiến độ | GVHD | Cao |
-| UC32 | Chat realtime | SV, GVHD | Trung bình |
-| UC40 | Chấm điểm hướng dẫn (40%) | GVHD | Cao |
-| UC41 | Chấm điểm phản biện (20%) | GVPB | Cao |
+| UC32 | Chat realtime (Hỗ trợ qua Mobile/Web) | SV, GVHD | Trung bình |
+| UC40 | Chấm điểm hướng dẫn | GVHD | Cao |
+| UC41 | Chấm điểm phản biện | GVPB | Cao |
 | UC42 | Xem điểm của mình | SV | Trung bình |
 | UC43 | Tổng hợp & công bố điểm | Admin | Cao |
 | UC50 | Tạo thông báo kỳ đồ án | Admin | Cao |
-| UC51 | Nhận thông báo hệ thống | Tất cả | Thấp |
+| UC51 | Nhận thông báo hệ thống (Push Notifications) | Tất cả | Thấp |
 | UC60 | Xem dashboard thống kê | Tất cả | Trung bình |
 | UC61 | Export báo cáo (PDF/Excel) | Admin | Thấp |
 | UC62 | Chat AI trợ lý Gemini | GVHD, Admin | Thấp |
-| UC63 | AI gợi ý phân công PB | Admin | Trung bình |
+| UC63 | AI gợi ý phân công Phản biện | Admin | Trung bình |
 | UC70 | Quản lý sinh viên | Admin | Cao |
 | UC71 | Quản lý giáo viên | Admin | Cao |
-| UC72 | Quản lý lớp | Admin | Trung bình |
+| UC72 | Quản lý lớp/Khoa | Admin | Trung bình |
 | UC73 | Cấu hình hệ thống | Admin | Trung bình |
 
 ---

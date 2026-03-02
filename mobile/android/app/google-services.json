@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "858648978872",
+    "firebase_url": "https://quanlyduan-8918b-default-rtdb.firebaseio.com",
+    "project_id": "quanlyduan-8918b",
+    "storage_bucket": "quanlyduan-8918b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:858648978872:android:cbb88faa1e4c513e7cdb4d",
+        "android_client_info": {
+          "package_name": "com.example.mobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858648978872-ud6sqr9fhb2tci0fv7q9m4drgl9u7ko1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBt_uy5YO4Y-qDGFdM9v4HS3spC1TkfU1A"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "858648978872-ud6sqr9fhb2tci0fv7q9m4drgl9u7ko1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -10,13 +10,32 @@ const router = express.Router();
  */
 router.get('/me', async (req, res) => {
     try {
-        const { uid } = req.user;
+        const { uid, email } = req.user;
+        console.log(`[AUTH /me] uid=${uid}, email=${email}`);
 
-        // Get user info from MySQL
-        const [rows] = await pool.query(
+        // Try find by uid first
+        let [rows] = await pool.query(
             'SELECT * FROM users WHERE uid = ?',
             [uid]
         );
+
+        // Fallback: find by email if uid not matched
+        if (rows.length === 0 && email) {
+            console.log(`[AUTH /me] uid not found, trying email: ${email}`);
+            [rows] = await pool.query(
+                'SELECT * FROM users WHERE email = ?',
+                [email]
+            );
+
+            // Update uid in database if found by email
+            if (rows.length > 0) {
+                console.log(`[AUTH /me] Found by email, updating uid`);
+                await pool.query(
+                    'UPDATE users SET uid = ? WHERE email = ?',
+                    [uid, email]
+                );
+            }
+        }
 
         if (rows.length === 0) {
             return res.status(404).json({
