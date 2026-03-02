@@ -1,0 +1,22 @@
+{
+  "messages": {
+    "7d14c6f2-ca70-42be-bfd4-ffd5bba2690c": {
+      "-OlLI9zLfntuza_MJA4s": {
+        "read": true,
+        "senderId": "ByQtTj3r97aNOHVQVQb2rKpNWkm1",
+        "senderName": "Tiến sĩ Nguyễn Văn X",
+        "senderRole": "teacher",
+        "text": "chào",
+        "timestamp": 1770974393248
+      },
+      "-OlLLyHw8nw4iYIdBZaP": {
+        "read": true,
+        "senderId": "ByQtTj3r97aNOHVQVQb2rKpNWkm1",
+        "senderName": "Tiến sĩ Nguyễn Văn X",
+        "senderRole": "teacher",
+        "text": "😀",
+        "timestamp": 1770975389821
+      }
+    }
+  }
+}

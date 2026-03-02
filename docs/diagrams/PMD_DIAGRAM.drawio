@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="pdm" name="PDM - Physical Data Model">
-        <mxGraphModel dx="3538" dy="2295" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="3058" dy="2295" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -11,7 +11,7 @@
                     <mxGeometry x="10" y="-35" width="320" height="25" as="geometry"/>
                 </mxCell>
                 <mxCell id="U" value="&lt;b&gt;users&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=17;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="70" width="280" height="195" as="geometry"/>
+                    <mxGeometry x="640" y="70" width="250" height="195" as="geometry"/>
                 </mxCell>
                 <mxCell id="2" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
                     <mxGeometry y="25" width="240" height="20" as="geometry"/>
@@ -25,7 +25,7 @@
                 <mxCell id="5" value="display_name     varchar(255)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
                     <mxGeometry y="85" width="240" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" value="role             enum(student,teacher,admin)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                <mxCell id="6" value="role             enum(" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
                     <mxGeometry y="105" width="240" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="7" value="avatar_url       varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
@@ -163,7 +163,7 @@
                 <mxCell id="44" value="semester         varchar(50)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
                     <mxGeometry y="145" width="260" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="45" value="status           enum(pending,approved,rejected)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                <mxCell id="45" value="status           enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
                     <mxGeometry y="165" width="260" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="46" value="max_students     int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
@@ -253,7 +253,7 @@
                 <mxCell id="71" value="goals            text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
                     <mxGeometry y="105" width="270" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="72" value="status           enum(planning,active,completed)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
+                <mxCell id="72" value="status           enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
                     <mxGeometry y="125" width="270" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="73" value="start_week       int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
@@ -274,7 +274,7 @@
                 <mxCell id="77" value="author_uid       varchar(128)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SC" vertex="1">
                     <mxGeometry y="65" width="270" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="78" value="author_role      enum(student,teacher)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SC" vertex="1">
+                <mxCell id="78" value="author_role      enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SC" vertex="1">
                     <mxGeometry y="85" width="270" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="79" value="content          text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SC" vertex="1">
@@ -301,7 +301,7 @@
                 <mxCell id="85" value="file_path        varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
                     <mxGeometry y="125" width="270" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="86" value="status           enum(submitted,approved,revision_needed)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
+                <mxCell id="86" value="status           enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
                     <mxGeometry y="145" width="270" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="87" value="reviewed_date    datetime" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
@@ -364,7 +364,7 @@
                 <mxCell id="103" value="proposal_deadline    date" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
                     <mxGeometry y="125" width="250" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="104" value="status               enum(draft,published,closed)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
+                <mxCell id="104" value="status               enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
                     <mxGeometry y="145" width="250" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="MS" value="&lt;b&gt;meeting_slots&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontStyle=1;" parent="1" vertex="1">
@@ -403,7 +403,7 @@
                 <mxCell id="114" value="project_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="BK" vertex="1">
                     <mxGeometry y="85" width="250" height="20" as="geometry"/>
                 </mxCell>
-                <mxCell id="115" value="status           enum(pending,confirmed,cancelled)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="BK" vertex="1">
+                <mxCell id="115" value="status           enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="BK" vertex="1">
                     <mxGeometry y="105" width="250" height="20" as="geometry"/>
                 </mxCell>
                 <mxCell id="116" value="note             text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="BK" vertex="1">
