@@ -1,0 +1,508 @@
+' =========================================================
+' USE CASE DIAGRAM — He Thong Quan Ly Do An
+' VS Code: Alt+D de preview | Ctrl+Shift+P -> PlantUML: Export
+' =========================================================
+
+
+' ─────────────────────────────────────────────────────────
+' DIAGRAM 1: TONG QUAN (Overview)
+' ─────────────────────────────────────────────────────────
+@startuml UC_OVERVIEW
+title HE THONG QUAN LY DO AN — Bieu Do Use Case Tong Quan
+
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam DefaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EEF4FF
+  BorderColor     #2563eb
+  ArrowColor      #374151
+  ActorBorderColor #1e3a5f
+  ActorFontColor  #1e3a5f
+  FontSize        12
+}
+
+left to right direction
+
+actor "Sinh Vien\n(Student)"       as SV
+actor "GV Huong Dan\n(Supervisor)" as GVHD
+actor "GV Phan Bien\n(Reviewer)"   as GVPB
+actor "Quan Tri Vien\n(Admin)"     as AD
+actor "Firebase Auth"              as FA <<system>>
+actor "Grok AI"                    as AI <<system>>
+
+rectangle "HE THONG QUAN LY DO AN" {
+
+  package "Xac thuc" {
+    usecase "UC01\nDang nhap"                  as UC01
+    usecase "UC02\nDang xuat"                  as UC02
+    usecase "UC03\nCap nhat\nthong tin ca nhan" as UC03
+  }
+
+  package "Quan ly De Tai" {
+    usecase "UC10\nXem thong bao\nky do an"    as UC10
+    usecase "UC11\nDe xuat de tai"             as UC11
+    usecase "UC12\nPhe duyet de tai"           as UC12
+    usecase "UC13\nDang ky de tai"             as UC13
+    usecase "UC14\nHuy dang ky\nde tai"        as UC14
+  }
+
+  package "Quan ly Do An" {
+    usecase "UC20\nXem do an\ncua minh"        as UC20
+    usecase "UC21\nQuan ly Sprint"             as UC21
+    usecase "UC22\nUpload tai lieu"            as UC22
+    usecase "UC23\nDownload tai lieu"          as UC23
+    usecase "UC24\nPhan cong\nGV phan bien"    as UC24
+    usecase "UC25\nLap lich\nbao ve"           as UC25
+    usecase "UC26\nArchive do an"              as UC26
+  }
+
+  package "Theo Doi Tien Do" {
+    usecase "UC30\nNop bao cao\ntien do"       as UC30
+    usecase "UC31\nNhan xet\nbao cao"          as UC31
+    usecase "UC32\nChat realtime\nvoi GV HD"   as UC32
+  }
+
+  package "Cham Diem" {
+    usecase "UC40\nCham diem\nhuong dan"       as UC40
+    usecase "UC41\nCham diem\nphan bien"       as UC41
+    usecase "UC42\nXem diem\ncua minh"         as UC42
+    usecase "UC43\nTong hop &\ncong bo diem"   as UC43
+  }
+
+  package "Thong Bao" {
+    usecase "UC50\nTao thong bao\ndo an"       as UC50
+    usecase "UC51\nNhan thong bao\nhe thong"   as UC51
+  }
+
+  package "Thong Ke & AI" {
+    usecase "UC60\nXem dashboard\nthong ke"    as UC60
+    usecase "UC61\nExport bao cao\n(PDF/Excel)" as UC61
+    usecase "UC62\nChat AI\ntro ly"            as UC62
+    usecase "UC63\nGoi y phan cong\nGV PB (AI)" as UC63
+  }
+
+  package "Quan Tri" {
+    usecase "UC70\nQuan ly\nsinh vien"         as UC70
+    usecase "UC71\nQuan ly\ngiao vien"         as UC71
+    usecase "UC72\nQuan ly lop"                as UC72
+    usecase "UC73\nCau hinh\nhe thong"         as UC73
+  }
+}
+
+' ── Student ──
+SV --> UC01
+SV --> UC02
+SV --> UC03
+SV --> UC10
+SV --> UC13
+SV --> UC14
+SV --> UC20
+SV --> UC21
+SV --> UC22
+SV --> UC23
+SV --> UC30
+SV --> UC32
+SV --> UC42
+SV --> UC51
+SV --> UC60
+
+' ── Supervisor ──
+GVHD --> UC01
+GVHD --> UC02
+GVHD --> UC03
+GVHD --> UC10
+GVHD --> UC11
+GVHD --> UC20
+GVHD --> UC21
+GVHD --> UC22
+GVHD --> UC23
+GVHD --> UC31
+GVHD --> UC32
+GVHD --> UC40
+GVHD --> UC51
+GVHD --> UC60
+GVHD --> UC62
+
+' ── Reviewer ──
+GVPB --> UC01
+GVPB --> UC02
+GVPB --> UC23
+GVPB --> UC41
+GVPB --> UC51
+GVPB --> UC60
+
+' ── Admin ──
+AD --> UC01
+AD --> UC02
+AD --> UC12
+AD --> UC24
+AD --> UC25
+AD --> UC26
+AD --> UC43
+AD --> UC50
+AD --> UC51
+AD --> UC60
+AD --> UC61
+AD --> UC63
+AD --> UC70
+AD --> UC71
+AD --> UC72
+AD --> UC73
+
+' ── External Systems ──
+UC01 ..> FA : <<use>>
+UC62 ..> AI : <<use>>
+UC63 ..> AI : <<use>>
+
+' ── include / extend ──
+UC13 ..> UC10 : <<include>>
+UC30 ..> UC22 : <<extend>>
+UC40 ..> UC43 : <<include>>
+UC41 ..> UC43 : <<include>>
+UC63 ..> UC24 : <<extend>>
+
+note right of SV   : Web (React)\n+ Mobile (Flutter)
+note right of AD   : Chi tren Web App
+
+@enduml
+
+
+' ─────────────────────────────────────────────────────────
+' DIAGRAM 2: SINH VIEN (Student)
+' ─────────────────────────────────────────────────────────
+@startuml UC_STUDENT
+title Bieu Do Use Case — SINH VIEN
+
+skinparam actorStyle awesome
+skinparam DefaultFontName Arial
+skinparam usecase {
+  BackgroundColor #F0FDF4
+  BorderColor     #16a34a
+  ArrowColor      #374151
+  FontSize        12
+}
+left to right direction
+
+actor "Sinh Vien" as SV
+
+rectangle "CHUC NANG SINH VIEN" {
+
+  package "Tai khoan" {
+    usecase "UC01\nDang nhap"                   as UC01
+    usecase "UC02\nDang xuat"                   as UC02
+    usecase "UC03\nCap nhat thong tin\nca nhan"  as UC03
+  }
+
+  package "De tai & Dang ky" {
+    usecase "UC10\nXem thong bao\nky do an"      as UC10
+    usecase "UC13\nXem danh sach\nde tai da duyet" as UC13
+    usecase "UC13a\nTim kiem / loc de tai"       as UC13a
+    usecase "UC13b\nDang ky de tai"              as UC13b
+    usecase "UC13c\nDe xuat de tai moi"          as UC13c
+    usecase "UC14\nXem trang thai\ndang ky"      as UC14
+  }
+
+  package "Thuc Hien Do An" {
+    usecase "UC20\nXem thong tin do an"          as UC20
+    usecase "UC21\nXem / Cap nhat sprint"        as UC21
+    usecase "UC22\nUpload tai lieu"              as UC22
+    usecase "UC23\nDownload tai lieu"            as UC23
+    usecase "UC30\nNop bao cao tien do"          as UC30
+    usecase "UC30a\nUpload file bao cao"         as UC30a
+    usecase "UC31\nXem nhan xet cua GV"          as UC31
+    usecase "UC32\nChat voi GV\nhuong dan"       as UC32
+  }
+
+  package "Ket Qua" {
+    usecase "UC42a\nXem diem\nhuong dan"         as UC42a
+    usecase "UC42b\nXem diem\nphan bien"         as UC42b
+    usecase "UC42c\nXem diem\ncuoi cung"         as UC42c
+    usecase "UC42d\nXem xep loai"                as UC42d
+  }
+
+  package "Thong Bao" {
+    usecase "UC51\nNhan thong bao\nhe thong"     as UC51
+    usecase "UC51a\nDanh dau da doc"             as UC51a
+  }
+}
+
+SV --> UC01
+SV --> UC02
+SV --> UC03
+SV --> UC10
+SV --> UC13
+SV --> UC14
+SV --> UC20
+SV --> UC21
+SV --> UC22
+SV --> UC23
+SV --> UC30
+SV --> UC31
+SV --> UC32
+SV --> UC42a
+SV --> UC42b
+SV --> UC42c
+SV --> UC42d
+SV --> UC51
+
+UC13  ..> UC13a : <<include>>
+UC13  ..> UC13b : <<include>>
+UC13  ..> UC13c : <<extend>>
+UC30  ..> UC30a : <<extend>>
+UC51  ..> UC51a : <<extend>>
+
+@enduml
+
+
+' ─────────────────────────────────────────────────────────
+' DIAGRAM 3: GV HUONG DAN (Supervisor)
+' ─────────────────────────────────────────────────────────
+@startuml UC_SUPERVISOR
+title Bieu Do Use Case — GV HUONG DAN
+
+skinparam actorStyle awesome
+skinparam DefaultFontName Arial
+skinparam usecase {
+  BackgroundColor #EFF6FF
+  BorderColor     #2563eb
+  ArrowColor      #374151
+  FontSize        12
+}
+left to right direction
+
+actor "GV Huong Dan" as GVHD
+
+rectangle "CHUC NANG GV HUONG DAN" {
+
+  package "De Tai" {
+    usecase "UC11\nDe xuat de tai moi"          as UC11
+    usecase "UC11a\nChinh sua de tai\n(cho duyet)" as UC11a
+    usecase "UC11b\nUpload tai lieu\nmo ta de tai"  as UC11b
+    usecase "UC11c\nXem trang thai\nphe duyet"   as UC11c
+  }
+
+  package "Quan Ly Sinh Vien" {
+    usecase "UC20\nXem danh sach SV\ndang huong dan" as UC20
+    usecase "UC20a\nDuyet don dang ky\ncua sinh vien" as UC20a
+    usecase "UC20b\nTu choi don\ndang ky"        as UC20b
+    usecase "UC20c\nXem ho so\nsinh vien"        as UC20c
+  }
+
+  package "Theo Doi Tien Do" {
+    usecase "UC31\nXem bao cao\ntien do"         as UC31
+    usecase "UC31a\nNhan xet +\nRating (1-5 sao)" as UC31a
+    usecase "UC31b\nDuyet / Yeu cau\nsua bao cao" as UC31b
+    usecase "UC31c\nDownload file\nbao cao"       as UC31c
+    usecase "UC32\nChat voi\nsinh vien"          as UC32
+    usecase "UC21\nXem / comment\nsprint"        as UC21
+  }
+
+  package "Cham Diem" {
+    usecase "UC40\nCham diem\nhuong dan"         as UC40
+    usecase "UC40a\nNhap diem\ntheo tieu chi"    as UC40a
+    usecase "UC40b\nViet nhan xet\ntong quan"    as UC40b
+    usecase "UC40c\nGui diem\ncho SV"            as UC40c
+  }
+
+  package "Tai Lieu & Thong Ke" {
+    usecase "UC23\nDownload tai lieu\ndo an"     as UC23
+    usecase "UC60\nXem dashboard\nca nhan"       as UC60
+    usecase "UC62\nChat AI tro ly"               as UC62
+  }
+}
+
+GVHD --> UC11
+GVHD --> UC20
+GVHD --> UC20a
+GVHD --> UC20b
+GVHD --> UC20c
+GVHD --> UC31
+GVHD --> UC32
+GVHD --> UC21
+GVHD --> UC40
+GVHD --> UC23
+GVHD --> UC60
+GVHD --> UC62
+
+UC11  ..> UC11a : <<extend>>
+UC11  ..> UC11b : <<extend>>
+UC11  ..> UC11c : <<include>>
+UC20a ..> UC20b : <<extend>>
+UC31  ..> UC31a : <<include>>
+UC31  ..> UC31b : <<include>>
+UC31  ..> UC31c : <<extend>>
+UC40  ..> UC40a : <<include>>
+UC40  ..> UC40b : <<include>>
+UC40  ..> UC40c : <<include>>
+
+@enduml
+
+
+' ─────────────────────────────────────────────────────────
+' DIAGRAM 4: GV PHAN BIEN (Reviewer)
+' ─────────────────────────────────────────────────────────
+@startuml UC_REVIEWER
+title Bieu Do Use Case — GV PHAN BIEN
+
+skinparam actorStyle awesome
+skinparam DefaultFontName Arial
+skinparam usecase {
+  BackgroundColor #FFF7ED
+  BorderColor     #ea580c
+  ArrowColor      #374151
+  FontSize        12
+}
+left to right direction
+
+actor "GV Phan Bien" as GVPB
+
+rectangle "CHUC NANG GV PHAN BIEN" {
+
+  package "Xem Do An Duoc Phan Cong" {
+    usecase "UC41a\nXem danh sach do an\nduoc phan cong"  as UC41a
+    usecase "UC41b\nXem chi tiet\ndo an"                  as UC41b
+    usecase "UC41c\nLoc theo ky /\ntrang thai"            as UC41c
+  }
+
+  package "Nghien Cuu Tai Lieu" {
+    usecase "UC23\nDownload tai lieu\ndo an"              as UC23
+    usecase "UC23a\nXem lich su tien do\nsinh vien"       as UC23a
+    usecase "UC23b\nXem nhan xet\ncua GV huong dan"      as UC23b
+  }
+
+  package "Cham Diem Phan Bien" {
+    usecase "UC41\nCham diem\nphan bien"                  as UC41
+    usecase "UC41d\nNhap diem\ntheo tieu chi"             as UC41d
+    usecase "UC41e\nViet cau hoi\nphan bien"              as UC41e
+    usecase "UC41f\nViet nhan xet\nchi tiet"              as UC41f
+    usecase "UC41g\nGui diem\nphan bien"                  as UC41g
+  }
+
+  package "Thong Bao & Thong Ke" {
+    usecase "UC51\nNhan thong bao\nphan cong"             as UC51
+    usecase "UC60\nXem thong ke\nda phan bien"            as UC60
+  }
+}
+
+GVPB --> UC41a
+GVPB --> UC41b
+GVPB --> UC41c
+GVPB --> UC23
+GVPB --> UC23a
+GVPB --> UC23b
+GVPB --> UC41
+GVPB --> UC51
+GVPB --> UC60
+
+UC41a ..> UC41b : <<include>>
+UC41b ..> UC41c : <<extend>>
+UC23  ..> UC23a : <<extend>>
+UC23  ..> UC23b : <<extend>>
+UC41  ..> UC41d : <<include>>
+UC41  ..> UC41e : <<include>>
+UC41  ..> UC41f : <<include>>
+UC41  ..> UC41g : <<include>>
+
+@enduml
+
+
+' ─────────────────────────────────────────────────────────
+' DIAGRAM 5: ADMIN — Quan Tri Vien
+' ─────────────────────────────────────────────────────────
+@startuml UC_ADMIN
+title Bieu Do Use Case — ADMIN (Quan Tri Vien)
+
+skinparam actorStyle awesome
+skinparam DefaultFontName Arial
+skinparam usecase {
+  BackgroundColor #FEF2F2
+  BorderColor     #dc2626
+  ArrowColor      #374151
+  FontSize        12
+}
+left to right direction
+
+actor "Admin"      as AD
+actor "Grok AI"    as AI <<system>>
+
+rectangle "CHUC NANG ADMIN" {
+
+  package "Quan Ly Nguoi Dung" {
+    usecase "UC70\nQuan ly\nsinh vien"          as UC70
+    usecase "UC70a\nImport SV tu Excel"         as UC70a
+    usecase "UC70b\nKich hoat /\nVo hieu TK"   as UC70b
+    usecase "UC71\nQuan ly\ngiao vien"          as UC71
+    usecase "UC71a\nPhan quyen\nHD / PB"        as UC71a
+    usecase "UC72\nQuan ly lop"                 as UC72
+  }
+
+  package "Quan Ly De Tai & Do An" {
+    usecase "UC12\nPhe duyet de tai"            as UC12
+    usecase "UC12a\nTu choi +\nghi ly do"      as UC12a
+    usecase "UC24\nPhan cong\nGV phan bien"     as UC24
+    usecase "UC24a\nPhan cong\ntu dong (AI)"    as UC24a
+    usecase "UC24b\nPhan cong\nthu cong"        as UC24b
+    usecase "UC24c\nPhan cong\nhang loat"       as UC24c
+  }
+
+  package "Lap Lich & Luu Tru" {
+    usecase "UC25\nLap lich bao ve"             as UC25
+    usecase "UC25a\nTao hoi dong\nbao ve"       as UC25a
+    usecase "UC25b\nPhan do an\nvao hoi dong"   as UC25b
+    usecase "UC26\nArchive do an"               as UC26
+    usecase "UC26a\nBatch archive\nhang loat"   as UC26a
+  }
+
+  package "Thong Bao" {
+    usecase "UC50\nTao thong bao\nky do an"     as UC50
+    usecase "UC50a\nGui thong bao\nhang loat"   as UC50a
+    usecase "UC50b\nGia han /\nDong dang ky"    as UC50b
+  }
+
+  package "Diem & Bao Cao" {
+    usecase "UC43\nTong hop &\ncong bo diem"    as UC43
+    usecase "UC61\nExport bao cao\n(PDF/Excel)" as UC61
+    usecase "UC60\nXem dashboard\ntong quan"    as UC60
+    usecase "UC63\nAI goi y\nphan cong PB"      as UC63
+  }
+
+  package "Cau Hinh" {
+    usecase "UC73\nCau hinh\nhe thong"          as UC73
+    usecase "UC73a\nCong thuc\ntinh diem"       as UC73a
+    usecase "UC73b\nGioi han\nfile upload"      as UC73b
+  }
+}
+
+AD --> UC70
+AD --> UC71
+AD --> UC72
+AD --> UC12
+AD --> UC24
+AD --> UC25
+AD --> UC26
+AD --> UC50
+AD --> UC43
+AD --> UC61
+AD --> UC60
+AD --> UC63
+AD --> UC73
+
+UC70  ..> UC70a : <<include>>
+UC70  ..> UC70b : <<include>>
+UC71  ..> UC71a : <<include>>
+UC12  ..> UC12a : <<extend>>
+UC24  ..> UC24a : <<extend>>
+UC24  ..> UC24b : <<extend>>
+UC24  ..> UC24c : <<extend>>
+UC24a ..> AI    : <<use>>
+UC63  ..> AI    : <<use>>
+UC25  ..> UC25a : <<include>>
+UC25  ..> UC25b : <<include>>
+UC26  ..> UC26a : <<extend>>
+UC50  ..> UC50a : <<extend>>
+UC50  ..> UC50b : <<extend>>
+UC73  ..> UC73a : <<include>>
+UC73  ..> UC73b : <<include>>
+
+@enduml

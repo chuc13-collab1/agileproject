@@ -1,0 +1,112 @@
+<mxfile host="65bd71144e">
+    <diagram id="UC_FIREBASE_AUTH" name="UC Firebase Auth">
+        <mxGraphModel dx="2763" dy="811" grid="0" gridSize="10" guides="1" tooltips="1" connect="0" arrows="0" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="actor_sv" value="Sinh Viên" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="-200" y="130" width="55" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_gvhd" value="GV Hướng Dẫn" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="-200" y="280" width="55" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_gvpb" value="GV Phản Biện" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="-200" y="430" width="55" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_admin" value="Admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FFFFFF;" parent="1" vertex="1">
+                    <mxGeometry x="-200" y="580" width="55" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="actor_fb" value="Firebase Auth&#10;«system»" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#FFFFFF;strokeColor=#ea580c;fontColor=#ea580c;fontStyle=2;" parent="1" vertex="1">
+                    <mxGeometry x="772" y="355" width="55" height="85" as="geometry"/>
+                </mxCell>
+                <mxCell id="boundary" value="Xác Thực — Firebase Auth" style="swimlane;whiteSpace=wrap;html=1;fillColor=#FFFFFF;fontStyle=1;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="-43" y="37" width="733" height="739" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc01" value="Đăng nhập hệ thống" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563eb;fontSize=11;fontStyle=1;" parent="boundary" vertex="1">
+                    <mxGeometry x="43" y="145" width="165" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc01a" value="Nhập email / mật khẩu" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16a34a;fontSize=10;" parent="boundary" vertex="1">
+                    <mxGeometry x="181" y="50" width="155" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc01b" value="Xác thực qua Firebase" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16a34a;fontSize=10;" parent="boundary" vertex="1">
+                    <mxGeometry x="257" y="252" width="155" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc01c" value="Nhận JWT token" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16a34a;fontSize=10;" parent="boundary" vertex="1">
+                    <mxGeometry x="393" y="63" width="140" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc01d" value="Làm mới token tự động" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#ca8a04;fontSize=10;" parent="boundary" vertex="1">
+                    <mxGeometry x="474" y="152" width="155" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc01e" value="Thông báo đăng nhập thất bại" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#ca8a04;fontSize=10;" parent="boundary" vertex="1">
+                    <mxGeometry x="568" y="90" width="155" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc02" value="Đăng xuất" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#2563eb;fontSize=11;fontStyle=1;" parent="boundary" vertex="1">
+                    <mxGeometry x="50" y="400" width="140" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc02a" value="Hủy JWT token phía client" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16a34a;fontSize=10;" parent="boundary" vertex="1">
+                    <mxGeometry x="190" y="325" width="160" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc02b" value="Thu hồi Refresh Token (Firebase)" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#16a34a;fontSize=10;" parent="boundary" vertex="1">
+                    <mxGeometry x="299" y="462" width="175" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="uc02c" value="Tự động đăng xuất khi hết phiên" style="ellipse;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#ca8a04;fontSize=10;" parent="boundary" vertex="1">
+                    <mxGeometry x="124" y="529" width="175" height="55" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_01a" value="«include»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#374151;fillColor=#FFFFFF;" parent="boundary" source="uc01" target="uc01a" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_01b" value="«include»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#374151;fillColor=#FFFFFF;" parent="boundary" source="uc01" target="uc01b" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_01c" value="«include»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#374151;fillColor=#FFFFFF;" parent="boundary" source="uc01" target="uc01c" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_02a" value="«include»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#374151;fillColor=#FFFFFF;" parent="boundary" source="uc02" target="uc02a" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inc_02b" value="«include»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#374151;fillColor=#FFFFFF;" parent="boundary" source="uc02" target="uc02b" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_01d" value="«extend»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#ca8a04;fillColor=#FFFFFF;" parent="boundary" source="uc01d" target="uc01" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_01e" value="«extend»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#ca8a04;fillColor=#FFFFFF;" parent="boundary" source="uc01e" target="uc01" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="ext_02c" value="«extend»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#ca8a04;fillColor=#FFFFFF;" parent="boundary" source="uc02c" target="uc02" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_sv01" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#374151;" parent="1" source="actor_sv" target="uc01" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_gvhd01" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#374151;" parent="1" source="actor_gvhd" target="uc01" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_gvpb01" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#374151;" parent="1" source="actor_gvpb" target="uc01" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_ad01" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#374151;" parent="1" source="actor_admin" target="uc01" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_sv02" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#374151;" parent="1" source="actor_sv" target="uc02" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_gvhd02" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#374151;" parent="1" source="actor_gvhd" target="uc02" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_gvpb02" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#374151;" parent="1" source="actor_gvpb" target="uc02" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_ad02" style="edgeStyle=none;html=1;endArrow=none;startArrow=none;strokeColor=#374151;" parent="1" source="actor_admin" target="uc02" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_use_01" value="«use»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#ea580c;fillColor=#FFFFFF;" parent="1" source="uc01" target="actor_fb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="e_use_02" value="«use»" style="edgeStyle=none;html=1;dashed=1;endArrow=open;endFill=0;fontSize=10;fontStyle=2;strokeColor=#ea580c;fillColor=#FFFFFF;" parent="1" source="uc02" target="actor_fb" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

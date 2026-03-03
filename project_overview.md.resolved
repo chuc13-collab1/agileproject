@@ -1,0 +1,296 @@
+# 📋 Agile Project Management — Tổng Quan Dự Án
+
+## 🏗️ Kiến Trúc Tổng Thể
+
+```
+agile-project-management/
+├── server/          # Node.js + Express + MySQL + Firebase Admin
+├── client/          # React 18 + TypeScript + Vite
+├── mobile/          # Flutter + Riverpod + Firebase Auth
+├── diagrams/        # ERD, DFD, Use Case, PMD diagrams
+├── docs/            # SQL scripts (SQL Server)
+├── firebase/        # Firebase config
+└── shared/          # Shared resources
+```
+
+---
+
+## 🖥️ SERVER — Node.js/Express
+
+### Tech Stack
+| Package | Version | Mục đích |
+|---------|---------|----------|
+| Express | 4.18.2 | Web framework |
+| mysql2 | 3.6.5 | MySQL database |
+| firebase-admin | 12.0.0 | Authentication |
+| @google/genai | 1.41.0 | AI Chatbot (Gemini) |
+| multer | 2.0.2 | File upload |
+| nodemailer | 8.0.1 | Email |
+| uuid | 9.0.1 | ID generation |
+
+### Cấu Trúc `server/src/`
+```
+src/
+├── index.js              # Entry point, Express app setup
+├── config/
+│   ├── database.js       # MySQL connection pool
+│   └── firebase.js       # Firebase Admin init
+├── middleware/
+│   ├── auth.js           # JWT/Firebase token verify
+│   ├── errorHandler.js   # Global error + 404 handler
+│   └── upload.js         # Multer file upload config
+└── routes/               # 19 route files
+```
+
+### API Routes (tất cả `/api/*` đều yêu cầu `verifyToken`)
+| Route | File | Chức năng |
+|-------|------|-----------|
+| `/api/auth` | auth.js | Thông tin user đăng nhập |
+| `/api/students` | students.js | CRUD sinh viên, batch import |
+| `/api/teachers` | teachers.js | CRUD giáo viên |
+| `/api/admins` | admins.js | CRUD admin |
+| `/api/classes` | classes.js | Quản lý lớp học |
+| `/api/topics` | topics.js | Quản lý đề tài |
+| `/api/topic-proposals` | topicProposals.js | Sinh viên đề xuất đề tài |
+| `/api/projects` | projects.js | Quản lý đồ án (file lớn nhất: 32KB) |
+| `/api/sprints` | sprints.js | Sprint planning |
+| `/api/progress-reports` | progressReports.js | Báo cáo tiến độ |
+| `/api/evaluations` | evaluations.js | Chấm điểm |
+| `/api/announcements` | announcements.js | Thông báo tuyển sinh |
+| `/api/scheduling` | scheduling.js | Đặt lịch hẹn gặp giáo viên |
+| `/api/notifications` | notifications.js | Thông báo real-time |
+| `/api/archive` | archive.js | Lưu trữ đồ án đã hoàn thành |
+| `/api/teacher-groups` | teacherGroups.js | Nhóm giáo viên |
+| `/api/ai` | ai.js | AI Chatbot (Gemini, 13.6KB) |
+| `/api/uploads` | uploads.js | Upload tài liệu |
+| `/api/stats` | stats.js | Thống kê |
+
+---
+
+## 🌐 CLIENT — React + TypeScript
+
+### Tech Stack
+| Package | Mục đích |
+|---------|----------|
+| React 18 + TypeScript | UI Framework |
+| Vite 5 | Build tool |
+| React Router DOM 6 | Routing |
+| Axios | HTTP client |
+| Firebase SDK 10 | Auth client-side |
+| Recharts | Biểu đồ thống kê |
+| jsPDF + autotable | Xuất PDF |
+| xlsx | Xuất Excel |
+
+### Cấu Trúc `client/src/`
+```
+src/
+├── App.tsx
+├── main.tsx
+├── index.tsx
+├── routes/           # Route definitions
+├── contexts/         # React Context (auth...)
+├── pages/
+│   ├── admin/        # 13 pages (AdminDashboard, UserManagement, ...)
+│   ├── student/      # 13 pages (StudentDashboard, SprintPlanning, ...)
+│   ├── supervisor/   # 12 pages (TeacherDashboard, TeacherProjectDetail, ...)
+│   ├── auth/         # 3 pages (Login, ...)
+│   └── shared/       # 8 pages dùng chung
+├── components/
+│   ├── admin/        # 23 components
+│   ├── auth/         # 3 components
+│   ├── chat/         # 4 components (AI Chatbot UI)
+│   ├── charts/       # 1 component
+│   ├── layout/       # 3 components (Header, Sidebar, Layout)
+│   ├── student/      # 1 component
+│   ├── supervisor/   # 1 component
+│   └── teacher/      # 2 components
+├── services/
+│   ├── api/          # 10 service files
+│   │   ├── user.service.ts
+│   │   ├── project.service.ts
+│   │   ├── topic.service.ts
+│   │   ├── chat.service.ts       # AI chat (11.3KB)
+│   │   ├── scheduling.service.ts
+│   │   ├── topicProposal.service.ts
+│   │   ├── progressReport.service.ts
+│   │   ├── class.service.ts
+│   │   ├── announcement.service.ts
+│   │   └── teacherGroup.service.ts
+│   └── firebase/     # 2 files (auth, config)
+├── types/            # 8 type files TypeScript
+│   ├── user.types.ts
+│   ├── auth.types.ts
+│   ├── project.types.ts
+│   ├── topic.types.ts
+│   ├── chat.types.ts
+│   ├── class.types.ts
+│   ├── announcement.types.ts
+│   └── teacherGroup.types.ts
+└── utils/            # 2 utility files
+```
+
+### Pages Chính — Phân Theo Role
+
+**Admin:**
+- `AdminDashboard` — Tổng quan hệ thống
+- `UserManagement` — Quản lý người dùng (25.8KB)
+- `TopicManagement` — Quản lý đề tài (15.7KB)
+- `ProjectManagement` — Quản lý đồ án (12.8KB)
+- `ClassAssignment` — Phân lớp (14.5KB)
+- `AnnouncementManagement` — Thông báo tuyển sinh
+- `ReviewerAssignment` — Phân công phản biện
+- `Statistics` — Thống kê
+
+**Sinh Viên (Student):**
+- `StudentDashboard` — Tổng quan (19.3KB)
+- `TopicBrowsing` — Duyệt đề tài
+- `TopicRegistration` — Đăng ký đề tài
+- `StudentTopicProposal` — Đề xuất đề tài
+- `MyProject` — Đồ án của tôi
+- `SprintPlanning` — Lập kế hoạch sprint (18.9KB)
+- `ProgressReports` — Báo cáo tiến độ
+- `SubmitReport` — Nộp báo cáo
+- `DocumentManagement` — Quản lý tài liệu (16.6KB)
+- `BookMeeting` — Đặt lịch hẹn (16.3KB)
+- `ProjectResults` — Kết quả đồ án
+
+**Giáo Viên (Supervisor):**
+- `TeacherDashboard` — Tổng quan (14.2KB)
+- `TeacherTopicProposal` — Tạo/quản lý đề tài (27.1KB)
+- `TeacherTopicList` — Danh sách đề tài
+- `TeacherStudentList` — Danh sách sinh viên
+- `TeacherProjectDetail` — Chi tiết đồ án (28.2KB)
+- `TeacherProgressTracking` — Theo dõi tiến độ (23KB)
+- `TeacherProposalReview` — Duyệt đề xuất (14.2KB)
+- `TeacherCalendar` — Lịch dạy/hẹn (26.5KB)
+- `TeacherReviewList` — Danh sách phản biện
+- `TeacherStatistics` — Thống kê giáo viên
+
+---
+
+## 📱 MOBILE — Flutter
+
+### Tech Stack
+| Package | Mục đích |
+|---------|----------|
+| Flutter + Dart SDK ^3.11 | Framework |
+| flutter_riverpod 2.6.1 | State Management |
+| firebase_auth 5.5.1 | Authentication |
+| dio 5.7.0 | HTTP client |
+| go_router 14.8.1 | Navigation |
+| flutter_secure_storage | Lưu token |
+| google_fonts | Typography |
+| shimmer | Loading effect |
+
+### Cấu Trúc `mobile/lib/`
+```
+lib/
+├── main.dart
+├── core/
+│   ├── config/       # 4 files (API config, Firebase, ...)
+│   ├── constants/    # 2 files
+│   ├── network/      # 1 file (Dio client)
+│   └── theme/        # 1 file
+├── features/         # 8 features (Clean Architecture)
+│   ├── auth/         # data/ domain/ presentation/
+│   ├── dashboard/    # presentation/
+│   ├── project/      # domain/ presentation/
+│   ├── sprint/       # 3 sub-dirs
+│   ├── student/      # 4 sub-dirs
+│   ├── supervisor/   # 6 sub-dirs
+│   ├── notification/ # 1 sub-dir
+│   └── admin/        # 5 sub-dirs
+└── shared/           # 3 dirs (widgets, utils, models)
+```
+
+### Mobile Features
+| Feature | Mô tả |
+|---------|-------|
+| auth | Đăng nhập Firebase |
+| dashboard | Màn hình chính theo role |
+| project | Quản lý đồ án |
+| sprint | Sprint planning |
+| student | Màn hình sinh viên |
+| supervisor | Màn hình giáo viên hướng dẫn |
+| admin | Màn hình quản trị |
+| notification | Thông báo |
+
+---
+
+## 🗄️ DATABASE — MySQL (SQL Server Schema)
+
+### Các Bảng Chính (16 tables)
+
+```mermaid
+graph TD
+    users --> students
+    users --> teachers
+    users --> admins
+    admins --> admin_permissions
+    teachers --> teacher_specializations
+    teachers --> classes
+    students --> topic_proposals
+    teachers --> topic_proposals
+    topics --> projects
+    students --> projects
+    teachers --> projects
+    projects --> sprints
+    sprints --> sprint_comments
+    projects --> progress_reports
+    progress_reports --> comments
+    teachers --> meeting_slots
+    meeting_slots --> bookings
+    students --> bookings
+```
+
+| Bảng | Mô tả |
+|------|-------|
+| `users` | Người dùng chung (role: student/teacher/admin) |
+| `students` | Hồ sơ sinh viên |
+| `teachers` | Hồ sơ giáo viên (max_students, can_supervise, can_review) |
+| `admins` | Hồ sơ admin |
+| `admin_permissions` | Phân quyền admin |
+| `teacher_specializations` | Chuyên ngành giáo viên |
+| `classes` | Lớp học |
+| `topics` | Đề tài (pending/approved/rejected) |
+| `topic_proposals` | Đề xuất đề tài từ sinh viên |
+| `projects` | Đồ án (registered→in_progress→submitted→graded→completed) |
+| `project_archive` | Lưu trữ đồ án đã hoàn thành |
+| `sprints` | Sprint của đồ án |
+| `sprint_comments` | Comment trên sprint |
+| `progress_reports` | Báo cáo tiến độ hàng tuần |
+| `comments` | Nhận xét giáo viên trên báo cáo |
+| `announcements` | Thông báo tuyển sinh (draft/published/closed) |
+| `meeting_slots` | Lịch hẹn giáo viên |
+| `bookings` | Đặt lịch hẹn của sinh viên |
+| `notifications` | Thông báo hệ thống |
+
+### Status Flows
+```
+Topic:   pending → approved / rejected
+Project: registered → in_progress → submitted → graded → completed / failed
+Sprint:  not_started → in_progress → completed
+Report:  submitted → reviewed → approved / revision_needed
+Booking: pending → confirmed / cancelled → completed
+Announcement: draft → published → closed
+```
+
+---
+
+## 🔐 Authentication & Authorization
+
+- **Firebase Auth** — đăng nhập phía client
+- **Firebase Admin SDK** — verify token phía server
+- **Role-based**: `student` | `teacher` | `admin`
+- Tất cả API routes đều qua middleware `verifyToken`
+
+## 📂 Diagrams
+| File | Nội dung |
+|------|---------|
+| `ERD_DIAGRAM.drawio` | Entity Relationship Diagram |
+| `PMD_DIAGRAM.drawio` | Physical/Logical Data Model |
+| `DFD_Level0/1/2.drawio` | Data Flow Diagram |
+| `USE_CASE_DIAGRAM.md` | Use Case Diagram |
+| `USE_CASE_SPECIFICATIONS.md` | Đặc tả Use Case |
+| `BFD_DIAGRAM.md` | Business Flow Diagram |
+| `erd_diagram.puml` | PlantUML ERD |
