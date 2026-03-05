@@ -5,6 +5,12 @@ import MainLayout from '../../components/layout/MainLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './Dashboard.module.css';
 
+interface Announcement {
+  id: string;
+  title: string;
+  created_at: string;
+}
+
 interface UpcomingProject {
   id: string;
   title: string;
@@ -23,10 +29,13 @@ const AdminDashboard = () => {
   });
   const [upcomingProjects, setUpcomingProjects] = useState<UpcomingProject[]>([]);
   const [loadingDeadlines, setLoadingDeadlines] = useState(true);
+  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
+  const [loadingAnnouncements, setLoadingAnnouncements] = useState(true);
 
   useEffect(() => {
     fetchStats();
     fetchUpcomingDeadlines();
+    fetchAnnouncements();
   }, []);
 
   const fetchStats = async () => {
@@ -86,6 +95,25 @@ const AdminDashboard = () => {
       console.error('Failed to load upcoming deadlines', error);
     } finally {
       setLoadingDeadlines(false);
+    }
+  };
+
+  const fetchAnnouncements = async () => {
+    setLoadingAnnouncements(true);
+    try {
+      const { auth } = await import('../../services/firebase/config');
+      const token = await auth.currentUser?.getIdToken();
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/announcements`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      if (data.success) {
+        setAnnouncements(data.data.slice(0, 5));
+      }
+    } catch (error) {
+      console.error('Failed to load announcements', error);
+    } finally {
+      setLoadingAnnouncements(false);
     }
   };
 
@@ -188,15 +216,32 @@ const AdminDashboard = () => {
 
           {/* Notifications */}
           <div className={styles.card}>
-            <h3> Thông báo mới nhất</h3>
+            <h3>🔔 Thông báo mới nhất</h3>
             <div className={styles.notificationList}>
-              <div className={styles.notificationItem}>
-                <div className={styles.notificationIcon}>📝</div>
-                <div className={styles.notificationContent}>
-                  <div className={styles.notificationTitle}>Hệ thống khởi chạy thành công</div>
-                  <div className={styles.notificationTime}>Vừa xong</div>
+              {loadingAnnouncements ? (
+                <div className={styles.emptyState}><p>Đang tải...</p></div>
+              ) : announcements.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <p>Không có thông báo nào</p>
                 </div>
-              </div>
+              ) : (
+                announcements.map(a => (
+                  <div
+                    key={a.id}
+                    className={styles.notificationItem}
+                    onClick={() => navigate('/admin/announcements')}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className={styles.notificationIcon}>📝</div>
+                    <div className={styles.notificationContent}>
+                      <div className={styles.notificationTitle}>{a.title}</div>
+                      <div className={styles.notificationTime}>
+                        {new Date(a.created_at).toLocaleDateString('vi-VN')}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>
