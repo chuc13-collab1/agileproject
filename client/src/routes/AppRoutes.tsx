@@ -14,6 +14,8 @@ import ProjectResults from '../pages/student/ProjectResults';
 import StudentTopicProposal from '../pages/student/StudentTopicProposal';
 import BookMeeting from '../pages/student/BookMeeting';
 import ChatPage from '../pages/shared/ChatPage';
+import AiAssistant from '../pages/shared/AiAssistant';
+import ArchivePage from '../pages/shared/ArchivePage';
 import TeacherDashboard from '../pages/supervisor/TeacherDashboard';
 import TeacherTopicList from '../pages/supervisor/TeacherTopicList';
 import TeacherStudentList from '../pages/supervisor/TeacherStudentList';
@@ -150,10 +152,20 @@ const AppRoutes: React.FC = () => {
         </ProtectedRoute>
       } />
 
-      {/* Chat Routes - accessible by all authenticated users */}
+      {/* Shared Services Routes - accessible by all authenticated users */}
       <Route path="/chat" element={
         <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
           <ChatPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/ai-assistant" element={
+        <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
+          <AiAssistant />
+        </ProtectedRoute>
+      } />
+      <Route path="/archive" element={
+        <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
+          <ArchivePage />
         </ProtectedRoute>
       } />
 

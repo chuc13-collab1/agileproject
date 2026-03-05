@@ -1,0 +1,25 @@
+[31mx[39m Build failed in 306ms
+[31merror during build:
+[31m[vite-plugin-pwa:build] [plugin vite-plugin-pwa:build] ../../../E:/agile-project-management/client/src/pages/supervisor/TeacherProgressTracking.tsx (46:16): There was an error during the build:
+  Transform failed with 1 error:
+E:/agile-project-management/client/src/pages/supervisor/TeacherProgressTracking.tsx:46:16: ERROR: Expected ")" but found "{"
+Additionally, handling the error in the 'buildEnd' hook caused the following error:
+  Transform failed with 1 error:
+E:/agile-project-management/client/src/pages/supervisor/TeacherProgressTracking.tsx:46:16: ERROR: Expected ")" but found "{"[31m
+file: [36mE:/agile-project-management/client/src/pages/supervisor/TeacherProgressTracking.tsx:46:16[31m
+[33m
+[33mExpected ")" but found "{"[33m
+44 |              const response = await fetch(
+45 |                  `${import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}`}/progress-reports/teachers/${user.uid}/progress-reports?status=${filter}`
+46 |                  {
+   |                  ^
+47 |                      headers: {
+48 |                          'Authorization': `Bearer ${token}`
+[31m
+    at getRollupError (file:///e:/agile-project-management/client/node_modules/rollup/dist/es/shared/parseAst.js:400:41)
+    at file:///e:/agile-project-management/client/node_modules/rollup/dist/es/shared/node-entry.js:23423:39
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async catchUnfinishedHookActions (file:///e:/agile-project-management/client/node_modules/rollup/dist/es/shared/node-entry.js:22881:16)
+    at async rollupInternal (file:///e:/agile-project-management/client/node_modules/rollup/dist/es/shared/node-entry.js:23406:5)
+    at async build (file:///e:/agile-project-management/client/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:65709:14)
+    at async CAC.<anonymous> (file:///e:/agile-project-management/client/node_modules/vite/dist/node/cli.js:829:5)[39m
