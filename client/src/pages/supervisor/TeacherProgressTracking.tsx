@@ -42,7 +42,7 @@ const TeacherProgressTracking: React.FC = () => {
             setLoading(true);
             const token = await auth.currentUser.getIdToken();
             const response = await fetch(
-                `http://localhost:3001/api/progress-reports/teachers/${user.uid}/progress-reports?status=${filter}`,
+                `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/progress-reports/teachers/${user.uid}/progress-reports?status=${filter}`,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`
@@ -84,7 +84,7 @@ const TeacherProgressTracking: React.FC = () => {
             setSubmitting(true);
             const token = await auth.currentUser.getIdToken();
             const response = await fetch(
-                `http://localhost:3001/api/progress-reports/${selectedReport.id}/comments`,
+                `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/progress-reports/${selectedReport.id}/comments`,
                 {
                     method: 'POST',
                     headers: {
@@ -374,7 +374,7 @@ const TeacherProgressTracking: React.FC = () => {
                                                     {selectedReport.file_name || 'Tài liệu đính kèm'}
                                                 </div>
                                                 <a
-                                                    href={`http://localhost:3001/uploads/progress-reports/${selectedReport.file_path.split(/[/\\]/).pop()}`}
+                                                    href={`${(import.meta.env.VITE_API_URL || 'http://localhost:3001/api').replace('/api', '')}/uploads/progress-reports/${selectedReport.file_path.split(/[/\\]/).pop()}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     style={{ color: '#2563eb', textDecoration: 'none', fontSize: '0.875rem', fontWeight: '500' }}

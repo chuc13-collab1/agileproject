@@ -61,4 +61,10 @@ class ApiEndpoints {
 
   // Announcements
   static const String announcements = '/announcements';
+
+  // Scheduling (Book Meeting)
+  static const String scheduling = '/scheduling';
+
+  // AI
+  static const String ai = '/ai';
 }

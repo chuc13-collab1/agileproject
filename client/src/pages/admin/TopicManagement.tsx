@@ -115,7 +115,7 @@ function TopicManagement() {
     try {
       const token = await auth.currentUser?.getIdToken();
       if (!token) throw new Error('No auth token');
-      const response = await fetch('http://localhost:3001/api/debug/reset-topic-counts', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/debug/reset-topic-counts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ function TopicManagement() {
     try {
       const token = await auth.currentUser?.getIdToken();
       if (!token) throw new Error('No auth token');
-      const response = await fetch('http://localhost:3001/api/debug/create-projects-table', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/debug/create-projects-table`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -164,7 +164,7 @@ function TopicManagement() {
     try {
       const token = await auth.currentUser?.getIdToken();
       if (!token) throw new Error('No auth token');
-      const response = await fetch('http://localhost:3001/api/debug/add-topic-columns', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/debug/add-topic-columns`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

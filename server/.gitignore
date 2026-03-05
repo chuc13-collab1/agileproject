@@ -3,3 +3,7 @@ node_modules/
 .DS_Store
 *.log
 npm-debug.log*
+
+# Firebase Admin SDK service account keys - NEVER commit these
+*-firebase-adminsdk-*.json
+serviceAccountKey.json

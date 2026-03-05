@@ -51,7 +51,7 @@ export const subscribeToConversations = (
 ): (() => void) => {
     const convsRef = ref(realtimeDb, CONVERSATIONS_REF);
 
-    const listener = onValue(convsRef, (snapshot) => {
+    onValue(convsRef, (snapshot) => {
         const conversations: Conversation[] = [];
         snapshot.forEach((child) => {
             const data = child.val();
@@ -144,7 +144,7 @@ export const subscribeToMessages = (
         orderByChild('timestamp')
     );
 
-    const listener = onValue(messagesRef, (snapshot) => {
+    onValue(messagesRef, (snapshot) => {
         const messages: ChatMessage[] = [];
         snapshot.forEach((child) => {
             messages.push({
@@ -238,7 +238,7 @@ export const subscribeToTyping = (
 ): (() => void) => {
     const typingRef = ref(realtimeDb, `${CONVERSATIONS_REF}/${projectId}/typing`);
 
-    const listener = onValue(typingRef, (snapshot) => {
+    onValue(typingRef, (snapshot) => {
         const typingUsers: string[] = [];
         if (snapshot.exists()) {
             const data = snapshot.val();
@@ -289,7 +289,7 @@ export const subscribeToUnreadCount = (
 ): (() => void) => {
     const messagesRef = ref(realtimeDb, `${MESSAGES_REF}/${projectId}`);
 
-    const listener = onValue(messagesRef, (snapshot) => {
+    onValue(messagesRef, (snapshot) => {
         let count = 0;
         snapshot.forEach((child) => {
             const msg = child.val();
@@ -334,7 +334,7 @@ export const subscribeToPresence = (
 
     userIds.forEach((uid) => {
         const presRef = ref(realtimeDb, `${PRESENCE_REF}/${uid}`);
-        const listener = onValue(presRef, (snapshot) => {
+        onValue(presRef, (snapshot) => {
             if (snapshot.exists()) {
                 presenceData[uid] = snapshot.val();
             } else {

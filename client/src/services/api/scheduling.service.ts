@@ -31,7 +31,7 @@ export interface Booking {
 }
 
 // API Base URL
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}`;
 
 /**
  * Helper function for API calls
@@ -39,9 +39,9 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 const apiCall = async (endpoint: string, options: RequestInit = {}) => {
     const token = await auth.currentUser?.getIdToken();
 
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        ...options.headers,
+        ...(options.headers as Record<string, string>),
     };
 
     if (token) {

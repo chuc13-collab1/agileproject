@@ -11,7 +11,7 @@ import {
 } from '../../types/user.types';
 
 // API Base URL
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}`;
 
 /**
  * Helper function to get auth token

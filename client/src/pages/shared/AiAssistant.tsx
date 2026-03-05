@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { auth } from '../../services/firebase/config';
 import styles from './AiAssistant.module.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}`;
 
 type Tab = 'chat' | 'summarize' | 'suggest' | 'suggest-tasks' | 'grammar' | 'assess';
 

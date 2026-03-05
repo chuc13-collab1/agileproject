@@ -13,7 +13,7 @@ import ChatWindow from '../../components/chat/ChatWindow';
 import styles from './Chat.module.css';
 
 // API helper
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}`;
 import { auth } from '../../services/firebase/config';
 
 const getAuthHeaders = async (): Promise<Record<string, string>> => {

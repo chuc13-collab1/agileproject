@@ -61,9 +61,9 @@ const TeacherSprintView: React.FC<TeacherSprintViewProps> = ({ projectId }) => {
             const headers = await getAuthHeaders();
 
             const [sprintsRes, burndownRes, commentsRes] = await Promise.all([
-                fetch(`http://localhost:3001/api/sprints/${projectId}`, { headers }),
-                fetch(`http://localhost:3001/api/sprints/${projectId}/burndown`, { headers }),
-                fetch(`http://localhost:3001/api/sprints/${projectId}/comments`, { headers }),
+                fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/sprints/${projectId}`, { headers }),
+                fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/sprints/${projectId}/burndown`, { headers }),
+                fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/sprints/${projectId}/comments`, { headers }),
             ]);
 
             const sprintsData = await sprintsRes.json();
@@ -85,7 +85,7 @@ const TeacherSprintView: React.FC<TeacherSprintViewProps> = ({ projectId }) => {
         setSubmitting(true);
         try {
             const headers = await getAuthHeaders();
-            const response = await fetch(`http://localhost:3001/api/sprints/${selectedSprintId}/comments`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/sprints/${selectedSprintId}/comments`, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({

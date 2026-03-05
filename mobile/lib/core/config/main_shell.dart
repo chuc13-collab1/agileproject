@@ -94,6 +94,30 @@ class MainShell extends ConsumerWidget {
               },
             ),
             _MoreMenuItem(
+              icon: Icons.event_available,
+              label: 'Đặt lịch hẹn GVHD',
+              onTap: () {
+                Navigator.pop(ctx);
+                context.go('/book-meeting');
+              },
+            ),
+            _MoreMenuItem(
+              icon: Icons.lightbulb_outline,
+              label: 'Đề xuất đề tài',
+              onTap: () {
+                Navigator.pop(ctx);
+                context.go('/propose-topic');
+              },
+            ),
+            _MoreMenuItem(
+              icon: Icons.auto_awesome,
+              label: 'AI Trợ lý',
+              onTap: () {
+                Navigator.pop(ctx);
+                context.go('/ai-chat');
+              },
+            ),
+            _MoreMenuItem(
               icon: Icons.notifications_outlined,
               label: 'Thông báo',
               onTap: () {

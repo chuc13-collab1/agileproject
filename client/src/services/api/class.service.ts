@@ -2,7 +2,7 @@ import { auth } from '../firebase/config';
 import { Class, ClassFormData } from '../../types/class.types';
 import { Student } from '../../types/user.types';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_URL || `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}`;
 
 const getAuthToken = async (): Promise<string> => {
     const token = await auth.currentUser?.getIdToken();

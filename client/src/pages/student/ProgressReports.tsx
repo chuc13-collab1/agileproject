@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
 import { useAuth } from '../../contexts/AuthContext';
-import * as projectService from '../../services/api/project.service';
+
 import styles from './Student.module.css';
 import { auth } from '../../services/firebase/config';
 
@@ -39,7 +39,7 @@ const ProgressReports: React.FC = () => {
         setLoading(true);
         try {
             const token = await auth.currentUser.getIdToken();
-            const url = `http://localhost:3001/api/progress-reports/students/${user.uid}/reports`;
+            const url = `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/progress-reports/students/${user.uid}/reports`;
             console.log('Fetching reports from:', url);
 
             const response = await fetch(url, {

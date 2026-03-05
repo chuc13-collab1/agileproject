@@ -86,7 +86,7 @@ const TeacherGradingPanel: React.FC<GradingPanelProps> = ({
             const token = await user?.getIdToken();
 
             const response = await fetch(
-                `http://localhost:3001/api/projects/${projectId}/evaluate`,
+                `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects/${projectId}/evaluate`,
                 {
                     method: 'POST',
                     headers: {

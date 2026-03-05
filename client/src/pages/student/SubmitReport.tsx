@@ -74,7 +74,7 @@ const SubmitReport: React.FC = () => {
             }
 
             // Call backend API
-            const response = await fetch('http://localhost:3001/api/progress-reports', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/progress-reports`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`

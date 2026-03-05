@@ -16,7 +16,7 @@ export const createProject = async (projectData: CreateProjectRequest): Promise<
   const token = await auth.currentUser?.getIdToken();
   if (!token) throw new Error('No authentication token');
 
-  const response = await fetch('http://localhost:3001/api/projects', {
+  const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export const createProject = async (projectData: CreateProjectRequest): Promise<
 export const getAllProjects = async (): Promise<Project[]> => {
   const token = await auth.currentUser?.getIdToken();
 
-  const headers: HeadersInit = {
+  const headers: Record<string, string> = {
     'Content-Type': 'application/json'
   };
 
@@ -45,7 +45,7 @@ export const getAllProjects = async (): Promise<Project[]> => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch('http://localhost:3001/api/projects', {
+  const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects`, {
     headers
   });
 
@@ -62,6 +62,34 @@ export const getAllProjects = async (): Promise<Project[]> => {
   }));
 };
 
+// Get My Project (student) — gọi đúng endpoint thay vì filter toàn bộ
+export const getMyProject = async (studentUid: string): Promise<Project | null> => {
+  const token = await auth.currentUser?.getIdToken();
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects/student/${studentUid}`,
+    { headers }
+  );
+
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error('Failed to fetch project');
+
+  const result = await response.json();
+  const data = result.data;
+
+  return {
+    ...data,
+    registrationDate: data.registrationDate ? new Date(data.registrationDate) : new Date(),
+    reportDeadline: data.reportDeadline ? new Date(data.reportDeadline) : new Date(),
+    defenseDate: data.defenseDate ? new Date(data.defenseDate) : undefined,
+    createdAt: data.createdAt ? new Date(data.createdAt) : new Date(),
+    updatedAt: data.updatedAt ? new Date(data.updatedAt) : new Date(),
+  };
+};
+
+
 // Get Project by ID
 // Get Project by ID
 export const getProjectById = async (projectId: string): Promise<Project | null> => {
@@ -69,7 +97,7 @@ export const getProjectById = async (projectId: string): Promise<Project | null>
   const headers: HeadersInit = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const response = await fetch(`http://localhost:3001/api/projects/${projectId}`, { headers });
+  const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects/${projectId}`, { headers });
 
   if (!response.ok) {
     if (response.status === 404) return null;
@@ -98,7 +126,7 @@ export const updateProject = async (
 
   // If updating status, use the status endpoint
   if (updates.status) {
-    await fetch(`http://localhost:3001/api/projects/${projectId}/status`, {
+    await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects/${projectId}/status`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
@@ -125,7 +153,7 @@ export const updateProject = async (
   delete (otherUpdates as any).studentId; // Cannot change student of existing project
 
   if (Object.keys(otherUpdates).length > 0) {
-    const response = await fetch(`http://localhost:3001/api/projects/${projectId}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects/${projectId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -156,7 +184,7 @@ export const getReviewProjects = async (teacherUid: string): Promise<any[]> => {
   const headers: HeadersInit = { 'Content-Type': 'application/json' };
   if (token) headers['Authorization'] = `Bearer ${token}`;
 
-  const response = await fetch(`http://localhost:3001/api/projects/teachers/${teacherUid}/review-projects`, { headers });
+  const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects/teachers/${teacherUid}/review-projects`, { headers });
   if (!response.ok) throw new Error('Failed to fetch review projects');
 
   const result = await response.json();
@@ -168,7 +196,7 @@ export const deleteProject = async (projectId: string): Promise<void> => {
   const token = await auth.currentUser?.getIdToken();
   if (!token) throw new Error('No authentication token');
 
-  const response = await fetch(`http://localhost:3001/api/projects/${projectId}`, {
+  const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/projects/${projectId}`, {
     method: 'DELETE',
     headers: {
       'Authorization': `Bearer ${token}`
