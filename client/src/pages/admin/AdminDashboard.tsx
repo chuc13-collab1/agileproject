@@ -1,4 +1,3 @@
-// Admin Dashboard Page
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
@@ -27,8 +26,10 @@ const AdminDashboard = () => {
     users: { total: 0, students: 0, teachers: 0 },
     topics: { total: 0, approved: 0 },
   });
+
   const [upcomingProjects, setUpcomingProjects] = useState<UpcomingProject[]>([]);
   const [loadingDeadlines, setLoadingDeadlines] = useState(true);
+
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loadingAnnouncements, setLoadingAnnouncements] = useState(true);
 
@@ -62,28 +63,28 @@ const AdminDashboard = () => {
       });
       const result = await response.json();
 
-      // Hỗ trợ cả 2 format: array hoặc { success, data: [] }
       const allProjects: any[] = Array.isArray(result) ? result : (result.data || []);
-
-      const now = new Date();
-      const sevenDaysLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
       const upcoming = allProjects
         .filter((p: any) => {
           const deadlineRaw = p.reportDeadline || p.report_deadline;
           if (!deadlineRaw) return false;
           if (['completed', 'graded', 'failed'].includes(p.status)) return false;
+
           const deadline = new Date(deadlineRaw);
-          return deadline >= now && deadline <= sevenDaysLater;
+          const daysLeft = Math.ceil((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
+
+          return daysLeft <= 7;
         })
         .map((p: any) => {
-          const deadline = new Date(p.reportDeadline || p.report_deadline);
-          const daysLeft = Math.ceil((deadline.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+          const deadlineRaw = p.reportDeadline || p.report_deadline;
+          const deadline = new Date(deadlineRaw);
+          const daysLeft = Math.ceil((deadline.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24));
           return {
             id: p.id,
             title: p.title,
             studentName: p.studentName || p.student_name || 'N/A',
-            reportDeadline: p.reportDeadline || p.report_deadline,
+            reportDeadline: deadlineRaw,
             status: p.status,
             daysLeft,
           };
@@ -118,9 +119,10 @@ const AdminDashboard = () => {
   };
 
   const getDayColor = (daysLeft: number) => {
-    if (daysLeft <= 1) return '#ef4444';
-    if (daysLeft <= 3) return '#f97316';
-    return '#f59e0b';
+    if (daysLeft < 0) return '#dc2626'; // Đỏ đậm cho quá hạn
+    if (daysLeft <= 1) return '#ef4444'; // 0-1 ngày
+    if (daysLeft <= 3) return '#f97316'; // 2-3 ngày
+    return '#f59e0b'; // 4-7 ngày
   };
 
   return (
@@ -175,7 +177,7 @@ const AdminDashboard = () => {
                 <div className={styles.emptyState}><p>Đang tải...</p></div>
               ) : upcomingProjects.length === 0 ? (
                 <div className={styles.emptyState}>
-                  <p>Không có đồ án nào sắp hết hạn</p>
+                  <p>Không có đồ án nào sắp hoặc đã hết hạn</p>
                 </div>
               ) : (
                 upcomingProjects.map(p => (
@@ -206,7 +208,12 @@ const AdminDashboard = () => {
                       background: `${getDayColor(p.daysLeft)}18`,
                       padding: '0.25rem 0.75rem', borderRadius: '999px', whiteSpace: 'nowrap',
                     }}>
-                      {p.daysLeft === 0 ? '⚠️ Hôm nay!' : `⏳ ${p.daysLeft} ngày`}
+                      {p.daysLeft < 0
+                        ? `🚨 Quá hạn ${Math.abs(p.daysLeft)} ngày`
+                        : p.daysLeft === 0
+                          ? '⚠️ Hôm nay!'
+                          : `⏳ ${p.daysLeft} ngày`
+                      }
                     </span>
                   </div>
                 ))
