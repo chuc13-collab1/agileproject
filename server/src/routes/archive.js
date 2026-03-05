@@ -214,7 +214,7 @@ router.post('/batch', async (req, res, next) => {
                 u_reviewer.display_name as reviewer_name,
                 p.final_score,
                 p.grade,
-                p.description
+                p.notes as description
             FROM projects p
             INNER JOIN topics t ON p.topic_id = t.id
             INNER JOIN students s ON p.student_id = s.id
