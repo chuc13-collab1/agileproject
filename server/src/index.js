@@ -39,7 +39,10 @@ const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors({
-    origin: process.env.ALLOWED_ORIGINS?.split(',') || 'http://localhost:5173',
+    origin: function (origin, callback) {
+        // Allow all cross-origin requests for now to fix production CORS issues
+        callback(null, true);
+    },
     credentials: true
 }));
 
