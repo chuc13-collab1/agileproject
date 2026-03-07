@@ -1,0 +1,562 @@
+<mxfile host="65bd71144e">
+    <diagram id="pdm" name="PDM - Physical Data Model">
+        <mxGraphModel dx="3058" dy="2295" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="tt" value="&lt;b&gt;Sơ đồ Vật lý (PDM) — Hệ thống Quản lý Đồ án Agile&lt;/b&gt;" style="text;html=1;align=center;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="-35" width="700" height="35" as="geometry"/>
+                </mxCell>
+                <mxCell id="leg" value="🔑 pk2 = Primary Key | 🔗 fk = Foreign Key" style="text;html=1;align=left;fontSize=17;fillColor=#f5f5f5;strokeColor=#666;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="10" y="-35" width="320" height="25" as="geometry"/>
+                </mxCell>
+                <mxCell id="U" value="&lt;b&gt;users&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="640" y="70" width="250" height="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                    <mxGeometry y="25" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="uid              varchar(128)   &lt;uk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                    <mxGeometry y="45" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="email            varchar(255)   &lt;uk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                    <mxGeometry y="65" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="display_name     varchar(255)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                    <mxGeometry y="85" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="role             enum(" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                    <mxGeometry y="105" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="avatar_url       varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                    <mxGeometry y="125" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="phone            varchar(20)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                    <mxGeometry y="145" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="is_active        tinyint(1)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="U" vertex="1">
+                    <mxGeometry y="165" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="ST" value="&lt;b&gt;students&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="60" width="240" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="ST" vertex="1">
+                    <mxGeometry y="25" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="11" value="user_id          int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="ST" vertex="1">
+                    <mxGeometry y="45" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="12" value="student_id       varchar(50)    &lt;uk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="ST" vertex="1">
+                    <mxGeometry y="65" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="13" value="class_name       varchar(100)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="ST" vertex="1">
+                    <mxGeometry y="85" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="14" value="major            varchar(200)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="ST" vertex="1">
+                    <mxGeometry y="105" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="15" value="phone            varchar(20)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="ST" vertex="1">
+                    <mxGeometry y="125" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="TC" value="&lt;b&gt;teachers&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="160" y="290" width="240" height="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="16" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TC" vertex="1">
+                    <mxGeometry y="25" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="17" value="user_id          int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="TC" vertex="1">
+                    <mxGeometry y="45" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="18" value="teacher_id       varchar(50)    &lt;uk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TC" vertex="1">
+                    <mxGeometry y="65" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="19" value="department       varchar(200)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TC" vertex="1">
+                    <mxGeometry y="85" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="can_supervise    tinyint(1)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TC" vertex="1">
+                    <mxGeometry y="105" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="21" value="can_review       tinyint(1)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TC" vertex="1">
+                    <mxGeometry y="125" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="22" value="max_students     int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TC" vertex="1">
+                    <mxGeometry y="145" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="current_students int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TC" vertex="1">
+                    <mxGeometry y="165" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="AD" value="&lt;b&gt;admins&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#f8cecc;strokeColor=#b85450;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1120" y="380" width="240" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AD" vertex="1">
+                    <mxGeometry y="25" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="25" value="user_id          int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="AD" vertex="1">
+                    <mxGeometry y="45" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="26" value="is_super_admin   tinyint(1)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AD" vertex="1">
+                    <mxGeometry y="65" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="AP" value="&lt;b&gt;admin_permissions&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#f8cecc;strokeColor=#b85450;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1110" y="550" width="280" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="27" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AP" vertex="1">
+                    <mxGeometry y="25" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="admin_id         int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="AP" vertex="1">
+                    <mxGeometry y="45" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="permission_name  varchar(100)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AP" vertex="1">
+                    <mxGeometry y="65" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="CL" value="&lt;b&gt;classes&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="560" width="240" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="30" value="id                   int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="CL" vertex="1">
+                    <mxGeometry y="25" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="class_code           varchar(50)    &lt;uk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="CL" vertex="1">
+                    <mxGeometry y="45" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="32" value="class_name           varchar(200)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="CL" vertex="1">
+                    <mxGeometry y="65" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="33" value="major                varchar(200)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="CL" vertex="1">
+                    <mxGeometry y="85" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="34" value="advisor_teacher_id   int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="CL" vertex="1">
+                    <mxGeometry y="105" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="TS" value="&lt;b&gt;teacher_specializations&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="530" width="240" height="95" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TS" vertex="1">
+                    <mxGeometry y="25" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="36" value="teacher_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="TS" vertex="1">
+                    <mxGeometry y="45" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="specialization   varchar(200)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TS" vertex="1">
+                    <mxGeometry y="65" width="240" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="TP" value="&lt;b&gt;topics&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1210" y="55" width="320" height="235" as="geometry"/>
+                </mxCell>
+                <mxCell id="38" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                    <mxGeometry y="25" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" value="supervisor_id    int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="TP" vertex="1">
+                    <mxGeometry y="45" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" value="reviewer_id      int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="TP" vertex="1">
+                    <mxGeometry y="65" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="41" value="title            varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                    <mxGeometry y="85" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="42" value="description      text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                    <mxGeometry y="105" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="43" value="field            varchar(200)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                    <mxGeometry y="125" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="semester         varchar(50)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                    <mxGeometry y="145" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" value="status           enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                    <mxGeometry y="165" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" value="max_students     int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                    <mxGeometry y="185" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="47" value="current_students int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="TP" vertex="1">
+                    <mxGeometry y="205" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="PR" value="&lt;b&gt;topic_proposals&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="730" y="340" width="320" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="48" value="id                       int    &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PR" vertex="1">
+                    <mxGeometry y="25" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="49" value="proposed_by_student_id   int    &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="PR" vertex="1">
+                    <mxGeometry y="45" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="requested_supervisor_id  int    &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="PR" vertex="1">
+                    <mxGeometry y="65" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="title                    varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PR" vertex="1">
+                    <mxGeometry y="85" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="52" value="description              text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PR" vertex="1">
+                    <mxGeometry y="105" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="status                   enum(pending,approved,rejected)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PR" vertex="1">
+                    <mxGeometry y="125" width="260" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="PJ" value="&lt;b&gt;projects&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1750" y="70" width="320" height="295" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="25" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="55" value="topic_id         int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="PJ" vertex="1">
+                    <mxGeometry y="45" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="student_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="PJ" vertex="1">
+                    <mxGeometry y="65" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="57" value="supervisor_id    int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="PJ" vertex="1">
+                    <mxGeometry y="85" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" value="reviewer_id      int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="PJ" vertex="1">
+                    <mxGeometry y="105" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" value="status           enum(registered,in_progress,...)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="125" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" value="supervisor_score decimal(4,2)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="145" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="61" value="reviewer_score   decimal(4,2)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="165" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" value="council_score    decimal(4,2)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="185" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="63" value="final_score      decimal(4,2)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="205" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="64" value="grade            enum(A,B,C,D,F)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="225" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="65" value="defense_date     datetime" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="245" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="66" value="created_at       datetime" style="text;align=left;spacingLeft=6;fontSize=17;" parent="PJ" vertex="1">
+                    <mxGeometry y="265" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="SP" value="&lt;b&gt;sprints&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#f0f0ff;strokeColor=#7070c0;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1700" y="440" width="320" height="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="67" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
+                    <mxGeometry y="25" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="68" value="project_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="SP" vertex="1">
+                    <mxGeometry y="45" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="69" value="sprint_number    int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
+                    <mxGeometry y="65" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="70" value="title            varchar(200)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
+                    <mxGeometry y="85" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="71" value="goals            text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
+                    <mxGeometry y="105" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="72" value="status           enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
+                    <mxGeometry y="125" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="73" value="start_week       int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
+                    <mxGeometry y="145" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="74" value="end_week         int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SP" vertex="1">
+                    <mxGeometry y="165" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="SC" value="&lt;b&gt;sprint_comments&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#f0f0ff;strokeColor=#7070c0;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1740" y="735" width="270" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="75" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SC" vertex="1">
+                    <mxGeometry y="25" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="76" value="sprint_id        int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="SC" vertex="1">
+                    <mxGeometry y="45" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="77" value="author_uid       varchar(128)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SC" vertex="1">
+                    <mxGeometry y="65" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="78" value="author_role      enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SC" vertex="1">
+                    <mxGeometry y="85" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="79" value="content          text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="SC" vertex="1">
+                    <mxGeometry y="105" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="RP" value="&lt;b&gt;progress_reports&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="870" y="695" width="400" height="195" as="geometry"/>
+                </mxCell>
+                <mxCell id="80" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
+                    <mxGeometry y="25" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="81" value="project_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="RP" vertex="1">
+                    <mxGeometry y="45" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="82" value="report_title     varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
+                    <mxGeometry y="65" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="83" value="week_number      int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
+                    <mxGeometry y="85" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="84" value="content          text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
+                    <mxGeometry y="105" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="85" value="file_path        varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
+                    <mxGeometry y="125" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="86" value="status           enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
+                    <mxGeometry y="145" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="87" value="reviewed_date    datetime" style="text;align=left;spacingLeft=6;fontSize=17;" parent="RP" vertex="1">
+                    <mxGeometry y="165" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="CM" value="&lt;b&gt;comments&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="950" width="270" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="88" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="CM" vertex="1">
+                    <mxGeometry y="25" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="89" value="report_id        int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="CM" vertex="1">
+                    <mxGeometry y="45" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="90" value="teacher_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="CM" vertex="1">
+                    <mxGeometry y="65" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="91" value="content          text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="CM" vertex="1">
+                    <mxGeometry y="85" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="92" value="rating           int" style="text;align=left;spacingLeft=6;fontSize=17;" parent="CM" vertex="1">
+                    <mxGeometry y="105" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="NT" value="&lt;b&gt;notifications&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="950" width="250" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="93" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="NT" vertex="1">
+                    <mxGeometry y="25" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="94" value="user_uid         varchar(128)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="NT" vertex="1">
+                    <mxGeometry y="45" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="95" value="title            varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="NT" vertex="1">
+                    <mxGeometry y="65" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="96" value="message          text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="NT" vertex="1">
+                    <mxGeometry y="85" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="97" value="is_read          tinyint(1)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="NT" vertex="1">
+                    <mxGeometry y="105" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="AN" value="&lt;b&gt;announcements&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="440" y="730" width="300" height="175" as="geometry"/>
+                </mxCell>
+                <mxCell id="98" value="id                   int    &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
+                    <mxGeometry y="25" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="99" value="title                varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
+                    <mxGeometry y="45" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="100" value="semester             varchar(50)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
+                    <mxGeometry y="65" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="101" value="registration_start   date" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
+                    <mxGeometry y="85" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="102" value="registration_end     date" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
+                    <mxGeometry y="105" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="103" value="proposal_deadline    date" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
+                    <mxGeometry y="125" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="104" value="status               enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AN" vertex="1">
+                    <mxGeometry y="145" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="MS" value="&lt;b&gt;meeting_slots&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="130" y="905" width="250" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="105" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="MS" vertex="1">
+                    <mxGeometry y="25" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="106" value="teacher_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="MS" vertex="1">
+                    <mxGeometry y="45" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="107" value="start_time       datetime" style="text;align=left;spacingLeft=6;fontSize=17;" parent="MS" vertex="1">
+                    <mxGeometry y="65" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="108" value="end_time         datetime" style="text;align=left;spacingLeft=6;fontSize=17;" parent="MS" vertex="1">
+                    <mxGeometry y="85" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="109" value="location         varchar(200)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="MS" vertex="1">
+                    <mxGeometry y="105" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="110" value="is_available     tinyint(1)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="MS" vertex="1">
+                    <mxGeometry y="125" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="BK" value="&lt;b&gt;bookings&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="-320" y="520" width="430" height="155" as="geometry"/>
+                </mxCell>
+                <mxCell id="111" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="BK" vertex="1">
+                    <mxGeometry y="25" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="112" value="slot_id          int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="BK" vertex="1">
+                    <mxGeometry y="45" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="113" value="student_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="BK" vertex="1">
+                    <mxGeometry y="65" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="114" value="project_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="BK" vertex="1">
+                    <mxGeometry y="85" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="115" value="status           enum" style="text;align=left;spacingLeft=6;fontSize=17;" parent="BK" vertex="1">
+                    <mxGeometry y="105" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="116" value="note             text" style="text;align=left;spacingLeft=6;fontSize=17;" parent="BK" vertex="1">
+                    <mxGeometry y="125" width="250" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="AR" value="&lt;b&gt;project_archive&lt;/b&gt;" style="swimlane;startSize=25;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=17;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="1120" y="930" width="270" height="135" as="geometry"/>
+                </mxCell>
+                <mxCell id="117" value="id               int            &lt;pk2&gt;" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AR" vertex="1">
+                    <mxGeometry x="200" y="35" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="118" value="project_id       int            &lt;fk&gt;" style="text;align=left;spacingLeft=6;fontSize=17;fillColor=#fff2cc;" parent="AR" vertex="1">
+                    <mxGeometry y="45" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="119" value="topic_title      varchar(500)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AR" vertex="1">
+                    <mxGeometry y="65" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="120" value="final_score      decimal(4,2)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AR" vertex="1">
+                    <mxGeometry y="85" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="121" value="grade            enum(A,B,C,D,F)" style="text;align=left;spacingLeft=6;fontSize=17;" parent="AR" vertex="1">
+                    <mxGeometry y="105" width="270" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk1" value="FK_students_users" style="endArrow=ERmandOne;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#6c8ebf;fontSize=17;" parent="1" source="ST" target="U" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk2" value="FK_teachers_users" style="endArrow=ERmandOne;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#82b366;fontSize=17;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" source="TC" target="8" edge="1">
+                    <mxGeometry x="-0.0875" y="-3" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="440" y="220"/>
+                        </Array>
+                        <mxPoint x="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk3" value="FK_admins_users" style="endArrow=ERmandOne;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#b85450;fontSize=17;entryX=1;entryY=1;entryDx=0;entryDy=0;" parent="1" target="U" edge="1">
+                    <mxGeometry x="-0.6668" y="-30" relative="1" as="geometry">
+                        <mxPoint x="1150" y="378" as="sourcePoint"/>
+                        <Array as="points">
+                            <mxPoint x="1150" y="270"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk4" value="FK_admin_permissions_admins" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#b85450;fontSize=17;" parent="1" source="AD" target="AP" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk5" value="FK_classes_teachers" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#9673a6;fontSize=17;" parent="1" source="TC" target="CL" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk6" value="FK_teacher_spec_teachers" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#82b366;fontSize=17;" parent="1" source="TC" target="TS" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk7" value="FK_topics_users_supervisor" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=17;" parent="1" source="U" target="TP" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk8" value="FK_topic_proposals_students" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=17;" parent="1" source="ST" target="PR" edge="1">
+                    <mxGeometry x="-0.0482" y="-17" relative="1" as="geometry">
+                        <mxPoint x="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk9" value="FK_topic_proposals_teachers" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#d6b656;fontSize=17;" parent="1" source="TC" target="PR" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk10" value="FK_projects_topics" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=17;" parent="1" source="TP" target="PJ" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk11" value="FK_projects_students" style="endArrow=ERmandOne;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#82b366;fontSize=17;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="ST" target="PJ" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="600" y="40"/>
+                            <mxPoint x="1250" y="40"/>
+                            <mxPoint x="1750" y="40"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk12" value="FK_projects_teachers" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#82b366;dashed=1;fontSize=17;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="17" target="65" edge="1">
+                    <mxGeometry x="-0.3427" y="1" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="480" y="310"/>
+                        </Array>
+                        <mxPoint x="-1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk13" value="FK_sprints_projects" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#7070c0;fontSize=17;" parent="1" source="PJ" target="SP" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk14" value="FK_sprint_comments_sprints" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#7070c0;fontSize=17;" parent="1" source="SP" target="SC" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="fk15" value="FK_progress_reports_projects" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#6c8ebf;fontSize=17;entryX=1;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.75;exitDx=0;exitDy=0;" parent="1" source="65" target="RP" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1510" y="330"/>
+                            <mxPoint x="1510" y="690"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk16" value="FK_comments_reports" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#6c8ebf;fontSize=17;entryX=0;entryY=0;entryDx=0;entryDy=0;" parent="1" source="RP" target="AR" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="1310" y="960" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk17" value="FK_comments_teachers" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#6c8ebf;dashed=1;fontSize=17;entryX=0;entryY=0.75;entryDx=0;entryDy=0;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="TC" target="89" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="440" y="520"/>
+                            <mxPoint x="440" y="680"/>
+                            <mxPoint x="800" y="680"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk18" value="FK_meeting_slots_teachers" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#82b366;fontSize=17;entryX=0;entryY=0;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" parent="1" source="22" target="MS" edge="1">
+                    <mxGeometry x="0.5758" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="130" y="440"/>
+                            <mxPoint x="130" y="750"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk19" value="FK_bookings_slots" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#82b366;fontSize=17;" parent="1" source="MS" target="BK" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-110" y="980"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk20" value="FK_bookings_students" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#82b366;dashed=1;fontSize=17;" parent="1" source="ST" target="BK" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="-105" y="140"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk21" value="FK_bookings_projects" style="endArrow=ERmany;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#d79b00;dashed=1;fontSize=17;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" parent="1" source="PJ" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="20" y="510" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="1810" y="20"/>
+                            <mxPoint x="20" y="30"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="fk22" value="FK_project_archive_projects" style="endArrow=ERmandOne;startArrow=ERmandOne;html=1;strokeWidth=1.5;strokeColor=#d79b00;fontSize=17;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="64" target="AR" edge="1">
+                    <mxGeometry x="0.4091" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1580" y="310"/>
+                            <mxPoint x="1580" y="1000"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

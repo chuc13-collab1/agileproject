@@ -1,0 +1,353 @@
+@startuml ERD_AgileProjectManagement
+
+skinparam linetype ortho
+skinparam roundcorner 8
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+
+skinparam class {
+    BorderColor #555555
+    ArrowColor #555555
+    FontColor #000000
+}
+
+' ==================== COLORS ====================
+' 🔵 Blue  - User management
+' 🟢 Green - Topic management
+' 🟠 Orange - Project management
+' 🟣 Purple - Progress tracking (Agile)
+' 🟡 Yellow - Scheduling & Announcements
+' ⚪ Gray   - System / Permissions
+
+' ============================================================
+' GROUP: USER MANAGEMENT (Blue)
+' ============================================================
+
+class users #DBEAFE {
+    + id : varchar(36) <<PK>>
+    --
+    uid : varchar(128) <<UK>>
+    email : varchar(255) <<UK>>
+    display_name : varchar(255)
+    phone : varchar(20)
+    photo_url : text
+    role : enum(student, teacher, admin)
+    is_active : tinyint(1)
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+class students #DBEAFE {
+    + id : varchar(36) <<PK>>
+    --
+    # user_id : varchar(36) <<FK>>
+    student_id : varchar(50) <<UK>>
+    class_name : varchar(100)
+    major : varchar(200)
+    academic_year : varchar(20)
+}
+
+class teachers #DBEAFE {
+    + id : varchar(36) <<PK>>
+    --
+    # user_id : varchar(36) <<FK>>
+    teacher_id : varchar(50) <<UK>>
+    department : varchar(200)
+    max_students : int
+    current_students : int
+    can_supervise : tinyint(1)
+    can_review : tinyint(1)
+}
+
+class admins #DBEAFE {
+    + id : varchar(36) <<PK>>
+    --
+    # user_id : varchar(36) <<FK>>
+    admin_id : varchar(50) <<UK>>
+}
+
+' ============================================================
+' GROUP: PERMISSIONS & SPECIALIZATIONS (Gray)
+' ============================================================
+
+class admin_permissions #E5E7EB {
+    + admin_id : varchar(36) <<PK, FK>>
+    + permission : enum <<PK>>
+    ..
+    manage_users | manage_projects
+    manage_topics | manage_grades
+    manage_system | view_reports
+}
+
+class teacher_specializations #E5E7EB {
+    + teacher_id : varchar(36) <<PK, FK>>
+    + specialization : varchar(100) <<PK>>
+}
+
+class classes #E5E7EB {
+    + id : char(36) <<PK>>
+    --
+    class_code : varchar(20) <<UK>>
+    class_name : varchar(100)
+    academic_year : varchar(20)
+    # advisor_teacher_id : char(36) <<FK>>
+    max_students : int
+    major : varchar(100)
+    is_active : tinyint(1)
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+' ============================================================
+' GROUP: TOPIC MANAGEMENT (Green)
+' ============================================================
+
+class topics #D1FAE5 {
+    + id : varchar(36) <<PK>>
+    --
+    title : varchar(255)
+    description : text
+    # supervisor_id : varchar(36) <<FK>>
+    # reviewer_id : varchar(36) <<FK>>
+    status : enum(pending, approved, rejected)
+    rejection_reason : text
+    semester : varchar(20)
+    academic_year : varchar(20)
+    field : varchar(100)
+    max_students : int
+    current_students : int
+    requirements : text
+    expected_results : text
+    proposed_by_type : enum(teacher, student)
+    approved_at : timestamp
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+class topic_proposals #D1FAE5 {
+    + id : varchar(36) <<PK>>
+    --
+    title : varchar(255)
+    description : text
+    requirements : text
+    expected_results : text
+    # proposed_by_student_id : varchar(36) <<FK>>
+    # requested_supervisor_id : varchar(36) <<FK>>
+    status : enum(pending, approved, rejected, revision_requested)
+    teacher_feedback : text
+    created_at : timestamp
+    reviewed_at : timestamp
+}
+
+' ============================================================
+' GROUP: PROJECT MANAGEMENT (Orange)
+' ============================================================
+
+class projects #FED7AA {
+    + id : varchar(36) <<PK>>
+    --
+    # topic_id : varchar(36) <<FK>>
+    # student_id : varchar(36) <<FK>>
+    # supervisor_id : varchar(36) <<FK>>
+    # reviewer_id : varchar(36) <<FK>>
+    status : enum(registered, in_progress, submitted, graded, completed, failed)
+    registration_date : timestamp
+    start_date : date
+    end_date : date
+    defense_date : datetime
+    report_deadline : datetime
+    supervisor_score : decimal(4,2)
+    reviewer_score : decimal(4,2)
+    council_score : decimal(4,2)
+    final_score : decimal(4,2)
+    grade : varchar(10)
+    notes : text
+    archived_at : timestamp
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+class project_archive #FED7AA {
+    + id : int <<PK, AUTO_INCREMENT>>
+    --
+    project_id : varchar(36)
+    topic_title : varchar(500)
+    topic_field : varchar(255)
+    student_name : varchar(255)
+    student_code : varchar(50)
+    class_name : varchar(50)
+    supervisor_name : varchar(255)
+    reviewer_name : varchar(255)
+    academic_year : varchar(20)
+    semester : varchar(20)
+    final_score : decimal(5,2)
+    grade : varchar(5)
+    status : varchar(50)
+    document_url : varchar(500)
+    archived_at : timestamp
+}
+
+' ============================================================
+' GROUP: AGILE PROGRESS TRACKING (Purple)
+' ============================================================
+
+class sprints #EDE9FE {
+    + id : varchar(36) <<PK>>
+    --
+    # project_id : varchar(36) <<FK>>
+    sprint_number : int <<UK with project_id>>
+    title : varchar(255)
+    goals : text
+    start_week : int
+    end_week : int
+    weight_percent : int
+    status : enum(not_started, in_progress, completed)
+    actual_progress : int
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+class sprint_comments #EDE9FE {
+    + id : varchar(36) <<PK>>
+    --
+    # sprint_id : varchar(36) <<FK>>
+    # project_id : varchar(36) <<FK>>
+    author_uid : varchar(255)
+    author_name : varchar(255)
+    author_role : enum(teacher, student)
+    content : text
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+class progress_reports #EDE9FE {
+    + id : varchar(36) <<PK>>
+    --
+    # project_id : varchar(36) <<FK>>
+    report_title : varchar(200)
+    week_number : int
+    content : text
+    achievements : text
+    difficulties : text
+    next_steps : text
+    file_path : varchar(500)
+    file_name : varchar(255)
+    file_size : bigint
+    status : enum(submitted, reviewed, approved, revision_needed)
+    submitted_date : timestamp
+    reviewed_date : timestamp
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+class comments #EDE9FE {
+    + id : varchar(36) <<PK>>
+    --
+    # report_id : varchar(36) <<FK>>
+    # teacher_id : varchar(36) <<FK>>
+    content : text
+    rating : int
+    comment_date : timestamp
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+' ============================================================
+' GROUP: SCHEDULING & ANNOUNCEMENTS (Yellow)
+' ============================================================
+
+class announcements #FEF9C3 {
+    + id : varchar(36) <<PK>>
+    --
+    title : varchar(255)
+    content : text
+    semester : varchar(20)
+    academic_year : varchar(20)
+    registration_start : datetime
+    registration_end : datetime
+    proposal_deadline : datetime
+    status : enum(draft, published, closed)
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+class meeting_slots #FEF9C3 {
+    + id : varchar(36) <<PK>>
+    --
+    # teacher_id : varchar(36) <<FK>>
+    start_time : datetime
+    end_time : datetime
+    location : varchar(255)
+    max_students : int
+    is_booked : tinyint(1)
+    created_at : timestamp
+}
+
+class bookings #FEF9C3 {
+    + id : varchar(36) <<PK>>
+    --
+    # slot_id : varchar(36) <<FK>>
+    # student_id : varchar(36) <<FK>>
+    # project_id : varchar(36) <<FK>>
+    notes : text
+    status : enum(pending, confirmed, cancelled, completed)
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+class notifications #FEF9C3 {
+    + id : varchar(36) <<PK>>
+    --
+    user_uid : varchar(128)
+    title : varchar(255)
+    message : text
+    type : enum(info, success, warning, error, project, report, chat, system)
+    link : varchar(500)
+    is_read : tinyint(1)
+    created_at : timestamp
+}
+
+' ============================================================
+' RELATIONSHIPS
+' ============================================================
+
+' User → Role profiles (1-1)
+users ||--|| students : "user_id"
+users ||--|| teachers : "user_id"
+users ||--|| admins   : "user_id"
+
+' Permissions & specializations
+admins              ||--|{ admin_permissions        : "admin_id"
+teachers            ||--|{ teacher_specializations  : "teacher_id"
+
+' Classes
+teachers            ||--o{ classes                  : "advisor_teacher_id"
+
+' Topics
+users               ||--o{ topics                   : "supervisor_id"
+users               ||--o{ topics                   : "reviewer_id"
+students            ||--o{ topic_proposals           : "proposed_by_student_id"
+teachers            ||--o{ topic_proposals           : "requested_supervisor_id"
+
+' Projects
+topics              ||--|{ projects                  : "topic_id"
+students            ||--o{ projects                  : "student_id"
+teachers            ||--o{ projects                  : "supervisor_id"
+teachers            ||--o{ projects                  : "reviewer_id"
+projects            ||--o| project_archive           : "project_id"
+
+' Agile tracking
+projects            ||--|{ sprints                   : "project_id"
+sprints             ||--o{ sprint_comments           : "sprint_id"
+projects            ||--|{ progress_reports          : "project_id"
+progress_reports    ||--o{ comments                 : "report_id"
+teachers            ||--o{ comments                 : "teacher_id"
+
+' Scheduling
+teachers            ||--o{ meeting_slots             : "teacher_id"
+meeting_slots       ||--|{ bookings                  : "slot_id"
+students            ||--o{ bookings                  : "student_id"
+projects            ||--o{ bookings                  : "project_id"
+
+@enduml

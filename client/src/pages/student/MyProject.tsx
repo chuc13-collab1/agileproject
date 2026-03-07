@@ -19,8 +19,9 @@ const MyProject: React.FC = () => {
     const loadProject = async () => {
         setLoading(true);
         try {
-            const myProject = await projectService.getMyProject(user!.uid);
-            setProject(myProject);
+            const allProjects = await projectService.getAllProjects();
+            const myProject = allProjects.find(p => p.studentId === user?.uid);
+            setProject(myProject || null);
         } catch (error) {
             console.error('Failed to load project:', error);
         } finally {

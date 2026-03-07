@@ -10,8 +10,3 @@ firestore-debug.log
 
 # Firebase Admin SDK Private Keys
 *-firebase-adminsdk-*.json
-
-# Documentation & generated files (not for deployment)
-diagrams/
-docs/
-out/
