@@ -38,6 +38,7 @@ const ArchivePage: React.FC = () => {
     const [projects, setProjects] = useState<ArchivedProject[]>([]);
     const [loading, setLoading] = useState(true);
     const [archiving, setArchiving] = useState(false);
+    const [archivingOverdue, setArchivingOverdue] = useState(false);
     const [archiveMsg, setArchiveMsg] = useState('');
     const [search, setSearch] = useState('');
     const [field, setField] = useState('');
@@ -83,6 +84,42 @@ const ArchivePage: React.FC = () => {
             setArchiveMsg('❌ Lỗi khi lưu trữ');
         } finally {
             setArchiving(false);
+        }
+    };
+
+    const handleBatchOverdue = async () => {
+        const academicYear = prompt('Nhập năm học cho đồ án quá hạn (VD: 2025-2026):');
+        if (!academicYear) return;
+        const semester = prompt('Nhập học kỳ (1 hoặc 2, bỏ trống nếu không cần):') || '';
+        const confirmed = window.confirm(
+            `⚠️ Xác nhận lưu trữ tất cả đồ án QUÁ HẠN?\n\nCác đồ án quá deadline sẽ bị đánh dấu KHÔNG ĐẠT và chuyển vào thư viện.\nHành động này không thể hoàn tác!`
+        );
+        if (!confirmed) return;
+
+        try {
+            setArchivingOverdue(true);
+            setArchiveMsg('');
+            const headers = await getHeaders();
+            const res = await fetch(`${API_URL}/archive/batch-overdue`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({ academicYear, semester: semester || undefined }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setArchiveMsg(
+                    `⚠️ Đã xử lý ${data.data.totalOverdue} đồ án quá hạn: ` +
+                    `${data.data.markedFailed} đánh dấu không đạt, ${data.data.archived} lưu trữ`
+                );
+                fetchProjects();
+                fetchStats();
+            } else {
+                setArchiveMsg(`❌ ${data.message}`);
+            }
+        } catch (err) {
+            setArchiveMsg('❌ Lỗi khi xử lý đồ án quá hạn');
+        } finally {
+            setArchivingOverdue(false);
         }
     };
 
@@ -158,13 +195,23 @@ const ArchivePage: React.FC = () => {
                     <p>Kho lưu trữ các đồ án đã hoàn thành qua các năm học</p>
                 </div>
                 {isAdmin && (
-                    <button
-                        className={styles.archiveArchiveBtn}
-                        onClick={handleBatchArchive}
-                        disabled={archiving}
-                    >
-                        {archiving ? '⏳ Đang lưu trữ...' : '📥 Lưu trữ đồ án hoàn thành'}
-                    </button>
+                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                        <button
+                            className={styles.archiveArchiveBtn}
+                            onClick={handleBatchArchive}
+                            disabled={archiving || archivingOverdue}
+                        >
+                            {archiving ? '⏳ Đang lưu trữ...' : '📥 Lưu trữ đồ án hoàn thành'}
+                        </button>
+                        <button
+                            className={styles.archiveArchiveBtn}
+                            onClick={handleBatchOverdue}
+                            disabled={archiving || archivingOverdue}
+                            style={{ background: '#dc3545', borderColor: '#dc3545' }}
+                        >
+                            {archivingOverdue ? '⏳ Đang xử lý...' : '⚠️ Lưu trữ đồ án quá hạn'}
+                        </button>
+                    </div>
                 )}
             </div>
             {archiveMsg && (
@@ -296,6 +343,14 @@ const ArchivePage: React.FC = () => {
                                         {project.semester ? ` - HK${project.semester}` : ''}
                                     </span>
                                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                        {project.status === 'failed' && (
+                                            <span style={{
+                                                fontSize: 11, fontWeight: 700, padding: '2px 8px',
+                                                borderRadius: 12, background: '#fde8e8', color: '#c0392b', border: '1px solid #f5c6cb'
+                                            }}>
+                                                ❌ Không đạt
+                                            </span>
+                                        )}
                                         {project.final_score != null && (
                                             <span className={styles.archiveCardScore}>
                                                 {project.final_score.toFixed(1)}

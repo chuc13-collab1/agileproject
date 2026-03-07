@@ -244,54 +244,6 @@ function TopicManagement() {
           >
             <span>+</span> Thêm Đề Tài
           </button>
-          <button
-            onClick={handleResetCounts}
-            style={{
-              backgroundColor: '#ef4444',
-              color: 'white',
-              border: 'none',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '8px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontSize: '0.85rem'
-            }}
-            title="Debug: Reset current_students về 0"
-          >
-            🔧 Reset Counts
-          </button>
-          <button
-            onClick={handleCreateTable}
-            style={{
-              backgroundColor: '#8b5cf6',
-              color: 'white',
-              border: 'none',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '8px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontSize: '0.85rem'
-            }}
-            title="Debug: Tạo bảng projects"
-          >
-            🗄️ Create Table
-          </button>
-          <button
-            onClick={handleAddColumns}
-            style={{
-              backgroundColor: '#f59e0b',
-              color: 'white',
-              border: 'none',
-              padding: '0.75rem 1.5rem',
-              borderRadius: '8px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              fontSize: '0.85rem'
-            }}
-            title="Debug: Thêm cột requirements & expected_results"
-          >
-            ➕ Add Columns
-          </button>
         </div>
 
         {/* Stats */}

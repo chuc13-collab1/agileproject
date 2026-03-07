@@ -17,6 +17,8 @@ const ProjectManagement = () => {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [semesterFilter, setSemesterFilter] = useState<string>('all');
+  const [yearFilter, setYearFilter] = useState<string>('all');
 
   // Data states
   const [projects, setProjects] = useState<Project[]>([]);
@@ -264,15 +266,23 @@ const ProjectManagement = () => {
               <option value="failed">Không đạt/Từ chối</option>
             </select>
 
-            <select className={styles.filterSelect}>
-              <option value="">Tất cả học kỳ</option>
+            <select
+              value={semesterFilter}
+              onChange={(e) => setSemesterFilter(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">Tất cả học kỳ</option>
               <option value="1">Học kỳ 1</option>
               <option value="2">Học kỳ 2</option>
               <option value="3">Học kỳ 3</option>
             </select>
 
-            <select className={styles.filterSelect}>
-              <option value="">Tất cả năm học</option>
+            <select
+              value={yearFilter}
+              onChange={(e) => setYearFilter(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <option value="all">Tất cả năm học</option>
               <option value="2023-2024">2023-2024</option>
               <option value="2024-2025">2024-2025</option>
               <option value="2025-2026">2025-2026</option>
@@ -297,13 +307,30 @@ const ProjectManagement = () => {
               {projects.filter(p => p.status === 'completed').length}
             </span>
           </div>
+          <div className={styles.statItem}>
+            <span className={styles.statLabel}>Quá hạn:</span>
+            <span className={styles.statValue} style={{ color: '#dc2626' }}>
+              {projects.filter(p => {
+                const dl = p.reportDeadline ? new Date(p.reportDeadline) : null;
+                return dl && dl < new Date() && !['completed', 'failed', 'graded'].includes(p.status);
+              }).length}
+            </span>
+          </div>
         </div>
 
         {loading ? (
           <div style={{ textAlign: 'center', padding: '2rem' }}>Đang tải dữ liệu...</div>
         ) : (
           <ProjectList
-            projects={projects}
+            projects={projects.filter(p => {
+              const matchSearch = !searchTerm ||
+                p.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (p.studentName as string)?.toLowerCase().includes(searchTerm.toLowerCase());
+              const matchStatus = statusFilter === 'all' || p.status === statusFilter;
+              const matchSemester = semesterFilter === 'all' || String(p.semester) === semesterFilter;
+              const matchYear = yearFilter === 'all' || p.academicYear === yearFilter;
+              return matchSearch && matchStatus && matchSemester && matchYear;
+            })}
             onEdit={handleEditProject}
             searchTerm={searchTerm}
             statusFilter={statusFilter}
