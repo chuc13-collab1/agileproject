@@ -66,7 +66,7 @@ function ClassModal({ cls, teachers, onClose, onSave }: ClassModalProps) {
                         </div>
                     )}
 
-                    <div className={styles.formRow}>
+                    <div className={styles.formGrid}>
                         <div className={styles.formGroup}>
                             <label>Mã lớp *</label>
                             <input
@@ -89,9 +89,7 @@ function ClassModal({ cls, teachers, onClose, onSave }: ClassModalProps) {
                                 placeholder="Công nghệ thông tin K22 - Lớp 1"
                             />
                         </div>
-                    </div>
 
-                    <div className={styles.formRow}>
                         <div className={styles.formGroup}>
                             <label>Năm học *</label>
                             <input
@@ -112,9 +110,7 @@ function ClassModal({ cls, teachers, onClose, onSave }: ClassModalProps) {
                                 placeholder="Công nghệ thông tin"
                             />
                         </div>
-                    </div>
 
-                    <div className={styles.formRow}>
                         <div className={styles.formGroup}>
                             <label>Giảng viên chủ nhiệm</label>
                             <select
@@ -142,7 +138,7 @@ function ClassModal({ cls, teachers, onClose, onSave }: ClassModalProps) {
                         </div>
                     </div>
 
-                    <div className={styles.formGroup}>
+                    <div className={`${styles.formGroup} ${styles.fullWidth}`} style={{ marginTop: '1.5rem', padding: '0 2rem' }}>
                         <label>Mô tả</label>
                         <textarea
                             rows={3}

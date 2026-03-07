@@ -1,163 +1,238 @@
-/* Project Modal Styles */
+/* Global Modal Styles (Shared by multiple modals) */
 
-.overlay {
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease-out;
 }
 
-.modal {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
   background: white;
-  border-radius: 12px;
+  border-radius: 16px;
   width: 100%;
-  max-width: 800px;
+  max-width: 650px;
   max-height: 90vh;
-  overflow-y: auto;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
 }
 
-.header {
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modalHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px;
-  border-bottom: 2px solid #f0f0f0;
+  padding: 1.5rem 2rem;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
 }
 
-.header h2 {
-  font-size: 24px;
+.modalHeader h2 {
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #333;
+  color: #1e293b;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .closeButton {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #999;
+  background: white;
+  border: 1px solid #e2e8f0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  color: #64748b;
   cursor: pointer;
-  padding: 4px 8px;
-  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
 }
 
 .closeButton:hover {
-  color: #333;
+  background: #fef2f2;
+  color: #ef4444;
+  border-color: #fecaca;
+  transform: rotate(90deg);
 }
 
-.form {
-  padding: 24px;
+.modalBody {
+  padding: 2rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
 }
 
 .formGroup {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formGroup.fullWidth {
+  grid-column: 1 / -1;
 }
 
 .formGroup label {
-  display: block;
-  font-size: 14px;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
+  color: #475569;
 }
 
 .formGroup input,
 .formGroup textarea,
 .formGroup select {
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #e8edf5;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 0.75rem 1rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 10px;
+  font-size: 0.95rem;
   transition: all 0.3s;
-  box-sizing: border-box;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.formGroup input:disabled,
+.formGroup select:disabled {
+  background: #e2e8f0;
+  color: #94a3b8;
+  cursor: not-allowed;
 }
 
 .formGroup input:focus,
 .formGroup textarea:focus,
 .formGroup select:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #3b82f6;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
 }
 
 .formGroup textarea {
   resize: vertical;
-  font-family: inherit;
+  min-height: 100px;
 }
 
-.formRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.formActions {
+.modalFooter {
   display: flex;
   justify-content: flex-end;
-  gap: 12px;
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 2px solid #f0f0f0;
+  gap: 1rem;
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  margin-top: auto;
 }
 
 .cancelButton {
-  padding: 12px 24px;
-  border: 2px solid #e8edf5;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid #cbd5e1;
   background: white;
-  color: #666;
-  border-radius: 8px;
-  font-size: 14px;
+  color: #475569;
+  border-radius: 10px;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s;
 }
 
 .cancelButton:hover {
-  background: #f8f9fa;
-  border-color: #ddd;
+  background: #f1f5f9;
+  color: #1e293b;
 }
 
-.saveButton {
-  padding: 12px 24px;
+.saveButton,
+.submitButton {
+  padding: 0.75rem 2rem;
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
   color: white;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.saveButton:hover {
+.saveButton:hover,
+.submitButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 16px rgba(59, 130, 246, 0.35);
 }
 
-@media (max-width: 768px) {
-  .modal {
-    max-height: 95vh;
-  }
+.saveButton:disabled,
+.submitButton:disabled {
+  background: #94a3b8;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
 
-  .formRow {
+@media (max-width: 640px) {
+  .formGrid {
     grid-template-columns: 1fr;
   }
 
-  .formActions {
+  .modalHeader,
+  .modalBody,
+  .modalFooter {
+    padding: 1.25rem;
+  }
+
+  .modalFooter {
     flex-direction: column-reverse;
   }
 
   .cancelButton,
-  .saveButton {
+  .saveButton,
+  .submitButton {
     width: 100%;
+    justify-content: center;
   }
 }
