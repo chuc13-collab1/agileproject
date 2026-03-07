@@ -134,18 +134,14 @@ router.get('/class/:classCode', async (req, res) => {
             data: groups
         });
     } catch (error) {
-        console.error('Error fetching class groups:', error);
+        console.error('🔥 CRITICAL ERROR fetching class groups for', classCode, ':', error);
 
-        // Firestore missing index — return empty array instead of crashing
-        if (error.code === 9 || (error.message && error.message.includes('index'))) {
-            console.warn('Firestore index missing for teacher_groups.classCode — returning empty');
-            return res.json({ success: true, data: [] });
-        }
-
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch class groups',
-            error: error.message
+        // Return empty array as fallback to unblock frontend loading
+        res.json({
+            success: true,
+            data: [],
+            _warn: 'Failed to fetch actual groups from DB due to internal error',
+            _errorDetails: error.message
         });
     }
 });
