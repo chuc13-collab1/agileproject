@@ -127,7 +127,7 @@ router.get('/class/:classCode', async (req, res) => {
         });
 
         // Sort by groupNumber on server side
-        groups.sort((a, b) => a.groupNumber - b.groupNumber);
+        groups.sort((a, b) => (a.groupNumber || 0) - (b.groupNumber || 0));
 
         res.json({
             success: true,
@@ -135,6 +135,13 @@ router.get('/class/:classCode', async (req, res) => {
         });
     } catch (error) {
         console.error('Error fetching class groups:', error);
+
+        // Firestore missing index — return empty array instead of crashing
+        if (error.code === 9 || (error.message && error.message.includes('index'))) {
+            console.warn('Firestore index missing for teacher_groups.classCode — returning empty');
+            return res.json({ success: true, data: [] });
+        }
+
         res.status(500).json({
             success: false,
             message: 'Failed to fetch class groups',

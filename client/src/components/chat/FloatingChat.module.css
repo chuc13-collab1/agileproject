@@ -1,0 +1,298 @@
+/* ============================================
+   Floating Chat Widget
+   ============================================ */
+
+.wrapper {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 14px;
+}
+
+/* ── Panel ── */
+.panel {
+    width: 360px;
+    height: 480px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow:
+        0 24px 64px rgba(0, 0, 0, 0.18),
+        0 4px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: popIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.panelWindow {
+    height: 560px;
+}
+
+@keyframes popIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ── Panel Header ── */
+.panelHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    flex-shrink: 0;
+}
+
+.panelHeaderLeft {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.panelHeaderIcon {
+    font-size: 22px;
+    background: rgba(255, 255, 255, 0.15);
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.panelHeaderLeft h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 1px 0;
+    line-height: 1;
+}
+
+.panelHeaderLeft span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.panelClose {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 50%;
+    color: #ffffff;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+}
+
+.panelClose:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.backBtn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 4px 10px;
+    transition: background 0.2s ease;
+}
+
+.backBtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Search ── */
+.searchBox {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1f5f9;
+    flex-shrink: 0;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 8px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    font-size: 13px;
+    background: #f8fafc;
+    outline: none;
+    transition: all 0.2s;
+    box-sizing: border-box;
+}
+
+.searchInput:focus {
+    border-color: #667eea;
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+/* ── Conversation List ── */
+.conversationList {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.conversationList::-webkit-scrollbar {
+    width: 4px;
+}
+
+.conversationList::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+    border-radius: 2px;
+}
+
+/* ── Chat Window ── */
+.chatWindowWrapper {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Override ChatWindow styles inside floating panel */
+.chatWindowWrapper>div {
+    height: 100% !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+
+/* ── Loading ── */
+.loadingState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 160px;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+.spinner {
+    width: 28px;
+    height: 28px;
+    border: 2.5px solid #e2e8f0;
+    border-top-color: #667eea;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── FAB ── */
+.fab {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    box-shadow:
+        0 6px 24px rgba(102, 126, 234, 0.45),
+        0 2px 8px rgba(0, 0, 0, 0.12);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+    flex-shrink: 0;
+}
+
+.fab:hover {
+    transform: scale(1.1);
+    box-shadow:
+        0 10px 32px rgba(102, 126, 234, 0.55),
+        0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.fabOpen {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    box-shadow:
+        0 6px 24px rgba(239, 68, 68, 0.4),
+        0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.fabOpen:hover {
+    box-shadow:
+        0 10px 32px rgba(239, 68, 68, 0.5),
+        0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.fabIcon {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.fabBadge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ef4444;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    border: 2px solid #ffffff;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .wrapper {
+        bottom: 16px;
+        right: 16px;
+    }
+
+    .panel,
+    .panelWindow {
+        width: calc(100vw - 32px);
+        height: 70vh;
+    }
+
+    .fab {
+        width: 52px;
+        height: 52px;
+    }
+}

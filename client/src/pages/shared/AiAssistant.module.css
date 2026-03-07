@@ -8,6 +8,32 @@
     margin-bottom: 1.5rem;
 }
 
+.headerTop {
+    margin-bottom: 12px;
+}
+
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.backBtn:hover {
+    background: #e2e8f0;
+    color: #1e293b;
+    transform: translateX(-2px);
+}
+
 .title {
     font-size: 1.75rem;
     font-weight: 700;

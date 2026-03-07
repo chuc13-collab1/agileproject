@@ -6,7 +6,6 @@ import TopicDetailModal from '../../components/admin/TopicDetailModal';
 import TopicModal from '../../components/admin/TopicModal';
 import { Topic, TopicStatus, Semester, TopicFormData } from '../../types/topic.types';
 import * as topicService from '../../services/api/topic.service';
-import { auth } from '../../services/firebase/config';
 import styles from './UserManagement.module.css';
 
 function TopicManagement() {
@@ -107,79 +106,6 @@ function TopicManagement() {
     } catch (error) {
       console.error('Failed to delete topic:', error);
       alert('Không thể xóa đề tài');
-    }
-  };
-
-  const handleResetCounts = async () => {
-    if (!window.confirm('⚠️ Reset tất cả current_students về 0? Dùng để fix bug data.')) return;
-    try {
-      const token = await auth.currentUser?.getIdToken();
-      if (!token) throw new Error('No auth token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/debug/reset-topic-counts`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await (window as any).firebase?.auth?.currentUser?.getIdToken()}`
-        }
-      });
-      const data = await response.json();
-      if (data.success) {
-        alert('✅ Reset thành công!');
-        await loadTopics();
-      } else {
-        alert('❌ Lỗi: ' + data.message);
-      }
-    } catch (error) {
-      console.error('Failed to reset:', error);
-      alert('❌ Không thể reset');
-    }
-  };
-
-  const handleCreateTable = async () => {
-    if (!window.confirm('🔧 Tạo bảng projects trong database?')) return;
-    try {
-      const token = await auth.currentUser?.getIdToken();
-      if (!token) throw new Error('No auth token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/debug/create-projects-table`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await (window as any).firebase?.auth?.currentUser?.getIdToken()}`
-        }
-      });
-      const data = await response.json();
-      if (data.success) {
-        alert('✅ Đã tạo bảng projects thành công!');
-      } else {
-        alert('❌ Lỗi: ' + data.message);
-      }
-    } catch (error) {
-      console.error('Failed to create table:', error);
-      alert('❌ Không thể tạo bảng');
-    }
-  };
-
-  const handleAddColumns = async () => {
-    if (!window.confirm('🔧 Thêm cột requirements & expected_results vào bảng topics?')) return;
-    try {
-      const token = await auth.currentUser?.getIdToken();
-      if (!token) throw new Error('No auth token');
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/debug/add-topic-columns`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${await (window as any).firebase?.auth?.currentUser?.getIdToken()}`
-        }
-      });
-      const data = await response.json();
-      if (data.success) {
-        alert('✅ Đã thêm cột thành công!');
-      } else {
-        alert('❌ Lỗi: ' + data.message);
-      }
-    } catch (error) {
-      console.error('Failed to add columns:', error);
-      alert('❌ Không thể thêm cột');
     }
   };
 

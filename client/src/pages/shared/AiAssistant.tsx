@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import { auth } from '../../services/firebase/config';
@@ -14,6 +15,7 @@ interface Message {
 }
 
 const AiAssistant: React.FC = () => {
+    const navigate = useNavigate();
     const { user } = useAuth();
     const isTeacher = user?.role === 'teacher' || user?.role === 'supervisor';
     const isStudent = user?.role === 'student';
@@ -213,6 +215,11 @@ const AiAssistant: React.FC = () => {
         <MainLayout>
             <div className={styles.container}>
                 <div className={styles.header}>
+                    <div className={styles.headerTop}>
+                        <button className={styles.backBtn} onClick={() => navigate(-1)}>
+                            ← Quay lại
+                        </button>
+                    </div>
                     <h1 className={styles.title}>🤖 Trợ Lý AI</h1>
                     <p className={styles.subtitle}>
                         {isTeacher ? 'Hỗ trợ giảng viên quản lý & đánh giá đồ án' : 'Hỗ trợ sinh viên thực hiện đồ án'}

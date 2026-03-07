@@ -4,94 +4,115 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f5f7fa;
+  background-color: #f4f6fb;
 }
 
 .header {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .headerContent {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 20px 40px;
+  padding: 14px 40px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.logo h1 {
-  font-size: 24px;
-  font-weight: 700;
-  margin: 0;
+.logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+}
+
+.logo h1 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.2px;
 }
 
 .userInfo {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 12px;
 }
 
 .userDetails {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 4px;
+  gap: 3px;
 }
 
 .userName {
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
 }
 
 .userRole {
-  font-size: 13px;
+  font-size: 11px;
   opacity: 0.9;
   background: rgba(255, 255, 255, 0.2);
-  padding: 2px 12px;
+  padding: 2px 10px;
   border-radius: 12px;
+  white-space: nowrap;
 }
 
-.chatButton {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+/* Header action buttons (Archive, AI) */
+.headerBtn {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: white;
-  padding: 10px 16px;
-  border-radius: 6px;
-  font-size: 20px;
-  cursor: pointer;
-  transition: all 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.chatButton:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-}
-
-.logoutButton {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  color: white;
-  padding: 10px 24px;
-  border-radius: 6px;
-  font-size: 14px;
+  padding: 7px 14px;
+  border-radius: 10px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.headerBtn:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.headerBtn span:first-child {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.headerBtnLabel {
+  font-size: 13px;
+}
+
+/* Logout */
+.logoutButton {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 20px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .logoutButton:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
+  background: rgba(239, 68, 68, 0.75);
+  border-color: rgba(239, 68, 68, 0.5);
+  transform: translateY(-1px);
 }
 
 .main {
@@ -99,19 +120,31 @@
   max-width: 1400px;
   width: 100%;
   margin: 0 auto;
-  padding: 40px;
+  padding: 36px 40px;
+}
+
+@media (max-width: 900px) {
+  .headerBtnLabel {
+    display: none;
+  }
+
+  .headerBtn {
+    padding: 8px 12px;
+  }
 }
 
 @media (max-width: 768px) {
   .headerContent {
     flex-direction: column;
-    gap: 20px;
-    padding: 20px;
+    gap: 14px;
+    padding: 16px 20px;
   }
 
   .userInfo {
     width: 100%;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
   }
 
   .main {
