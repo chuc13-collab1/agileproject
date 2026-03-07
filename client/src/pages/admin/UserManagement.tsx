@@ -358,24 +358,15 @@ function UserManagement() {
     <MainLayout>
       <div className={styles.container}>
         <div className={styles.header}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <div className={styles.headerLeft}>
             <button
+              className={styles.backButton}
               onClick={() => navigate('/admin/dashboard')}
-              style={{
-                background: 'transparent',
-                border: 'none',
-                fontSize: '1.5rem',
-                cursor: 'pointer',
-                padding: '0.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                color: '#64748b'
-              }}
               title="Quay lại Dashboard"
             >
-              ⬅️
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
             </button>
-            <div>
+            <div className={styles.titleWrapper}>
               <h1 className={styles.title}>Quản Lý {activeTab === 'classes' ? 'Lớp Học' : 'Người Dùng'}</h1>
               <p className={styles.subtitle}>
                 {activeTab === 'classes'
@@ -457,7 +448,7 @@ function UserManagement() {
         {/* Content */}
         <div className={styles.content}>
           {activeTab === 'classes' && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(350px, 1fr))', gap: '1.5rem', padding: '1rem 0' }}>
+            <div className={styles.classGrid}>
               {classes.filter(cls => {
                 const matchesSearch = cls.classCode.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   cls.className?.toLowerCase().includes(searchTerm.toLowerCase());
@@ -465,58 +456,75 @@ function UserManagement() {
                   (filterActive === 'active' ? cls.isActive : !cls.isActive);
                 return matchesSearch && matchesActive;
               }).map(cls => (
-                <div key={cls.id} style={{
-                  background: 'white', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '1.5rem',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.05)', position: 'relative'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-                    <div>
-                      <h3 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 0.25rem 0' }}>📁 {cls.classCode}</h3>
-                      <p style={{ color: '#64748b', fontSize: '0.875rem', margin: 0 }}>{cls.className}</p>
+                <div key={cls.id} className={styles.classCard}>
+                  <div className={styles.classHeader}>
+                    <div className={styles.titleWrapper}>
+                      <h3 className={styles.classCode}>📁 {cls.classCode}</h3>
+                      <p className={styles.className}>{cls.className}</p>
                     </div>
-                    <span style={{
-                      padding: '0.25rem 0.75rem', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600,
-                      background: cls.isActive ? '#d1fae5' : '#fee2e2', color: cls.isActive ? '#065f46' : '#991b1b'
-                    }}>{cls.isActive ? 'Hoạt động' : 'Vô hiệu'}</span>
+                    <span className={`${styles.badge} ${cls.isActive ? styles.badgeActive : styles.badgeInactive}`}>
+                      {cls.isActive ? 'Hoạt động' : 'Vô hiệu'}
+                    </span>
                   </div>
-                  <div style={{ marginBottom: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.5rem', background: '#f8fafc', borderRadius: '6px', marginBottom: '0.5rem' }}>
-                      <span>Sĩ số:</span>
-                      <strong style={{ color: cls.currentStudents >= cls.maxStudents ? '#dc2626' : '#059669' }}>
+
+                  <div className={styles.classInfo}>
+                    <div className={styles.infoRow}>
+                      <span className={styles.infoLabel}>👥 Sĩ số:</span>
+                      <strong className={`${styles.infoValue} ${cls.currentStudents >= cls.maxStudents ? styles.textDanger : (cls.currentStudents >= cls.maxStudents * 0.8 ? styles.textWarning : styles.textSuccess)}`}>
                         {cls.currentStudents}/{cls.maxStudents}
                       </strong>
                     </div>
-                    <div>📅 Năm học: <strong>{cls.academicYear}</strong></div>
-                    {cls.advisorTeacher && <div>👨‍🏫 GVCN: <strong>{cls.advisorTeacher.displayName}</strong></div>}
+                    <div className={styles.infoRow}>
+                      <span className={styles.infoLabel}>📅 Năm học:</span>
+                      <strong className={styles.infoValue}>{cls.academicYear}</strong>
+                    </div>
+                    {cls.advisorTeacher && (
+                      <div className={styles.infoRow}>
+                        <span className={styles.infoLabel}>👨‍🏫 GVCN:</span>
+                        <strong className={styles.infoValue}>{cls.advisorTeacher.displayName}</strong>
+                      </div>
+                    )}
                   </div>
-                  <div style={{ display: 'flex', gap: '0.5rem', paddingTop: '1rem', borderTop: '1px solid #e2e8f0' }}>
+
+                  <div className={styles.cardActions}>
                     <button
-                      style={{ flex: 1, padding: '0.5rem', background: '#e0f2fe', color: '#0369a1', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}
+                      className={`${styles.actionBtn} ${styles.btnPrimary}`}
                       onClick={() => handleViewClassStudents(cls.classCode)}
+                      title="Xem danh sách"
                     >
                       👥 Xem DS
                     </button>
                     <button
-                      style={{ flex: 1, padding: '0.5rem', background: '#d1fae5', color: '#065f46', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}
+                      className={`${styles.actionBtn} ${styles.btnSuccess}`}
                       onClick={() => {
                         setImportTargetClass(cls.classCode);
                         setShowImportModal(true);
                       }}
+                      title="Import sinh viên"
                     >
                       📥 Import
                     </button>
                     <button
-                      style={{ flex: 1, padding: '0.5rem', background: '#f1f5f9', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                      className={`${styles.actionBtn} ${styles.btnSecondary} ${styles.iconBtn}`}
                       onClick={() => handleEditClass(cls)}
-                    >✏️ Sửa</button>
+                      title="Sửa"
+                    >
+                      ✏️
+                    </button>
                     <button
-                      style={{ width: '40px', padding: '0.5rem', background: '#f1f5f9', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                      className={`${styles.actionBtn} ${styles.btnSecondary} ${styles.iconBtn}`}
                       onClick={() => handleToggleClassActive(cls)}
-                    >{cls.isActive ? '🔒' : '🔓'}</button>
+                      title={cls.isActive ? 'Khóa' : 'Mở khóa'}
+                    >
+                      {cls.isActive ? '🔒' : '🔓'}
+                    </button>
                     <button
-                      style={{ width: '40px', padding: '0.5rem', background: '#fee2e2', color: '#991b1b', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                      className={`${styles.actionBtn} ${styles.btnDanger} ${styles.iconBtn}`}
                       onClick={() => handleDeleteClass(cls)}
-                    >🗑️</button>
+                      title="Xóa"
+                    >
+                      🗑️
+                    </button>
                   </div>
                 </div>
               ))}
@@ -612,44 +620,24 @@ function UserManagement() {
 
         {/* Batch Action Floating Bar */}
         {selectedStudentIds.size > 0 && activeTab === 'students' && (
-          <div style={{
-            position: 'fixed',
-            bottom: '2rem',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            background: 'white',
-            padding: '1rem 2rem',
-            borderRadius: '12px',
-            boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '1.5rem',
-            zIndex: 100,
-            border: '1px solid #e2e8f0'
-          }}>
-            <span style={{ fontWeight: 600, color: '#334155' }}>{selectedStudentIds.size} sinh viên đã chọn</span>
-            <div style={{ height: '24px', width: '1px', background: '#cbd5e1' }}></div>
+          <div className={styles.batchActionBar}>
+            <span className={styles.batchCount}>{selectedStudentIds.size} sinh viên đã chọn</span>
+            <div className={styles.divider}></div>
             <button
               onClick={() => setShowBatchClassModal(true)}
-              style={{
-                background: '#3b82f6', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem'
-              }}
+              className={`${styles.batchBtn} ${styles.batchBtnPrimary}`}
             >
               ✏️ Chuyển lớp
             </button>
             <button
               onClick={handleBatchDelete}
-              style={{
-                background: '#ef4444', color: 'white', border: 'none', padding: '0.5rem 1rem', borderRadius: '6px', cursor: 'pointer', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.25rem'
-              }}
+              className={`${styles.batchBtn} ${styles.batchBtnDanger}`}
             >
               🗑️ Xóa
             </button>
             <button
               onClick={() => setSelectedStudentIds(new Set())}
-              style={{
-                background: 'transparent', color: '#64748b', border: 'none', cursor: 'pointer', fontSize: '0.875rem'
-              }}
+              className={`${styles.batchBtn} ${styles.batchBtnGhost}`}
             >
               Hủy chọn
             </button>
