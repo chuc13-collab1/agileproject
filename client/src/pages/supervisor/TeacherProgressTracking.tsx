@@ -348,11 +348,11 @@ const TeacherProgressTracking: React.FC = () => {
 
                 {/* Comment Modal */}
                 {selectedReport && (
-                    <div className={styles.modal} onClick={() => setSelectedReport(null)}>
+                    <div className={styles.modalOverlay} onClick={() => setSelectedReport(null)}>
                         <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
                             <div className={styles.modalHeader}>
                                 <h2>📝 Báo cáo tiến độ - Tuần {selectedReport.week_number}</h2>
-                                <button onClick={() => setSelectedReport(null)}>✕</button>
+                                <button className={styles.closeButton} onClick={() => setSelectedReport(null)}>✕</button>
                             </div>
 
                             <div className={styles.modalBody}>

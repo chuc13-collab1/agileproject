@@ -192,43 +192,43 @@ const TeacherProposalReview: React.FC = () => {
 
                 {/* Feedback Modal */}
                 {showModal && (
-                    <div style={{
-                        position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000
-                    }}>
-                        <div style={{
-                            background: 'white', padding: '2rem', borderRadius: '8px', width: '500px', maxWidth: '90%',
-                            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
-                        }}>
-                            <h3 style={{ marginTop: 0, marginBottom: '1rem', color: actionType === 'reject' ? '#dc2626' : '#ea580c' }}>
-                                {actionType === 'reject' ? 'Từ chối đề xuất' : 'Yêu cầu sửa đổi'}
-                            </h3>
-                            <div style={{ marginBottom: '1rem' }}>
-                                <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 500 }}>
-                                    Lý do / Phản hồi <span style={{ color: 'red' }}>*</span>:
-                                </label>
-                                <textarea
-                                    value={feedback}
-                                    onChange={(e) => setFeedback(e.target.value)}
-                                    rows={4}
-                                    style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
-                                    placeholder={actionType === 'reject' ? "Nhập lý do từ chối..." : "Nhập nội dung cần chỉnh sửa..."}
-                                />
+                    <div className={styles.modalOverlay} onClick={() => setShowModal(false)}>
+                        <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+                            <div className={styles.modalHeader}>
+                                <h3 style={{ margin: 0, color: actionType === 'reject' ? '#dc2626' : '#ea580c' }}>
+                                    {actionType === 'reject' ? 'Từ chối đề xuất' : 'Yêu cầu sửa đổi'}
+                                </h3>
+                                <button className={styles.closeButton} onClick={() => setShowModal(false)}>
+                                    ✕
+                                </button>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+
+                            <div className={styles.form}>
+                                <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+                                    <label>Lý do / Phản hồi <span className={styles.required}>*</span>:</label>
+                                    <textarea
+                                        value={feedback}
+                                        onChange={(e) => setFeedback(e.target.value)}
+                                        rows={4}
+                                        placeholder={actionType === 'reject' ? "Nhập lý do từ chối..." : "Nhập nội dung cần chỉnh sửa..."}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className={styles.formActions}>
                                 <button
                                     onClick={() => setShowModal(false)}
-                                    style={{ padding: '0.5rem 1rem', background: 'white', border: '1px solid #ccc', borderRadius: '4px', cursor: 'pointer' }}
+                                    className={styles.cancelButton}
                                 >
                                     Hủy
                                 </button>
                                 <button
                                     onClick={submitAction}
                                     disabled={!!processingId}
+                                    className={styles.submitButton}
                                     style={{
-                                        padding: '0.5rem 1rem',
                                         background: actionType === 'reject' ? '#dc2626' : '#ea580c',
-                                        color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer'
+                                        boxShadow: actionType === 'reject' ? '0 4px 12px rgba(220, 38, 38, 0.25)' : '0 4px 12px rgba(234, 88, 12, 0.25)',
                                     }}
                                 >
                                     {processingId ? 'Đang xử lý...' : 'Xác nhận'}

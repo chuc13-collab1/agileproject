@@ -108,40 +108,40 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
   };
 
   return (
-    <div className={styles.overlay} onClick={onClose}>
-      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-        <div className={styles.header}>
+    <div className={styles.modalOverlay} onClick={onClose}>
+      <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalHeader}>
           <h2>{project ? 'Chỉnh sửa đồ án' : 'Tạo đồ án mới'}</h2>
           <button className={styles.closeButton} onClick={onClose}>
             ✕
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className={styles.formGroup}>
-            <label>Tên đồ án *</label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              placeholder="Nhập tên đồ án"
-              required
-            />
-          </div>
+        <form onSubmit={handleSubmit} className={styles.modalBody}>
+          <div className={styles.formGrid}>
+            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+              <label>Tên đồ án *</label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                placeholder="Nhập tên đồ án"
+                required
+              />
+            </div>
 
-          <div className={styles.formGroup}>
-            <label>Mô tả</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              placeholder="Mô tả chi tiết về đồ án"
-              rows={4}
-            />
-          </div>
+            <div className={`${styles.formGroup} ${styles.fullWidth}`}>
+              <label>Mô tả</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                placeholder="Mô tả chi tiết về đồ án"
+                rows={4}
+              />
+            </div>
 
-          <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label>Sinh viên *</label>
               <select
@@ -172,9 +172,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 ))}
               </select>
             </div>
-          </div>
 
-          <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label>Giảng viên phản biện</label>
               <select
@@ -206,9 +204,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 <option value="data">Khoa học dữ liệu</option>
               </select>
             </div>
-          </div>
 
-          <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label>Học kỳ *</label>
               <select
@@ -238,9 +234,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
                 <option value="2025-2026">2025-2026</option>
               </select>
             </div>
-          </div>
 
-          <div className={styles.formRow}>
             <div className={styles.formGroup}>
               <label>Ngày bắt đầu *</label>
               <input
@@ -266,7 +260,7 @@ const ProjectModal: React.FC<ProjectModalProps> = ({ project, students, teachers
             </div>
           </div>
 
-          <div className={styles.formActions}>
+          <div className={styles.modalFooter}>
             <button type="button" onClick={onClose} className={styles.cancelButton}>
               Hủy
             </button>
