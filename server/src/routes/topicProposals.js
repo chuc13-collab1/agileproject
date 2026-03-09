@@ -41,7 +41,6 @@ router.post('/', verifyToken, async (req, res, next) => {
         );
 
         if (existing[0].count > 0) {
-            console.log(`[Proposal Denied] Student ${studentId} already has a pending/approved proposal.`);
             return res.status(400).json({ message: 'You already have a pending or approved proposal.' });
         }
 
@@ -50,7 +49,6 @@ router.post('/', verifyToken, async (req, res, next) => {
             "SELECT proposal_deadline FROM announcements WHERE status = 'published' AND proposal_deadline IS NOT NULL AND proposal_deadline < NOW()"
         );
         if (announcements.length > 0) {
-            console.log(`[Proposal Denied] Deadline passed for student ${studentId}. Deadline was: ${announcements[0].proposal_deadline}`);
             return res.status(400).json({ message: 'The deadline for topic proposals has passed.' });
         }
 
@@ -281,15 +279,6 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
 
     } catch (error) {
         next(error);
-    }
-});
-
-router.get('/debug-all', async (req, res) => {
-    try {
-        const [rows] = await pool.query('SELECT * FROM topic_proposals ORDER BY created_at DESC LIMIT 10');
-        res.json({ db_rows: rows });
-    } catch (e) {
-        res.status(500).json({ error: e.message });
     }
 });
 
