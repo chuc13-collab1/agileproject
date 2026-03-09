@@ -109,7 +109,7 @@ router.get('/teacher', verifyToken, isTeacher, async (req, res, next) => {
     try {
         // Teacher ID logic might need adjustment depending on how isTeacher middleware attaches info
         // Assuming req.user.uid is available. need to find teacher_id
-        const [teachers] = await pool.query('SELECT id FROM teachers JOIN users ON teachers.user_id = users.id WHERE users.uid = ?', [req.user.uid]);
+        const [teachers] = await pool.query('SELECT teachers.id FROM teachers JOIN users ON teachers.user_id = users.id WHERE users.uid = ?', [req.user.uid]);
         if (teachers.length === 0) return res.status(404).json({ message: 'Teacher not found' });
         const teacherId = teachers[0].id;
 
@@ -147,7 +147,7 @@ router.patch('/:id/review', verifyToken, isTeacher, async (req, res, next) => {
         }
 
         // Check ownership (is this teacher actually the requested supervisor?)
-        const [teachers] = await connection.query('SELECT id FROM teachers JOIN users ON teachers.user_id = users.id WHERE users.uid = ?', [req.user.uid]);
+        const [teachers] = await connection.query('SELECT teachers.id FROM teachers JOIN users ON teachers.user_id = users.id WHERE users.uid = ?', [req.user.uid]);
         const teacherId = teachers[0].id;
 
         const [proposals] = await connection.query('SELECT * FROM topic_proposals WHERE id = ?', [id]);
@@ -160,12 +160,26 @@ router.patch('/:id/review', verifyToken, isTeacher, async (req, res, next) => {
         await connection.beginTransaction();
 
         if (action === 'approve') {
+            // Resolve semester & academic_year from the active published announcement
+            const [announcements] = await connection.query(
+                `SELECT semester, academic_year FROM announcements 
+                 WHERE status = 'published' 
+                 ORDER BY created_at DESC LIMIT 1`
+            );
+            const activeSemester = announcements.length > 0 ? announcements[0].semester : '1';
+            const activeAcademicYear = announcements.length > 0 ? announcements[0].academic_year : (() => {
+                const now = new Date();
+                const year = now.getFullYear();
+                return `${year}-${year + 1}`;
+            })();
+            const activeField = proposals[0].field || 'Software Engineering';
+
             // 1. Create a Topic from the Proposal
             const topicId = uuidv4();
             await connection.query(`
                 INSERT INTO topics 
                 (id, title, description, requirements, expected_results, supervisor_id, semester, academic_year, field, max_students, current_students, status, proposed_by_type, original_proposal_id, assigned_to_student_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, 'pending', 'student', ?, ?) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 1, 'pending', 'student', ?, ?)
              `, [
                 topicId,
                 proposals[0].title,
@@ -173,7 +187,9 @@ router.patch('/:id/review', verifyToken, isTeacher, async (req, res, next) => {
                 proposals[0].requirements,
                 proposals[0].expected_results,
                 teacherId,
-                '1', '2025-2026', 'Software Engineering', // Defaults
+                activeSemester,
+                activeAcademicYear,
+                activeField,
                 proposals[0].id,
                 proposals[0].proposed_by_student_id
             ]);
