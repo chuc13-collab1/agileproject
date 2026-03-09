@@ -27,6 +27,13 @@ router.post('/', verifyToken, async (req, res, next) => {
         }
         const studentId = students[0].id;
 
+        // Resolve teacher ID from user ID if necessary
+        let finalSupervisorId = requestedSupervisorId;
+        const [teacherObj] = await pool.query('SELECT id FROM teachers WHERE user_id = ?', [requestedSupervisorId]);
+        if (teacherObj.length > 0) {
+            finalSupervisorId = teacherObj[0].id;
+        }
+
         // 2. Check for existing active proposals
         const [existing] = await pool.query(
             "SELECT COUNT(*) as count FROM topic_proposals WHERE proposed_by_student_id = ? AND status IN ('pending', 'approved')",
@@ -52,14 +59,14 @@ router.post('/', verifyToken, async (req, res, next) => {
             `INSERT INTO topic_proposals 
             (id, title, description, requirements, expected_results, proposed_by_student_id, requested_supervisor_id, status)
             VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
-            [id, title, description, requirements, expectedResults, studentId, requestedSupervisorId]
+            [id, title, description, requirements, expectedResults, studentId, finalSupervisorId]
         );
 
         res.status(201).json({ success: true, message: 'Proposal submitted successfully', data: { id } });
 
         // Send notification to requested supervisor (non-blocking, after response)
-        if (requestedSupervisorId) {
-            const supervisorUid = await getUserUidById('teachers', requestedSupervisorId);
+        if (finalSupervisorId) {
+            const supervisorUid = await getUserUidById('teachers', finalSupervisorId);
             if (supervisorUid) {
                 await createNotification({
                     userUid: supervisorUid,
@@ -92,8 +99,8 @@ router.get('/my', verifyToken, async (req, res, next) => {
             FROM topic_proposals tp
             JOIN students s ON tp.proposed_by_student_id = s.id
             JOIN users us ON s.user_id = us.id
-            JOIN teachers t ON tp.requested_supervisor_id = t.id
-            JOIN users u ON t.user_id = u.id
+            LEFT JOIN teachers t ON tp.requested_supervisor_id = t.id
+            LEFT JOIN users u ON t.user_id = u.id
             WHERE us.uid = ?
             ORDER BY tp.created_at DESC
         `, [studentUid]);
