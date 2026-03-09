@@ -284,4 +284,13 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
     }
 });
 
+router.get('/debug-all', async (req, res) => {
+    try {
+        const [rows] = await pool.query('SELECT * FROM topic_proposals ORDER BY created_at DESC LIMIT 10');
+        res.json({ db_rows: rows });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 export default router;
