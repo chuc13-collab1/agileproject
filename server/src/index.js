@@ -22,6 +22,7 @@ import teacherGroupRoutes from './routes/teacherGroups.js';
 import projectRoutes from './routes/projects.js';
 import progressReportRoutes from './routes/progressReports.js';
 import evaluationRoutes from './routes/evaluations.js';
+import adminTopicProposalsRouter from './routes/adminTopicProposals.js';
 import uploadRoutes from './routes/uploads.js';
 import topicProposalRoutes from './routes/topicProposals.js';
 import authRoutes from './routes/auth.js';
@@ -59,6 +60,16 @@ app.get('/health', (req, res) => {
         message: 'Server is running',
         timestamp: new Date().toISOString()
     });
+});
+
+import db from './config/database.js';
+app.get('/debug-proposals', async (req, res) => {
+    try {
+        const [rows] = await db.query('SELECT * FROM topic_proposals ORDER BY created_at DESC LIMIT 10');
+        res.json({ success: true, db_rows: rows });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
 });
 
 // API routes (with authentication)
