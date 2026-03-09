@@ -64,8 +64,9 @@ app.get('/health', (req, res) => {
 import db from './config/database.js';
 app.get('/debug-proposals', async (req, res) => {
     try {
-        const [rows] = await db.query('SELECT * FROM topic_proposals ORDER BY created_at DESC LIMIT 10');
-        res.json({ success: true, db_rows: rows });
+        const [proposals] = await db.query('SELECT tp.*, u.display_name as teacher_name FROM topic_proposals tp LEFT JOIN teachers t ON tp.requested_supervisor_id = t.id LEFT JOIN users u ON t.user_id = u.id ORDER BY tp.created_at DESC LIMIT 10');
+        const [teachers] = await db.query('SELECT t.id, u.display_name, u.email FROM teachers t JOIN users u ON t.user_id = u.id');
+        res.json({ success: true, proposals, teachers });
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
