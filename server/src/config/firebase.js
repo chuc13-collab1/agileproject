@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 // Initialize Firebase Admin SDK
 let credential;
 
-// Option 1: Use serviceAccountKey.json file (RECOMMENDED)
+// Option 1: Use serviceAccountKey.json file (local dev)
 if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
     const serviceAccountPath = join(__dirname, '..', '..', process.env.FIREBASE_SERVICE_ACCOUNT_PATH);
     try {
@@ -24,7 +24,19 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
         process.exit(1);
     }
 }
-// Option 2: Use environment variables
+// Option 2: Use full JSON string in a single env var (RECOMMENDED for Railway/cloud)
+// Set FIREBASE_SERVICE_ACCOUNT_JSON = entire content of serviceAccount.json
+else if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    try {
+        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
+        credential = admin.credential.cert(serviceAccount);
+        console.log('✅ Using Firebase Service Account from FIREBASE_SERVICE_ACCOUNT_JSON');
+    } catch (error) {
+        console.error('❌ Error parsing FIREBASE_SERVICE_ACCOUNT_JSON:', error.message);
+        process.exit(1);
+    }
+}
+// Option 3: Use separate environment variables (fallback)
 else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
     const serviceAccount = {
         projectId: process.env.FIREBASE_PROJECT_ID,
@@ -34,9 +46,10 @@ else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL &&
     credential = admin.credential.cert(serviceAccount);
     console.log('✅ Using Firebase credentials from environment variables');
 } else {
-    console.error('❌ Firebase credentials not found. Please provide either:');
-    console.error('   1. FIREBASE_SERVICE_ACCOUNT_PATH in .env');
-    console.error('   2. FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY in .env');
+    console.error('❌ Firebase credentials not found. Please provide one of:');
+    console.error('   1. FIREBASE_SERVICE_ACCOUNT_PATH (.env local)');
+    console.error('   2. FIREBASE_SERVICE_ACCOUNT_JSON (full JSON string — Railway recommended)');
+    console.error('   3. FIREBASE_PROJECT_ID + FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY');
     process.exit(1);
 }
 
