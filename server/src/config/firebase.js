@@ -24,32 +24,19 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
         process.exit(1);
     }
 }
-// Option 2: Use full JSON string in a single env var (RECOMMENDED for Railway/cloud)
-// Set FIREBASE_SERVICE_ACCOUNT_JSON = entire content of serviceAccount.json
-else if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
-    try {
-        const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_JSON);
-        credential = admin.credential.cert(serviceAccount);
-        console.log('✅ Using Firebase Service Account from FIREBASE_SERVICE_ACCOUNT_JSON');
-    } catch (error) {
-        console.error('❌ Error parsing FIREBASE_SERVICE_ACCOUNT_JSON:', error.message);
-        process.exit(1);
-    }
-}
-// Option 3: Use separate environment variables (fallback)
+// Option 2: Use separate environment variables (Railway/cloud)
 else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
+    const privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
     const serviceAccount = {
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
+        privateKey,
     };
     credential = admin.credential.cert(serviceAccount);
     console.log('✅ Using Firebase credentials from environment variables');
 } else {
-    console.error('❌ Firebase credentials not found. Please provide one of:');
-    console.error('   1. FIREBASE_SERVICE_ACCOUNT_PATH (.env local)');
-    console.error('   2. FIREBASE_SERVICE_ACCOUNT_JSON (full JSON string — Railway recommended)');
-    console.error('   3. FIREBASE_PROJECT_ID + FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY');
+    console.error('❌ Firebase credentials not found. Please set:');
+    console.error('   FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY');
     process.exit(1);
 }
 
@@ -59,3 +46,4 @@ console.log('✅ Firebase Admin SDK initialized successfully');
 
 export const auth = admin.auth();
 export default admin;
+
