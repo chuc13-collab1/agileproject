@@ -22,7 +22,6 @@ import teacherGroupRoutes from './routes/teacherGroups.js';
 import projectRoutes from './routes/projects.js';
 import progressReportRoutes from './routes/progressReports.js';
 import evaluationRoutes from './routes/evaluations.js';
-import adminTopicProposalsRouter from './routes/adminTopicProposals.js';
 import uploadRoutes from './routes/uploads.js';
 import topicProposalRoutes from './routes/topicProposals.js';
 import authRoutes from './routes/auth.js';
