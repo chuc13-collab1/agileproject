@@ -153,7 +153,7 @@ const StudentTopicProposal: React.FC = () => {
                                 >
                                     <option value="">-- Chọn Giảng Viên --</option>
                                     {teachers.map(teacher => (
-                                        <option key={teacher.id} value={teacher.id}>
+                                        <option key={teacher.teacherDbId || teacher.id} value={teacher.teacherDbId || teacher.id}>
                                             {teacher.displayName}
                                         </option>
                                     ))}
