@@ -27,6 +27,12 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
 // Option 2: Use separate environment variables (Railway/cloud)
 else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
     const privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
+    console.log(`🔑 DEBUG (Do not expose full key!):`);
+    console.log(`   Length: ${privateKey.length}`);
+    console.log(`   Starts with: ${privateKey.substring(0, 27)}`);
+    console.log(`   Ends with: ...${privateKey.substring(privateKey.length - 25)}`);
+    console.log(`   Has literal \\n: ${process.env.FIREBASE_PRIVATE_KEY.includes('\\n')}`);
+    console.log(`   Has actual newline: ${process.env.FIREBASE_PRIVATE_KEY.includes('\n')}`);
     const serviceAccount = {
         projectId: process.env.FIREBASE_PROJECT_ID,
         clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
