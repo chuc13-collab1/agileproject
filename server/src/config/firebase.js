@@ -24,7 +24,19 @@ if (process.env.FIREBASE_SERVICE_ACCOUNT_PATH) {
         process.exit(1);
     }
 }
-// Option 2: Use separate environment variables (Railway/cloud)
+// Option 2: Use Base64 encoded JSON (Railway/cloud recommended)
+else if (process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
+    try {
+        const buff = Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64, 'base64');
+        const serviceAccount = JSON.parse(buff.toString('utf-8'));
+        credential = admin.credential.cert(serviceAccount);
+        console.log('✅ Using Firebase credentials from Base64 environment variable');
+    } catch (error) {
+        console.error('❌ Error parsing FIREBASE_SERVICE_ACCOUNT_BASE64:', error.message);
+        process.exit(1);
+    }
+}
+// Option 3: Use separate environment variables (Legacy string parsing)
 else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL && process.env.FIREBASE_PRIVATE_KEY) {
     const privateKey = process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n');
     console.log(`🔑 DEBUG (Do not expose full key!):`);
@@ -42,6 +54,7 @@ else if (process.env.FIREBASE_PROJECT_ID && process.env.FIREBASE_CLIENT_EMAIL &&
     console.log('✅ Using Firebase credentials from environment variables');
 } else {
     console.error('❌ Firebase credentials not found. Please set:');
+    console.error('   FIREBASE_SERVICE_ACCOUNT_BASE64 (recommended) OR');
     console.error('   FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY');
     process.exit(1);
 }
