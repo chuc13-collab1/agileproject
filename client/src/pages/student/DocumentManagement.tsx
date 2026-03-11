@@ -3,16 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import MainLayout from '../../components/layout/MainLayout';
 import { useAuth } from '../../contexts/AuthContext';
 import * as projectService from '../../services/api/project.service';
+import * as documentService from '../../services/api/document.service';
 import styles from './Student.module.css';
 
 interface Document {
     id: string;
-    name: string;
-    category: 'outline' | 'report' | 'slides' | 'code' | 'other';
+    file_name: string;
+    document_type: 'outline' | 'report' | 'slides' | 'source_code' | 'other';
     url: string;
-    size: number;
-    uploadedAt: Date;
+    file_size: number;
+    uploaded_at: string;
     version: number;
+    uploaded_by_name: string;
 }
 
 const DocumentManagement: React.FC = () => {
@@ -33,13 +35,13 @@ const DocumentManagement: React.FC = () => {
     const loadData = async () => {
         setLoading(true);
         try {
-            const allProjects = await projectService.getAllProjects();
-            const myProject = allProjects.find(p => p.studentId === user?.uid);
+            const myProject = await projectService.getMyProject(user?.uid || '');
             setProject(myProject || null);
 
-            // In real app, fetch documents from API
-            // const docs = await documentService.getDocuments(myProject.id);
-            setDocuments([]);
+            if (myProject) {
+                const docs = await documentService.getProjectDocuments(myProject.id);
+                setDocuments(docs);
+            }
         } catch (error) {
             console.error('Failed to load data:', error);
         } finally {
@@ -58,25 +60,27 @@ const DocumentManagement: React.FC = () => {
 
         setUploading(true);
         try {
-            // In real app: await documentService.uploadDocument(project.id, selectedFile, uploadCategory);
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate upload
-
+            await documentService.uploadDocument(project.id, selectedFile, uploadCategory);
             alert('Upload tài liệu thành công!');
             setSelectedFile(null);
+            // Reset input file manually if needed, but simple re-render might not clear it
+            const fileInput = document.getElementById('file-upload') as HTMLInputElement;
+            if (fileInput) fileInput.value = '';
+            
             loadData();
         } catch (error) {
             console.error('Failed to upload:', error);
-            alert('Upload thất bại. Vui lòng thử lại.');
+            alert('Upload thất bại: ' + (error as any).message);
         } finally {
             setUploading(false);
         }
     };
 
-    const handleDelete = async (_docId: string) => {
+    const handleDelete = async (docId: string) => {
         if (!window.confirm('Bạn có chắc chắn muốn xóa tài liệu này?')) return;
 
         try {
-            // await documentService.deleteDocument(_docId);
+            await documentService.deleteDocument(docId);
             alert('Đã xóa tài liệu');
             loadData();
         } catch (error) {
@@ -90,7 +94,7 @@ const DocumentManagement: React.FC = () => {
             'outline': 'Đề cương',
             'report': 'Báo cáo',
             'slides': 'Slide thuyết trình',
-            'code': 'Source code',
+            'source_code': 'Source code',
             'other': 'Khác'
         };
         return labels[category] || category;
@@ -101,7 +105,7 @@ const DocumentManagement: React.FC = () => {
             'outline': '#3b82f6',
             'report': '#10b981',
             'slides': '#f59e0b',
-            'code': '#8b5cf6',
+            'source_code': '#8b5cf6',
             'other': '#64748b'
         };
         return colors[category] || '#64748b';
@@ -115,7 +119,7 @@ const DocumentManagement: React.FC = () => {
 
     const filteredDocs = selectedCategory === 'all'
         ? documents
-        : documents.filter(d => d.category === selectedCategory);
+        : documents.filter(d => d.document_type === selectedCategory);
 
     if (loading) {
         return <MainLayout><div style={{ padding: '2rem' }}>Đang tải...</div></MainLayout>;
@@ -216,7 +220,7 @@ const DocumentManagement: React.FC = () => {
                                 <option value="outline">Đề cương</option>
                                 <option value="report">Báo cáo</option>
                                 <option value="slides">Slide thuyết trình</option>
-                                <option value="code">Source code</option>
+                                <option value="source_code">Source code</option>
                                 <option value="other">Khác</option>
                             </select>
                         </div>
@@ -243,7 +247,7 @@ const DocumentManagement: React.FC = () => {
                         { value: 'outline', label: 'Đề cương' },
                         { value: 'report', label: 'Báo cáo' },
                         { value: 'slides', label: 'Slide' },
-                        { value: 'code', label: 'Source code' },
+                        { value: 'source_code', label: 'Source code' },
                         { value: 'other', label: 'Khác' }
                     ].map(item => (
                         <button
@@ -288,7 +292,7 @@ const DocumentManagement: React.FC = () => {
                             <tbody>
                                 {filteredDocs.map(doc => (
                                     <tr key={doc.id}>
-                                        <td style={{ fontWeight: 500 }}>{doc.name}</td>
+                                        <td style={{ fontWeight: 500 }}>{doc.file_name}</td>
                                         <td>
                                             <span
                                                 style={{
@@ -296,15 +300,15 @@ const DocumentManagement: React.FC = () => {
                                                     borderRadius: '0.375rem',
                                                     fontSize: '0.75rem',
                                                     fontWeight: 500,
-                                                    background: getCategoryColor(doc.category) + '20',
-                                                    color: getCategoryColor(doc.category)
+                                                    background: getCategoryColor(doc.document_type) + '20',
+                                                    color: getCategoryColor(doc.document_type)
                                                 }}
                                             >
-                                                {getCategoryLabel(doc.category)}
+                                                {getCategoryLabel(doc.document_type)}
                                             </span>
                                         </td>
-                                        <td>{formatFileSize(doc.size)}</td>
-                                        <td>{new Date(doc.uploadedAt).toLocaleDateString('vi-VN')}</td>
+                                        <td>{formatFileSize(doc.file_size)}</td>
+                                        <td>{new Date(doc.uploaded_at).toLocaleDateString('vi-VN')}</td>
                                         <td>v{doc.version}</td>
                                         <td>
                                             <div style={{ display: 'flex', gap: '0.5rem' }}>
