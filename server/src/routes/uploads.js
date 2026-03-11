@@ -119,7 +119,7 @@ router.get('/projects/:projectId/documents', async (req, res, next) => {
         d.*,
         u.display_name as uploaded_by_name
       FROM documents d
-      INNER JOIN users u ON d.uploaded_by = u.id
+      LEFT JOIN users u ON d.uploaded_by = u.id
       WHERE d.project_id = ?
     `;
         
