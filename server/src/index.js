@@ -8,6 +8,7 @@ import { fileURLToPath } from 'url';
 import './config/database.js'; // Initialize database connection
 import './config/firebase.js'; // Initialize Firebase Admin
 import { verifyToken } from './middleware/auth.js';
+import pool from './config/database.js'; // Ensure pool is imported
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 
 // Import routes
@@ -59,6 +60,37 @@ app.get('/health', (req, res) => {
         message: 'Server is running',
         timestamp: new Date().toISOString()
     });
+});
+
+// TEMPORARY: Public DB setup endpoint
+app.get('/api/setup-db', async (req, res) => {
+    try {
+        const sql = `
+            CREATE TABLE IF NOT EXISTS \`documents\` (
+                \`id\` varchar(36) NOT NULL,
+                \`project_id\` varchar(36) NOT NULL,
+                \`document_type\` enum('outline', 'report', 'slides', 'source_code', 'other') NOT NULL,
+                \`file_name\` varchar(255) NOT NULL,
+                \`file_path\` varchar(500) NOT NULL,
+                \`file_size\` bigint(20) DEFAULT NULL,
+                \`mime_type\` varchar(100) DEFAULT NULL,
+                \`version\` int(11) DEFAULT 1,
+                \`is_latest\` tinyint(1) DEFAULT 1,
+                \`uploaded_by\` varchar(36) NOT NULL,
+                \`description\` text DEFAULT NULL,
+                \`uploaded_at\` timestamp NOT NULL DEFAULT current_timestamp(),
+                \`updated_at\` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+                PRIMARY KEY (\`id\`),
+                KEY \`idx_project_id\` (\`project_id\`),
+                CONSTRAINT \`fk_documents_project_setup_v2\` FOREIGN KEY (\`project_id\`) REFERENCES \`projects\` (\`id\`) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+        `;
+        await pool.query(sql);
+        res.send('✅ Database setup successful! The "documents" table has been created. You can now close this page.');
+    } catch (error) {
+        console.error('Setup DB error:', error);
+        res.status(500).send('❌ Setup failed: ' + error.message);
+    }
 });
 
 // API routes (with authentication)
