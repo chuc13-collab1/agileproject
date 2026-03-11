@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { auth } from '../../services/firebase/config';
 import styles from '../../pages/supervisor/Supervisor.module.css';
 
 interface GradingPanelProps {
@@ -82,7 +83,7 @@ const TeacherGradingPanel: React.FC<GradingPanelProps> = ({
             setSubmitting(true);
 
             // Get Firebase token
-            const user = (window as any).currentUser; // Assuming you have user in global scope
+            const user = auth.currentUser; // Assuming you have user in global scope
             const token = await user?.getIdToken();
 
             const response = await fetch(
