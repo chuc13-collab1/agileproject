@@ -84,9 +84,11 @@ router.post('/', verifyToken, isAdmin, async (req, res, next) => {
                 '/notifications'
             );
             if (sendEmail) {
+                console.log('📧 Initiating email broadcast...');
                 sendAnnouncementEmail({ title, content, semester, academicYear, registrationStart, registrationEnd })
                     .then(result => console.log('📧 Email result:', result))
-                    .catch(err => console.error('📧 Email error:', err.message));
+                    .catch(err => console.error('📧 Email error:', err))
+                    .finally(() => console.log('📧 Email broadcast process finished.'));
             }
         }
 
@@ -127,9 +129,11 @@ router.put('/:id', verifyToken, isAdmin, async (req, res, next) => {
                 '/notifications'
             );
             if (sendEmail) {
+                console.log('📧 Initiating email broadcast for updated announcement...');
                 sendAnnouncementEmail({ title, content, semester, academicYear, registrationStart, registrationEnd })
                     .then(result => console.log('📧 Email result:', result))
-                    .catch(err => console.error('📧 Email error:', err.message));
+                    .catch(err => console.error('📧 Email error:', err))
+                    .finally(() => console.log('📧 Email broadcast process finished.'));
             }
         }
 

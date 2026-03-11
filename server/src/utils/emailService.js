@@ -14,8 +14,8 @@ const createTransporter = () => {
   const { EMAIL_USER, EMAIL_APP_PASSWORD } = process.env;
 
   if (!EMAIL_USER || !EMAIL_APP_PASSWORD) {
-    console.warn('⚠️  Email config missing: EMAIL_USER or EMAIL_APP_PASSWORD not set in .env');
-    return null;
+    console.error('⚠️  Email config missing: EMAIL_USER or EMAIL_APP_PASSWORD not set in .env');
+    throw new Error('Email configuration missing in environment variables');
   }
 
   return nodemailer.createTransport({
@@ -209,10 +209,12 @@ const buildAnnouncementEmail = (announcement) => {
 // Send bulk email (async, non-blocking)
 // ============================================
 export const sendAnnouncementEmail = async (announcement) => {
-  const transporter = createTransporter();
-  if (!transporter) {
-    console.error('❌ Email transporter not configured. Skipping email send.');
-    return { success: false, error: 'Email not configured' };
+  let transporter;
+  try {
+    transporter = createTransporter();
+  } catch (err) {
+    console.error('❌ Failed to initialize email transporter:', err.message);
+    return { success: false, error: err.message };
   }
 
   try {
