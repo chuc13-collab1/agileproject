@@ -112,7 +112,9 @@ router.post('/documents', upload.single('file'), async (req, res, next) => {
 router.get('/projects/:projectId/documents', async (req, res, next) => {
     try {
         const { projectId } = req.params;
-        const { type } = req.query; // Optional filter by document_type
+        const { type } = req.query;
+
+        console.log(`[DEBUG] Fetching documents for project: ${projectId}`);
 
         let query = `
       SELECT 
@@ -132,18 +134,38 @@ router.get('/projects/:projectId/documents', async (req, res, next) => {
         
         query += " ORDER BY d.uploaded_at DESC";
 
-        const [documents] = await db.query(query, params);
+        try {
+            const [documents] = await db.query(query, params);
+            console.log(`[DEBUG] Found ${documents.length} documents`);
 
-        // Map internal paths to accessible URLs
-        const documentsWithUrls = documents.map(doc => ({
-            ...doc,
-            url: `/uploads/${path.relative(path.join(__dirname, '../../uploads'), doc.file_path).replace(/\\/g, '/')}`
-        }));
+            // Map internal paths to accessible URLs
+            const documentsWithUrls = documents.map(doc => {
+                try {
+                    const relativePath = path.relative(path.join(__dirname, '../../uploads'), doc.file_path).replace(/\\/g, '/');
+                    return {
+                        ...doc,
+                        url: `/uploads/${relativePath}`
+                    };
+                } catch (err) {
+                    console.error(`[DEBUG] Error mapping path for doc ${doc.id}:`, err);
+                    return { ...doc, url: '#' };
+                }
+            });
 
-        res.json({
-            success: true,
-            data: documentsWithUrls
-        });
+            res.json({
+                success: true,
+                data: documentsWithUrls
+            });
+        } catch (dbError) {
+            console.error('[DEBUG] Database error in fetch documents:', dbError);
+            if (dbError.code === 'ER_NO_SUCH_TABLE') {
+                return res.status(500).json({
+                    success: false,
+                    message: 'Database table "documents" is missing. Please run the SQL migration.'
+                });
+            }
+            throw dbError;
+        }
     } catch (error) {
         next(error);
     }
