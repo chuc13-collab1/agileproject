@@ -25,13 +25,13 @@ const storage = multer.diskStorage({
 
 // File filter
 const fileFilter = (req, file, cb) => {
-    const allowedTypes = /pdf|doc|docx|zip|rar/;
+    const allowedTypes = /pdf|doc|docx|ppt|pptx|zip|rar/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
 
     if (extname) {
         return cb(null, true);
     } else {
-        cb(new Error('Only PDF, DOC, DOCX, ZIP, RAR files are allowed!'));
+        cb(new Error('Only PDF, DOC, DOCX, PPT, PPTX, ZIP, RAR files are allowed!'));
     }
 };
 
