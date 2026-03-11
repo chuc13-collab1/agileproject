@@ -81,7 +81,7 @@ router.post('/', verifyToken, isAdmin, async (req, res, next) => {
             notifyAllStudents(
                 `📋 ${title}`,
                 `Thông báo mới: ${title} - ${semester}/${academicYear}`,
-                '/notifications'
+                '/announcements'
             );
             if (sendEmail) {
                 console.log('📧 Initiating email broadcast...');
@@ -126,7 +126,7 @@ router.put('/:id', verifyToken, isAdmin, async (req, res, next) => {
             notifyAllStudents(
                 `📋 ${title}`,
                 `Thông báo mới: ${title} - ${semester}/${academicYear}`,
-                '/notifications'
+                '/announcements'
             );
             if (sendEmail) {
                 console.log('📧 Initiating email broadcast for updated announcement...');

@@ -41,6 +41,18 @@ export const getAllAnnouncements = async (): Promise<Announcement[]> => {
   }));
 };
 
+export const getActiveAnnouncements = async (): Promise<Announcement[]> => {
+  const result = await apiCall('announcements/active');
+  return result.data.map((item: any) => ({
+    ...item,
+    academicYear: item.academic_year,
+    registrationStart: new Date(item.registration_start),
+    registrationEnd: new Date(item.registration_end),
+    createdAt: new Date(item.created_at),
+    updatedAt: new Date(item.updated_at),
+  }));
+};
+
 export const createAnnouncement = async (data: AnnouncementFormData): Promise<Announcement> => {
   const result = await apiCall('announcements', {
     method: 'POST',

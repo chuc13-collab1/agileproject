@@ -2,6 +2,10 @@ import nodemailer from 'nodemailer';
 import pool from '../config/database.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dns from 'dns';
+
+// Fix lỗi ENETUNREACH IPv6 trên Node 18+ (thường gặp khi host trên Railway)
+dns.setDefaultResultOrder('ipv4first');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,11 +23,20 @@ const createTransporter = () => {
   }
 
   return nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 587,
+    secure: false, // true for 465, false for 587
     auth: {
       user: EMAIL_USER,
       pass: EMAIL_APP_PASSWORD,
     },
+    // Timings để fail-fast, tránh bị treo process Node nếu mạng Railway chặn
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    // Bật log nội bộ của NodeMailer để xem tiến trình TLS handshake
+    logger: true,
+    debug: true
   });
 };
 

@@ -33,6 +33,8 @@ import ReviewerAssignment from '../pages/admin/ReviewerAssignment';
 import ClassAssignment from '../pages/admin/ClassAssignment';
 import Statistics from '../pages/admin/Statistics';
 import Unauthorized from '../pages/auth/Unauthorized';
+import NotificationsPage from '../pages/shared/NotificationsPage';
+import AnnouncementsPage from '../pages/shared/AnnouncementsPage';
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactElement, allowedRoles?: string[] }> = ({ children, allowedRoles }) => {
@@ -155,10 +157,20 @@ const AppRoutes: React.FC = () => {
         </ProtectedRoute>
       } />
 
-      {/* Chat Routes - accessible by all authenticated users */}
+      {/* Chat & Notifications Routes - accessible by all authenticated users */}
       <Route path="/chat" element={
         <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
           <ChatPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/notifications" element={
+        <ProtectedRoute>
+          <NotificationsPage />
+        </ProtectedRoute>
+      } />
+      <Route path="/announcements" element={
+        <ProtectedRoute>
+          <AnnouncementsPage />
         </ProtectedRoute>
       } />
 
