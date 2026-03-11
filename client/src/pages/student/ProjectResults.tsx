@@ -219,7 +219,7 @@ const ProjectResults: React.FC = () => {
                                                 Điểm GVHD
                                             </div>
                                             <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#3b82f6' }}>
-                                                {project.supervisorScore.toFixed(2)}
+                                                {Number(project.supervisorScore).toFixed(2)}
                                             </div>
                                         </div>
                                     )}
@@ -230,7 +230,7 @@ const ProjectResults: React.FC = () => {
                                                 Điểm phản biện
                                             </div>
                                             <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#8b5cf6' }}>
-                                                {project.reviewerScore.toFixed(2)}
+                                                {Number(project.reviewerScore).toFixed(2)}
                                             </div>
                                         </div>
                                     )}
@@ -241,7 +241,7 @@ const ProjectResults: React.FC = () => {
                                                 Điểm hội đồng
                                             </div>
                                             <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#10b981' }}>
-                                                {project.score.toFixed(2)}
+                                                {Number(project.score).toFixed(2)}
                                             </div>
                                         </div>
                                     )}

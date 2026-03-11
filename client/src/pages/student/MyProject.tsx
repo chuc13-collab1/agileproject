@@ -191,7 +191,7 @@ const MyProject: React.FC = () => {
                                 <div className={styles.infoItem}>
                                     <span className={styles.infoLabel}>Điểm GVHD</span>
                                     <span className={styles.infoValue} style={{ color: '#3b82f6', fontSize: '1.5rem' }}>
-                                        {project.supervisorScore.toFixed(2)}
+                                        {Number(project.supervisorScore).toFixed(2)}
                                     </span>
                                 </div>
                             )}
@@ -200,7 +200,7 @@ const MyProject: React.FC = () => {
                                 <div className={styles.infoItem}>
                                     <span className={styles.infoLabel}>Điểm phản biện</span>
                                     <span className={styles.infoValue} style={{ color: '#8b5cf6', fontSize: '1.5rem' }}>
-                                        {project.reviewerScore.toFixed(2)}
+                                        {Number(project.reviewerScore).toFixed(2)}
                                     </span>
                                 </div>
                             )}
@@ -209,7 +209,7 @@ const MyProject: React.FC = () => {
                                 <div className={styles.infoItem}>
                                     <span className={styles.infoLabel}>Điểm cuối cùng</span>
                                     <span className={styles.infoValue} style={{ color: '#10b981', fontSize: '1.5rem' }}>
-                                        {project.score.toFixed(2)}
+                                        {Number(project.score).toFixed(2)}
                                     </span>
                                 </div>
                             )}
