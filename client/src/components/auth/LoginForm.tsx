@@ -1,6 +1,6 @@
 // Login Form Component
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import styles from './auth.module.css';
 
@@ -105,9 +105,9 @@ const LoginForm: React.FC = () => {
                   <input type="checkbox" />
                   <span>Ghi nhớ đăng nhập</span>
                 </label>
-                <a href="/forgot-password" className={styles.forgotLink}>
+                <Link to="/forgot-password" className={styles.forgotLink}>
                   Quên mật khẩu?
-                </a>
+                </Link>
               </div>
 
               <button

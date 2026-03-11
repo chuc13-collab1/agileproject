@@ -1,0 +1,319 @@
+<mxfile host="65bd71144e">
+    <diagram id="class-diagram" name="Class Diagram">
+        <mxGraphModel dx="1376" dy="1126" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="2000" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="title" value="CLASS DIAGRAM — Hệ thống Quản lý Đồ án Agile" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+                    <mxGeometry x="600" y="10" width="900" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="user" value="«abstract»&#xa;User" style="swimlane;fontStyle=1;align=center;startSize=46;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="930" y="70" width="230" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="user_attr" value="- id: String «UUID»&#xa;- uid: String «Firebase UID»&#xa;- email: String&#xa;- displayName: String&#xa;- phone: String&#xa;- role: UserRole&#xa;- isActive: Boolean&#xa;- createdAt: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=11;" parent="user" vertex="1">
+                    <mxGeometry y="46" width="230" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="user_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="user" vertex="1">
+                    <mxGeometry y="156" width="230" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="user_method" value="+ login(): Boolean&#xa;+ logout(): void&#xa;+ updateProfile(): void&#xa;+ getNotifications(): List" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=11;" parent="user" vertex="1">
+                    <mxGeometry y="164" width="230" height="56" as="geometry"/>
+                </mxCell>
+                <mxCell id="student" value="Student" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="180" y="420" width="230" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="student_attr" value="- id: String «UUID»&#xa;- userId: String «FK»&#xa;- studentId: String&#xa;- className: String&#xa;- major: String&#xa;- academicYear: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=11;" parent="student" vertex="1">
+                    <mxGeometry y="30" width="230" height="90" as="geometry"/>
+                </mxCell>
+                <mxCell id="student_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="student" vertex="1">
+                    <mxGeometry y="120" width="230" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="student_method" value="+ browseTopics(): List&#xa;+ registerTopic(id): Project&#xa;+ proposeNewTopic(): void&#xa;+ submitProgressReport(): void&#xa;+ createSprint(): void&#xa;+ uploadDocument(): void&#xa;+ bookMeeting(slotId): Booking&#xa;+ viewProjectResult(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=11;" parent="student" vertex="1">
+                    <mxGeometry y="128" width="230" height="182" as="geometry"/>
+                </mxCell>
+                <mxCell id="teacher" value="Teacher" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="700" y="340" width="240" height="310" as="geometry"/>
+                </mxCell>
+                <mxCell id="teacher_attr" value="- id: String «UUID»&#xa;- userId: String «FK»&#xa;- teacherId: String&#xa;- department: String&#xa;- maxStudents: Int&#xa;- currentStudents: Int&#xa;- canSupervise: Boolean&#xa;- canReview: Boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=11;" parent="teacher" vertex="1">
+                    <mxGeometry y="30" width="240" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="teacher_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="teacher" vertex="1">
+                    <mxGeometry y="140" width="240" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="teacher_method" value="+ createTopic(): void&#xa;+ reviewTopicProposal(): void&#xa;+ reviewProgressReport(): void&#xa;+ commentOnSprint(): void&#xa;+ gradeProject(): void&#xa;+ createMeetingSlot(): void&#xa;+ getStatistics(): TeacherStats" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=11;" parent="teacher" vertex="1">
+                    <mxGeometry y="148" width="240" height="162" as="geometry"/>
+                </mxCell>
+                <mxCell id="admin" value="Admin" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="390" width="230" height="270" as="geometry"/>
+                </mxCell>
+                <mxCell id="admin_attr" value="- id: String «UUID»&#xa;- userId: String «FK»&#xa;- adminId: String&#xa;- permissions: List&lt;AdminPermission&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=11;" parent="admin" vertex="1">
+                    <mxGeometry y="30" width="230" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="admin_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="admin" vertex="1">
+                    <mxGeometry y="90" width="230" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="admin_method" value="+ manageUsers(): List&#xa;+ manageClasses(): List&#xa;+ manageTopics(): List&#xa;+ createAnnouncement(): void&#xa;+ publishAnnouncement(): void&#xa;+ assignReviewer(): void&#xa;+ archiveProject(): void&#xa;+ getSystemStatistics(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=11;" parent="admin" vertex="1">
+                    <mxGeometry y="98" width="230" height="172" as="geometry"/>
+                </mxCell>
+                <mxCell id="classEntity" value="Class" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="550" y="1160" width="200" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="class_attr" value="- id: String «UUID»&#xa;- classCode: String «UNIQUE»&#xa;- className: String&#xa;- academicYear: String&#xa;- advisorTeacherId: String&#xa;- maxStudents: Int&#xa;- major: String&#xa;- isActive: Boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="classEntity" vertex="1">
+                    <mxGeometry y="30" width="200" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="class_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="classEntity" vertex="1">
+                    <mxGeometry y="140" width="200" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="class_method" value="+ getStudents(): List&#xa;+ assignStudent(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="classEntity" vertex="1">
+                    <mxGeometry y="148" width="200" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="topic" value="Topic" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="520" y="860" width="220" height="250" as="geometry"/>
+                </mxCell>
+                <mxCell id="topic_attr" value="- id: String «UUID»&#xa;- title: String&#xa;- description: String&#xa;- supervisorId: String «FK»&#xa;- reviewerId: String «FK»&#xa;- status: TopicStatus&#xa;- semester: String&#xa;- academicYear: String&#xa;- field: String&#xa;- maxStudents: Int&#xa;- proposedByType: ProposedByType" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="topic" vertex="1">
+                    <mxGeometry y="30" width="220" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="topic_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="topic" vertex="1">
+                    <mxGeometry y="180" width="220" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="topic_method" value="+ approve(): void&#xa;+ reject(reason): void&#xa;+ isAvailable(): Boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="topic" vertex="1">
+                    <mxGeometry y="188" width="220" height="62" as="geometry"/>
+                </mxCell>
+                <mxCell id="topicProposal" value="TopicProposal" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="110" y="860" width="220" height="230" as="geometry"/>
+                </mxCell>
+                <mxCell id="tp_attr" value="- id: String «UUID»&#xa;- title: String&#xa;- description: String&#xa;- requirements: String&#xa;- proposedByStudentId: String&#xa;- requestedSupervisorId: String&#xa;- status: ProposalStatus&#xa;- teacherFeedback: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="topicProposal" vertex="1">
+                    <mxGeometry y="30" width="220" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="tp_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="topicProposal" vertex="1">
+                    <mxGeometry y="140" width="220" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="tp_method" value="+ submit(): void&#xa;+ approve(): Topic&#xa;+ reject(feedback): void&#xa;+ requestRevision(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="topicProposal" vertex="1">
+                    <mxGeometry y="148" width="220" height="82" as="geometry"/>
+                </mxCell>
+                <mxCell id="project" value="Project" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="820" y="810" width="250" height="320" as="geometry"/>
+                </mxCell>
+                <mxCell id="proj_attr" value="- id: String «UUID»&#xa;- topicId: String «FK»&#xa;- studentId: String «FK»&#xa;- supervisorId: String «FK»&#xa;- reviewerId: String «FK»&#xa;- status: ProjectStatus&#xa;- registrationDate: DateTime&#xa;- startDate / endDate: Date&#xa;- defenseDate: DateTime&#xa;- reportDeadline: DateTime&#xa;- supervisorScore: Decimal&#xa;- reviewerScore: Decimal&#xa;- councilScore: Decimal&#xa;- finalScore: Decimal&#xa;- grade: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="project" vertex="1">
+                    <mxGeometry y="30" width="250" height="210" as="geometry"/>
+                </mxCell>
+                <mxCell id="proj_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="project" vertex="1">
+                    <mxGeometry y="240" width="250" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="proj_method" value="+ getProgressReports(): List&#xa;+ getSprints(): List&#xa;+ calculateFinalScore(): Decimal&#xa;+ archive(): ProjectArchive" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="project" vertex="1">
+                    <mxGeometry y="248" width="250" height="72" as="geometry"/>
+                </mxCell>
+                <mxCell id="sprint" value="Sprint" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="810" width="220" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="sprint_attr" value="- id: String «UUID»&#xa;- projectId: String «FK»&#xa;- sprintNumber: Int&#xa;- title: String&#xa;- goals: String&#xa;- startWeek: Int&#xa;- endWeek: Int&#xa;- weightPercent: Int&#xa;- status: SprintStatus&#xa;- actualProgress: Int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="sprint" vertex="1">
+                    <mxGeometry y="30" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="sprint_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="sprint" vertex="1">
+                    <mxGeometry y="170" width="220" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="sprint_method" value="+ start(): void&#xa;+ complete(): void&#xa;+ updateProgress(pct): void&#xa;+ addComment(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="sprint" vertex="1">
+                    <mxGeometry y="178" width="220" height="62" as="geometry"/>
+                </mxCell>
+                <mxCell id="sprintComment" value="SprintComment" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1180" y="1120" width="220" height="170" as="geometry"/>
+                </mxCell>
+                <mxCell id="sc_attr" value="- id: String «UUID»&#xa;- sprintId: String «FK»&#xa;- projectId: String «FK»&#xa;- authorUid: String&#xa;- authorName: String&#xa;- authorRole: AuthorRole&#xa;- content: String&#xa;- createdAt: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="sprintComment" vertex="1">
+                    <mxGeometry y="30" width="220" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="progressReport" value="ProgressReport" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="870" y="1200" width="250" height="240" as="geometry"/>
+                </mxCell>
+                <mxCell id="pr_attr" value="- id: String «UUID»&#xa;- projectId: String «FK»&#xa;- reportTitle: String&#xa;- weekNumber: Int&#xa;- content: String&#xa;- achievements: String&#xa;- difficulties: String&#xa;- nextSteps: String&#xa;- filePath: String&#xa;- status: ReportStatus&#xa;- submittedDate: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="progressReport" vertex="1">
+                    <mxGeometry y="30" width="250" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="pr_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="progressReport" vertex="1">
+                    <mxGeometry y="180" width="250" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="pr_method" value="+ submit(): void&#xa;+ approve(): void&#xa;+ requestRevision(): void&#xa;+ getComments(): List" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="progressReport" vertex="1">
+                    <mxGeometry y="188" width="250" height="52" as="geometry"/>
+                </mxCell>
+                <mxCell id="comment" value="Comment" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="570" y="1400" width="210" height="150" as="geometry"/>
+                </mxCell>
+                <mxCell id="cmt_attr" value="- id: String «UUID»&#xa;- reportId: String «FK»&#xa;- teacherId: String «FK»&#xa;- content: String&#xa;- rating: Int (1-5)&#xa;- commentDate: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="comment" vertex="1">
+                    <mxGeometry y="30" width="210" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="meetingSlot" value="MeetingSlot" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="180" width="210" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="ms_attr" value="- id: String «UUID»&#xa;- teacherId: String «FK»&#xa;- startTime: DateTime&#xa;- endTime: DateTime&#xa;- location: String&#xa;- maxStudents: Int&#xa;- isBooked: Boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="meetingSlot" vertex="1">
+                    <mxGeometry y="30" width="210" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="ms_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="meetingSlot" vertex="1">
+                    <mxGeometry y="130" width="210" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="ms_method" value="+ book(): Booking&#xa;+ isAvailable(): Boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="meetingSlot" vertex="1">
+                    <mxGeometry y="138" width="210" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="booking" value="Booking" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="120" y="70" width="210" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="bk_attr" value="- id: String «UUID»&#xa;- slotId: String «FK»&#xa;- studentId: String «FK»&#xa;- projectId: String «FK»&#xa;- notes: String&#xa;- status: BookingStatus&#xa;- createdAt: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="booking" vertex="1">
+                    <mxGeometry y="30" width="210" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="bk_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="booking" vertex="1">
+                    <mxGeometry y="140" width="210" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="bk_method" value="+ confirm(): void&#xa;+ cancel(): void&#xa;+ complete(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="booking" vertex="1">
+                    <mxGeometry y="148" width="210" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="announcement" value="Announcement" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1540" y="360" width="220" height="200" as="geometry"/>
+                </mxCell>
+                <mxCell id="ann_attr" value="- id: String «UUID»&#xa;- title: String&#xa;- content: String&#xa;- semester: String&#xa;- academicYear: String&#xa;- registrationStart: DateTime&#xa;- registrationEnd: DateTime&#xa;- status: AnnouncementStatus" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="announcement" vertex="1">
+                    <mxGeometry y="30" width="220" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="ann_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="announcement" vertex="1">
+                    <mxGeometry y="150" width="220" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="ann_method" value="+ publish(): void&#xa;+ close(): void&#xa;+ notifyAllStudents(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="announcement" vertex="1">
+                    <mxGeometry y="158" width="220" height="42" as="geometry"/>
+                </mxCell>
+                <mxCell id="notification" value="Notification" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" parent="1" vertex="1">
+                    <mxGeometry x="1390" y="100" width="210" height="180" as="geometry"/>
+                </mxCell>
+                <mxCell id="notif_attr" value="- id: String «UUID»&#xa;- userUid: String «FK»&#xa;- title: String&#xa;- message: String&#xa;- type: NotificationType&#xa;- link: String&#xa;- isRead: Boolean&#xa;- createdAt: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="notification" vertex="1">
+                    <mxGeometry y="30" width="210" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="notif_div" value="" style="line;strokeWidth=1;fillColor=none;" parent="notification" vertex="1">
+                    <mxGeometry y="150" width="210" height="8" as="geometry"/>
+                </mxCell>
+                <mxCell id="notif_method" value="+ markAsRead(): void&#xa;+ send(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="notification" vertex="1">
+                    <mxGeometry y="158" width="210" height="22" as="geometry"/>
+                </mxCell>
+                <mxCell id="projectArchive" value="ProjectArchive" style="swimlane;fontStyle=1;align=center;startSize=30;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" parent="1" vertex="1">
+                    <mxGeometry x="1170" y="1330" width="250" height="220" as="geometry"/>
+                </mxCell>
+                <mxCell id="pa_attr" value="- id: Int&#xa;- projectId: String «FK»&#xa;- topicTitle: String&#xa;- studentName: String&#xa;- studentCode: String&#xa;- className: String&#xa;- supervisorName: String&#xa;- reviewerName: String&#xa;- academicYear: String&#xa;- finalScore: Decimal&#xa;- grade: String&#xa;- archivedAt: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=6;overflow=hidden;fontSize=10;" parent="projectArchive" vertex="1">
+                    <mxGeometry y="30" width="250" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="inherit_sv" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=0;startArrow=none;strokeWidth=2;strokeColor=#6c8ebf;" parent="1" source="student" target="user" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1070" y="680"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="inherit_gv" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=0;startArrow=none;strokeWidth=2;strokeColor=#6c8ebf;" parent="1" source="teacher" target="user" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="inherit_admin" style="edgeStyle=orthogonalEdgeStyle;endArrow=block;endFill=0;startArrow=none;strokeWidth=2;strokeColor=#6c8ebf;" parent="1" source="admin" target="user" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1100" y="525"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_sv_class" value="thuộc về" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="student" target="classEntity" edge="1">
+                    <mxGeometry x="0.2901" y="-10" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="440" y="720"/>
+                            <mxPoint x="440" y="1280"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_sv_proj" value="thực hiện" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="student" target="project" edge="1">
+                    <mxGeometry x="-0.4001" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="970" y="700"/>
+                        </Array>
+                        <mxPoint x="1" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_sv_tp" value="đề xuất" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="student" target="topicProposal" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_sv_booking" value="đặt lịch" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="student" target="booking" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_gv_topic" value="tạo/hướng dẫn" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="teacher" target="topic" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="820" y="750"/>
+                            <mxPoint x="770" y="750"/>
+                            <mxPoint x="770" y="985"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_gv_proj_sup" value="hướng dẫn" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;exitX=0.75;exitY=1;exitDx=0;exitDy=0;" parent="1" source="teacher_method" target="project" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="880" y="740"/>
+                            <mxPoint x="870" y="740"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_gv_slot" value="tạo" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="teacher" target="meetingSlot" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_gv_class" value="chủ nhiệm" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="teacher" target="classEntity" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="740" y="720"/>
+                            <mxPoint x="480" y="720"/>
+                            <mxPoint x="480" y="1255"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_admin_ann" value="quản lý" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="admin" target="announcement" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_admin_archive" value="lưu trữ" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="admin" target="projectArchive" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1430" y="1430"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="comp_proj_sprint" value="1..*" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;startArrow=diamond;startFill=1;strokeColor=#b85450;strokeWidth=2;fontSize=10;" parent="1" source="project" target="sprint" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="comp_proj_rpt" value="1..*" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;startArrow=diamond;startFill=1;strokeColor=#b85450;strokeWidth=2;fontSize=10;" parent="1" source="project" target="progressReport" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_proj_topic" value="về đề tài" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="project" target="topic" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="780" y="1070"/>
+                            <mxPoint x="780" y="985"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="assoc_proj_archive" value="được lưu trữ" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#888888;fontSize=10;" parent="1" source="project" target="projectArchive" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1140" y="1050"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="comp_sprint_cmt" value="1..*" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;startArrow=diamond;startFill=1;strokeColor=#b85450;strokeWidth=2;fontSize=10;" parent="1" source="sprint" target="sprintComment" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="comp_rpt_cmt" value="1..*" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;startArrow=diamond;startFill=1;strokeColor=#b85450;strokeWidth=2;fontSize=10;" parent="1" source="progressReport" target="comment" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_slot_booking" value="bao gồm" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#9673a6;fontSize=10;" parent="1" source="meetingSlot" target="booking" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="dep_tp_topic" value="«creates»" style="edgeStyle=orthogonalEdgeStyle;dashed=1;endArrow=open;endFill=0;strokeColor=#d6b656;fontSize=10;" parent="1" source="topicProposal" target="topic" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="assoc_user_notif" value="nhận" style="edgeStyle=orthogonalEdgeStyle;endArrow=open;endFill=0;strokeColor=#6c8ebf;fontSize=10;dashed=1;" parent="1" source="user" target="notification" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="1380" y="180"/>
+                            <mxPoint x="1380" y="180"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

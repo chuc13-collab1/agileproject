@@ -68,7 +68,7 @@ router.post('/', async (req, res, next) => {
         // Auto-generate password from adminId
         // Format: AdminID@2026 (e.g., ADMIN001@2026)
         const finalPassword = password || `${adminId}@2026`;
-        
+
         // Create Firebase Auth user
         const userRecord = await firebaseAuth.createUser({
             email,
@@ -145,6 +145,7 @@ router.put('/:id', async (req, res, next) => {
         const { id } = req.params;
         const {
             displayName,
+            email,
             adminId,
             permissions,
             password
@@ -152,24 +153,37 @@ router.put('/:id', async (req, res, next) => {
 
         await connection.beginTransaction();
 
-        // Update password if provided
-        if (password) {
+        // Update password/email if provided
+        if (password || email) {
             try {
-                const [users] = await connection.query('SELECT uid FROM users WHERE id = ?', [id]);
+                const [users] = await connection.query('SELECT uid, email FROM users WHERE id = ?', [id]);
                 if (users.length > 0) {
-                    await firebaseAuth.updateUser(users[0].uid, { password });
+                    const updateData = {};
+                    if (password) updateData.password = password;
+                    if (email && email !== users[0].email) updateData.email = email;
+
+                    if (Object.keys(updateData).length > 0) {
+                        await firebaseAuth.updateUser(users[0].uid, updateData);
+                    }
                 }
             } catch (authError) {
-                console.error('Error updating Firebase password:', authError);
-                throw new Error(`Failed to update password: ${authError.message}`);
+                console.error('Error updating Firebase credentials:', authError);
+                throw new Error(`Failed to update credentials: ${authError.message}`);
             }
         }
 
         // Update users table
-        if (displayName) {
+        if (displayName || email) {
+            const userUpdates = [];
+            const userValues = [];
+
+            if (displayName) { userUpdates.push('display_name = ?'); userValues.push(displayName); }
+            if (email) { userUpdates.push('email = ?'); userValues.push(email); }
+
+            userValues.push(id);
             await connection.query(
-                'UPDATE users SET display_name = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-                [displayName, id]
+                `UPDATE users SET ${userUpdates.join(', ')}, updated_at = CURRENT_TIMESTAMP WHERE id = ?`,
+                userValues
             );
         }
 

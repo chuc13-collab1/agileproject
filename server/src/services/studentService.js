@@ -89,17 +89,23 @@ export async function createStudent({ email, displayName, studentId, className, 
 }
 
 export async function updateStudent(userId, fields) {
-    const { displayName, phone, studentId, className, major, academicYear, password } = fields;
+    const { displayName, email, phone, studentId, className, major, academicYear, password } = fields;
     const connection = await db.getConnection();
 
     try {
         await connection.beginTransaction();
 
-        // Update Firebase password if provided
-        if (password) {
-            const [users] = await connection.query('SELECT uid FROM users WHERE id = ?', [userId]);
+        // Update Firebase password/email if provided
+        if (password || email) {
+            const [users] = await connection.query('SELECT uid, email FROM users WHERE id = ?', [userId]);
             if (users.length > 0) {
-                await firebaseAuth.updateUser(users[0].uid, { password });
+                const updateData = {};
+                if (password) updateData.password = password;
+                if (email && email !== users[0].email) updateData.email = email;
+
+                if (Object.keys(updateData).length > 0) {
+                    await firebaseAuth.updateUser(users[0].uid, updateData);
+                }
             }
         }
 
@@ -107,6 +113,7 @@ export async function updateStudent(userId, fields) {
         const userUpdates = [];
         const userValues = [];
         if (displayName) { userUpdates.push('display_name = ?'); userValues.push(displayName); }
+        if (email) { userUpdates.push('email = ?'); userValues.push(email); }
         if (phone !== undefined) { userUpdates.push('phone = ?'); userValues.push(phone); }
 
         if (userUpdates.length > 0) {

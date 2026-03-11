@@ -152,6 +152,7 @@ router.put('/:id', async (req, res, next) => {
         const { id } = req.params;
         const {
             displayName,
+            email,
             phone,
             teacherId,
             department,
@@ -163,29 +164,39 @@ router.put('/:id', async (req, res, next) => {
 
         await connection.beginTransaction();
 
-        // Update password if provided
-        if (req.body.password) {
+        // Update password/email if provided
+        if (req.body.password || email) {
             try {
-                const [users] = await connection.query('SELECT uid FROM users WHERE id = ?', [id]);
+                const [users] = await connection.query('SELECT uid, email FROM users WHERE id = ?', [id]);
                 if (users.length > 0) {
-                    await firebaseAuth.updateUser(users[0].uid, { password: req.body.password });
+                    const updateData = {};
+                    if (req.body.password) updateData.password = req.body.password;
+                    if (email && email !== users[0].email) updateData.email = email;
+
+                    if (Object.keys(updateData).length > 0) {
+                        await firebaseAuth.updateUser(users[0].uid, updateData);
+                    }
                 }
             } catch (authError) {
-                console.error('Error updating Firebase password:', authError);
+                console.error('Error updating Firebase credentials:', authError);
                 // Optional: decide if we want to fail the whole request or just log warning
                 // For now, let's throw to rollback (integrity first)
-                throw new Error(`Failed to update password: ${authError.message}`);
+                throw new Error(`Failed to update credentials: ${authError.message}`);
             }
         }
 
         // Update users table
-        if (displayName || phone !== undefined) {
+        if (displayName || email || phone !== undefined) {
             const userUpdates = [];
             const userValues = [];
 
             if (displayName) {
                 userUpdates.push('display_name = ?');
                 userValues.push(displayName);
+            }
+            if (email) {
+                userUpdates.push('email = ?');
+                userValues.push(email);
             }
             if (phone !== undefined) {
                 userUpdates.push('phone = ?');

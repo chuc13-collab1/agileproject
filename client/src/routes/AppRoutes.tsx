@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
+import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import StudentDashboard from '../pages/student/StudentDashboard';
 import TopicBrowsing from '../pages/student/TopicBrowsing';
 import TopicRegistration from '../pages/student/TopicRegistration';
@@ -14,8 +15,6 @@ import ProjectResults from '../pages/student/ProjectResults';
 import StudentTopicProposal from '../pages/student/StudentTopicProposal';
 import BookMeeting from '../pages/student/BookMeeting';
 import ChatPage from '../pages/shared/ChatPage';
-import AiAssistant from '../pages/shared/AiAssistant';
-import ArchivePage from '../pages/shared/ArchivePage';
 import TeacherDashboard from '../pages/supervisor/TeacherDashboard';
 import TeacherTopicList from '../pages/supervisor/TeacherTopicList';
 import TeacherStudentList from '../pages/supervisor/TeacherStudentList';
@@ -88,6 +87,10 @@ const AppRoutes: React.FC = () => {
         path="/register"
         element={user ? <Navigate to="/" replace /> : <RegisterPage />}
       />
+      <Route
+        path="/forgot-password"
+        element={user ? <Navigate to="/" replace /> : <ForgotPasswordPage />}
+      />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
       {/* Protected routes */}
@@ -152,20 +155,10 @@ const AppRoutes: React.FC = () => {
         </ProtectedRoute>
       } />
 
-      {/* Shared Services Routes - accessible by all authenticated users */}
+      {/* Chat Routes - accessible by all authenticated users */}
       <Route path="/chat" element={
         <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
           <ChatPage />
-        </ProtectedRoute>
-      } />
-      <Route path="/ai-assistant" element={
-        <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
-          <AiAssistant />
-        </ProtectedRoute>
-      } />
-      <Route path="/archive" element={
-        <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
-          <ArchivePage />
         </ProtectedRoute>
       } />
 
