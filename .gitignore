@@ -1,4 +1,4 @@
-﻿node_modules/
+node_modules/
 .env
 .DS_Store
 *.log
@@ -10,3 +10,6 @@ firestore-debug.log
 
 # Firebase Admin SDK Private Keys
 *-firebase-adminsdk-*.json
+
+# Ignore diagrams
+diagrams/
