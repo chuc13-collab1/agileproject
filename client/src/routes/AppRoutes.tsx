@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
-import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import StudentDashboard from '../pages/student/StudentDashboard';
 import TopicBrowsing from '../pages/student/TopicBrowsing';
 import TopicRegistration from '../pages/student/TopicRegistration';
@@ -33,8 +32,6 @@ import ReviewerAssignment from '../pages/admin/ReviewerAssignment';
 import ClassAssignment from '../pages/admin/ClassAssignment';
 import Statistics from '../pages/admin/Statistics';
 import Unauthorized from '../pages/auth/Unauthorized';
-import NotificationsPage from '../pages/shared/NotificationsPage';
-import AnnouncementsPage from '../pages/shared/AnnouncementsPage';
 
 // Protected Route Component
 const ProtectedRoute: React.FC<{ children: React.ReactElement, allowedRoles?: string[] }> = ({ children, allowedRoles }) => {
@@ -88,10 +85,6 @@ const AppRoutes: React.FC = () => {
       <Route
         path="/register"
         element={user ? <Navigate to="/" replace /> : <RegisterPage />}
-      />
-      <Route
-        path="/forgot-password"
-        element={user ? <Navigate to="/" replace /> : <ForgotPasswordPage />}
       />
       <Route path="/unauthorized" element={<Unauthorized />} />
 
@@ -157,20 +150,10 @@ const AppRoutes: React.FC = () => {
         </ProtectedRoute>
       } />
 
-      {/* Chat & Notifications Routes - accessible by all authenticated users */}
+      {/* Chat Routes - accessible by all authenticated users */}
       <Route path="/chat" element={
         <ProtectedRoute allowedRoles={['student', 'teacher', 'supervisor', 'admin']}>
           <ChatPage />
-        </ProtectedRoute>
-      } />
-      <Route path="/notifications" element={
-        <ProtectedRoute>
-          <NotificationsPage />
-        </ProtectedRoute>
-      } />
-      <Route path="/announcements" element={
-        <ProtectedRoute>
-          <AnnouncementsPage />
         </ProtectedRoute>
       } />
 

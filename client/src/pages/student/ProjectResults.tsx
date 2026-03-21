@@ -132,7 +132,7 @@ const ProjectResults: React.FC = () => {
 
     const finalScore = calculateFinalScore();
     const gradeInfo = getGradeClassification(finalScore);
-    const hasScores = evaluations.length > 0;
+    const hasScores = evaluations.length > 0 || project.supervisorScore != null || project.reviewerScore != null || project.score != null;
 
     return (
         <MainLayout>
@@ -253,40 +253,44 @@ const ProjectResults: React.FC = () => {
                         <div className={styles.card}>
                             <h3 className={styles.sectionTitle}>💬 Đánh Giá Chi Tiết</h3>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-                                {evaluations.map((evaluation, index) => (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            background: '#f8fafc',
-                                            padding: '1.5rem',
-                                            borderRadius: '0.5rem',
-                                            borderLeft: '4px solid #3b82f6'
-                                        }}
-                                    >
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
-                                            <div>
-                                                <div style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>
-                                                    {getRoleIcon(evaluation.evaluatorRole)} {evaluation.evaluatorName}
+                                {evaluations.length > 0 ? (
+                                    evaluations.map((evaluation, index) => (
+                                        <div
+                                            key={index}
+                                            style={{
+                                                background: '#f8fafc',
+                                                padding: '1.5rem',
+                                                borderRadius: '0.5rem',
+                                                borderLeft: '4px solid #3b82f6'
+                                            }}
+                                        >
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                                                <div>
+                                                    <div style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '0.25rem' }}>
+                                                        {getRoleIcon(evaluation.evaluatorRole)} {evaluation.evaluatorName}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.875rem', color: '#64748b' }}>
+                                                        {getRoleLabel(evaluation.evaluatorRole)}
+                                                    </div>
                                                 </div>
-                                                <div style={{ fontSize: '0.875rem', color: '#64748b' }}>
-                                                    {getRoleLabel(evaluation.evaluatorRole)}
+                                                <div style={{ textAlign: 'right' }}>
+                                                    <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#3b82f6' }}>
+                                                        {evaluation.score.toFixed(2)}
+                                                    </div>
+                                                    <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                                                        {new Date(evaluation.evaluatedAt).toLocaleDateString('vi-VN')}
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div style={{ textAlign: 'right' }}>
-                                                <div style={{ fontSize: '1.5rem', fontWeight: 600, color: '#3b82f6' }}>
-                                                    {evaluation.score.toFixed(2)}
-                                                </div>
-                                                <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                                                    {new Date(evaluation.evaluatedAt).toLocaleDateString('vi-VN')}
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        <div style={{ color: '#475569', lineHeight: 1.6 }}>
-                                            {evaluation.comment}
+                                            <div style={{ color: '#475569', lineHeight: 1.6 }}>
+                                                {evaluation.comment}
+                                            </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    ))
+                                ) : (
+                                    <p style={{ color: '#64748b', fontStyle: 'italic' }}>Chưa có đánh giá chi tiết.</p>
+                                )}
                             </div>
                         </div>
                     </>

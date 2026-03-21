@@ -456,7 +456,7 @@ export async function evaluateProject(projectId, evaluatorUid, payload) {
             );
         } else {
             await connection.query(
-                "UPDATE projects SET status = 'graded' WHERE id = ? AND status = 'submitted'",
+                "UPDATE projects SET status = 'graded' WHERE id = ? AND status NOT IN ('completed', 'failed')",
                 [projectId]
             );
         }

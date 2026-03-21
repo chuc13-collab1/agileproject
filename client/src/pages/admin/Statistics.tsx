@@ -175,6 +175,7 @@ function Statistics() {
               { label: '⏳ Đề tài chờ', value: stats.topics.pending },
               { label: '🔄 Đang làm', value: stats.projects.in_progress },
               { label: '📮 Đã nộp', value: stats.projects.submitted },
+              { label: '📝 Đã chấm', value: stats.projects.graded },
               { label: '🏆 Hoàn thành', value: stats.projects.completed },
               { label: '❌ Không đạt', value: stats.projects.failed },
               { label: '🚨 Quá hạn', value: stats.projects.overdue },

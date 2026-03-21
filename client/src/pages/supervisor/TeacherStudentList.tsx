@@ -125,6 +125,8 @@ const TeacherStudentList: React.FC = () => {
                                     <th>Mã SV</th>
                                     <th>Họ Tên</th>
                                     <th>Tên Đề Tài</th>
+                                    <th>Điểm GVHD</th>
+                                    <th>Điểm Phản Biện</th>
                                     <th>Trạng Thái</th>
                                     <th>Hành Động</th>
                                 </tr>
@@ -132,7 +134,7 @@ const TeacherStudentList: React.FC = () => {
                             <tbody>
                                 {students.length === 0 ? (
                                     <tr>
-                                        <td colSpan={5} className={styles.emptyCell}>Chưa có sinh viên nào đăng ký đề tài của bạn.</td>
+                                        <td colSpan={7} className={styles.emptyCell}>Chưa có sinh viên nào đăng ký đề tài của bạn.</td>
                                     </tr>
                                 ) : (
                                     students.map(project => (
@@ -147,6 +149,12 @@ const TeacherStudentList: React.FC = () => {
                                             <td style={{ fontWeight: 600 }}>{project.studentName}</td>
                                             <td>
                                                 <div className={styles.topicTitle}>{project.title}</div>
+                                            </td>
+                                            <td style={{ fontWeight: 600, color: '#3b82f6' }}>
+                                                {project.supervisorScore != null ? Number(project.supervisorScore).toFixed(2) : '—'}
+                                            </td>
+                                            <td style={{ fontWeight: 600, color: '#8b5cf6' }}>
+                                                {project.reviewerScore != null ? Number(project.reviewerScore).toFixed(2) : '—'}
                                             </td>
                                             <td>{getStatusBadge(project.status)}</td>
                                             <td>

@@ -80,7 +80,7 @@ router.post('/batch', async (req, res, next) => {
             LEFT JOIN users u_supervisor ON te.user_id = u_supervisor.id
             LEFT JOIN teachers tr ON p.reviewer_id = tr.id
             LEFT JOIN users u_reviewer ON tr.user_id = u_reviewer.id
-            WHERE p.status IN ('completed', 'failed') AND p.archived_at IS NULL
+            WHERE p.status IN ('completed', 'failed', 'graded') AND p.archived_at IS NULL
         `);
 
         let archived = 0;

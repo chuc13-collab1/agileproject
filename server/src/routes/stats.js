@@ -18,13 +18,14 @@ router.get('/counts', verifyToken, isAdmin, async (req, res, next) => {
         };
 
         // 1. User Counts
-        const [userRows] = await pool.query(`SELECT role, COUNT(*) as count FROM users GROUP BY role`);
-        userRows.forEach(row => {
-            stats.users.total += Number(row.count);
-            if (row.role === 'student') stats.users.students = Number(row.count);
-            if (row.role === 'teacher') stats.users.teachers = Number(row.count);
-            if (row.role === 'admin') stats.users.admins = Number(row.count);
-        });
+        const [[{ count: stdCount }]] = await pool.query('SELECT COUNT(*) as count FROM users u INNER JOIN students s ON u.id = s.user_id');
+        const [[{ count: tchCount }]] = await pool.query('SELECT COUNT(*) as count FROM users u INNER JOIN teachers t ON u.id = t.user_id');
+        const [[{ count: admCount }]] = await pool.query('SELECT COUNT(*) as count FROM users WHERE role="admin"');
+        
+        stats.users.total = Number(stdCount) + Number(tchCount) + Number(admCount);
+        stats.users.students = Number(stdCount);
+        stats.users.teachers = Number(tchCount);
+        stats.users.admins = Number(admCount);
 
         // 2. Topic Counts
         const [topicRows] = await pool.query(`SELECT status, COUNT(*) as count FROM topics GROUP BY status`);

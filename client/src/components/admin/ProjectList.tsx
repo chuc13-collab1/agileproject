@@ -84,7 +84,9 @@ const ProjectList: React.FC<ProjectListProps> = ({
               <th>Trạng thái</th>
               <th>Học kỳ</th>
               <th>Thời hạn</th>
-              <th>Điểm</th>
+              <th>Điểm GVHD</th>
+              <th>Điểm PB</th>
+              <th>Điểm HĐ</th>
               <th>Thao tác</th>
             </tr>
           </thead>
@@ -134,8 +136,14 @@ const ProjectList: React.FC<ProjectListProps> = ({
                       </div>
                     </div>
                   </td>
-                  <td className={styles.score}>
-                    {project.score ? `${project.score}/10` : '-'}
+                  <td className={styles.score} style={{ color: '#3b82f6', fontWeight: 600 }}>
+                    {project.supervisorScore != null ? Number(project.supervisorScore).toFixed(2) : '-'}
+                  </td>
+                  <td className={styles.score} style={{ color: '#8b5cf6', fontWeight: 600 }}>
+                    {project.reviewerScore != null ? Number(project.reviewerScore).toFixed(2) : '-'}
+                  </td>
+                  <td className={styles.score} style={{ color: '#10b981', fontWeight: 600 }}>
+                    {project.score != null ? Number(project.score).toFixed(2) : '-'}
                   </td>
                   <td>
                     <div className={styles.actions}>

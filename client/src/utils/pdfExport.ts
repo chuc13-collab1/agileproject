@@ -96,15 +96,16 @@ export const exportProjectList = (projects: any[], title?: string) => {
     doc.text(`Ngay xuat: ${new Date().toLocaleDateString('vi-VN')}`, 148, 22, { align: 'center' });
 
     // Table
-    const headers = [['STT', 'Ten de tai', 'Sinh vien', 'GVHD', 'Trang thai', 'Diem TK', 'Xep loai']];
+    const headers = [['STT', 'Ten de tai', 'Sinh vien', 'GVHD', 'Trang thai', 'GVHD', 'GVPB', 'Cuoi Cung']];
     const rows = projects.map((p, i) => [
         i + 1,
         (p.title || p.topicTitle || 'N/A').substring(0, 50),
         p.studentName || 'N/A',
         p.supervisorName || 'N/A',
         p.status || 'N/A',
-        p.finalScore ?? '-',
-        p.grade || '-',
+        p.supervisorScore != null ? Number(p.supervisorScore).toFixed(2) : '-',
+        p.reviewerScore != null ? Number(p.reviewerScore).toFixed(2) : '-',
+        (p.score ?? p.finalScore) != null ? Number(p.score ?? p.finalScore).toFixed(2) : '-',
     ]);
 
     autoTable(doc, {
@@ -116,11 +117,12 @@ export const exportProjectList = (projects: any[], title?: string) => {
         headStyles: { fillColor: [59, 130, 246], textColor: 255, fontSize: 9 },
         alternateRowStyles: { fillColor: [248, 250, 252] },
         columnStyles: {
-            0: { cellWidth: 15, halign: 'center' },
+            0: { cellWidth: 10, halign: 'center' },
             1: { cellWidth: 80 },
-            4: { cellWidth: 25, halign: 'center' },
-            5: { cellWidth: 20, halign: 'center' },
-            6: { cellWidth: 20, halign: 'center' },
+            4: { cellWidth: 20, halign: 'center' },
+            5: { cellWidth: 15, halign: 'center' },
+            6: { cellWidth: 15, halign: 'center' },
+            7: { cellWidth: 15, halign: 'center' },
         },
     });
 
