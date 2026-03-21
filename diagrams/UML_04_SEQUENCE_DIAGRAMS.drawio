@@ -1,1014 +1,280 @@
-<mxfile host="65bd71144e">
-    <diagram id="seq1" name="SD1: Đăng nhập">
-        <mxGraphModel dx="733" dy="568" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="t" value="SEQUENCE DIAGRAM 1: Đăng nhập hệ thống" style="text;html=1;align=center;fontSize=15;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="10" width="900" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_user" value="Người dùng" style="rounded=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_client" value="Client (React/Flutter)" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="260" y="55" width="150" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_server" value="Server (Express.js)" style="rounded=1;fillColor=#FFFFFF;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="490" y="55" width="150" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_firebase" value="Firebase Auth" style="rounded=1;fillColor=#FFFFFF;strokeColor=#d79b00;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="720" y="55" width="130" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_db" value="MySQL Database" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="940" y="55" width="140" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="ll1" style="endArrow=none;dashed=1;strokeColor=#6c8ebf;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="120" y="95" as="sourcePoint"/>
-                        <mxPoint x="120" y="780" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ll2" style="endArrow=none;dashed=1;strokeColor=#82b366;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="335" y="95" as="sourcePoint"/>
-                        <mxPoint x="335" y="780" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ll3" style="endArrow=none;dashed=1;strokeColor=#b85450;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="565" y="95" as="sourcePoint"/>
-                        <mxPoint x="565" y="780" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ll4" style="endArrow=none;dashed=1;strokeColor=#d79b00;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="785" y="95" as="sourcePoint"/>
-                        <mxPoint x="785" y="780" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="ll5" style="endArrow=none;dashed=1;strokeColor=#9673a6;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1010" y="95" as="sourcePoint"/>
-                        <mxPoint x="1010" y="780" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="m1" value="1: Nhập email + mật khẩu" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="120" y="145" as="sourcePoint"/>
-                        <mxPoint x="335" y="145" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="m2" value="2: POST /api/auth/login {email, password}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="335" y="195" as="sourcePoint"/>
-                        <mxPoint x="565" y="195" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="m3" value="3: verifyIdToken(firebaseToken)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="565" y="240" as="sourcePoint"/>
-                        <mxPoint x="785" y="240" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="m4" value="4: return UserRecord {uid}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="785" y="280" as="sourcePoint"/>
-                        <mxPoint x="565" y="280" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="m5" value="5: SELECT user WHERE firebase_uid = uid" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="565" y="325" as="sourcePoint"/>
-                        <mxPoint x="1010" y="325" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="m6" value="6: return {user_id, role, name, ...}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1010" y="365" as="sourcePoint"/>
-                        <mxPoint x="565" y="365" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="m7" value="7: sign JWT token (user_id, role)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#FFFFFF;strokeColor=#d6b656;" parent="1" vertex="1">
-                    <mxGeometry x="473" y="393" width="185" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="m8" value="8: return {token, user profile}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="565" y="440" as="sourcePoint"/>
-                        <mxPoint x="335" y="440" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="m9" value="9: Lưu token vào localStorage / secureStorage" style="endArrow=none;dashed=0;fontSize=11;fillColor=#FFFFFF;strokeColor=#82b366;" parent="1" vertex="1">
-                    <mxGeometry x="243" y="468" width="185" height="35" as="geometry"/>
-                </mxCell>
-                <mxCell id="m10" value="10: Điều hướng đến Dashboard (theo role)" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="335" y="520" as="sourcePoint"/>
-                        <mxPoint x="120" y="520" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="alt_box" value="alt [Nếu đăng nhập thất bại]" style="swimlane;startSize=25;fillColor=#FFFFFF;strokeColor=#d6b656;dashed=1;fontSize=11;" parent="1" vertex="1">
-                    <mxGeometry x="220" y="555" width="680" height="80" as="geometry"/>
-                </mxCell>
-                <mxCell id="alt_m1" value="11: return 401 Unauthorized" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="565" y="600" as="sourcePoint"/>
-                        <mxPoint x="335" y="600" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="alt_m2" value="12: Hiển thị thông báo lỗi" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="335" y="615" as="sourcePoint"/>
-                        <mxPoint x="120" y="615" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram id="seq2" name="SD2: Đăng ký Đề tài">
-        <mxGraphModel dx="733" dy="568" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="t" value="SEQUENCE DIAGRAM 2: Đăng ký Đề tài" style="text;html=1;align=center;fontSize=15;fontStyle=1;fillColor=#FFFFFF;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="10" width="900" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_client" value="Client (React)" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="250" y="55" width="130" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_server" value="Server (Express)" style="rounded=1;fillColor=#FFFFFF;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="470" y="55" width="140" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="710" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_gv" value="Giảng Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="930" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="95" as="sourcePoint"/>
-                        <mxPoint x="115" y="820" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="315" y="95" as="sourcePoint"/>
-                        <mxPoint x="315" y="820" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="4" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="95" as="sourcePoint"/>
-                        <mxPoint x="540" y="820" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="5" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="770" y="95" as="sourcePoint"/>
-                        <mxPoint x="770" y="820" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="6" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="985" y="95" as="sourcePoint"/>
-                        <mxPoint x="985" y="820" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m1" value="1: Xem danh sách đề tài (GET /api/topics)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="145" as="sourcePoint"/>
-                        <mxPoint x="540" y="145" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m2" value="2: SELECT topics WHERE status=APPROVED" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="185" as="sourcePoint"/>
-                        <mxPoint x="770" y="185" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m3" value="3: return topics[]" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="770" y="220" as="sourcePoint"/>
-                        <mxPoint x="540" y="220" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m4" value="4: return topic list" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="255" as="sourcePoint"/>
-                        <mxPoint x="115" y="255" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m5" value="5: Chọn đề tài + POST /api/topics/:id/register" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="300" as="sourcePoint"/>
-                        <mxPoint x="540" y="300" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m6" value="6: Kiểm tra SV đã đăng ký chưa" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="340" as="sourcePoint"/>
-                        <mxPoint x="770" y="340" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m7" value="7: INSERT INTO topic_proposals (sv_id, topic_id, status=PENDING)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="380" as="sourcePoint"/>
-                        <mxPoint x="770" y="380" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m8" value="8: INSERT INTO notifications (gv_id, message)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="420" as="sourcePoint"/>
-                        <mxPoint x="770" y="420" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m9" value="9: Nhận thông báo SV đăng ký đề tài" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="460" as="sourcePoint"/>
-                        <mxPoint x="985" y="460" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m10" value="10: Duyệt / Từ chối (PUT /api/topics/:id/approve)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="985" y="510" as="sourcePoint"/>
-                        <mxPoint x="540" y="510" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m11" value="11: UPDATE proposals SET status = APPROVED/REJECTED" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="550" as="sourcePoint"/>
-                        <mxPoint x="770" y="550" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s2m12" value="12: Thông báo kết quả đến SV" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="540" y="590" as="sourcePoint"/>
-                        <mxPoint x="115" y="590" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram id="seq3" name="SD3: Nộp báo cáo tiến độ">
-        <mxGraphModel dx="1078" dy="568" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="t" value="SEQUENCE DIAGRAM 3: Nộp &amp; Duyệt Báo cáo Tiến độ" style="text;html=1;align=center;fontSize=15;fontStyle=1;fillColor=#FFFFFF;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="10" width="900" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="50" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="240" y="55" width="100" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#FFFFFF;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="430" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_storage" value="Firebase Storage" style="rounded=1;fillColor=#FFFFFF;strokeColor=#d79b00;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="640" y="55" width="140" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="880" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_gv" value="Giảng Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="1090" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="105" y="95" as="sourcePoint"/>
-                        <mxPoint x="105" y="830" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="290" y="95" as="sourcePoint"/>
-                        <mxPoint x="290" y="830" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="4" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="485" y="95" as="sourcePoint"/>
-                        <mxPoint x="485" y="830" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="5" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="710" y="95" as="sourcePoint"/>
-                        <mxPoint x="710" y="830" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="6" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="935" y="95" as="sourcePoint"/>
-                        <mxPoint x="935" y="830" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="7" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1145" y="95" as="sourcePoint"/>
-                        <mxPoint x="1145" y="830" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m1" value="1: Điền form báo cáo + chọn file" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="105" y="145" as="sourcePoint"/>
-                        <mxPoint x="290" y="145" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m2" value="2: Upload file to Firebase Storage" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="290" y="190" as="sourcePoint"/>
-                        <mxPoint x="710" y="190" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m3" value="3: return downloadURL" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="710" y="230" as="sourcePoint"/>
-                        <mxPoint x="290" y="230" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m4" value="4: POST /api/progress-reports {content, file_url, sprint_id}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="290" y="275" as="sourcePoint"/>
-                        <mxPoint x="485" y="275" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m5" value="5: Kiểm tra deadline Sprint" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="485" y="315" as="sourcePoint"/>
-                        <mxPoint x="935" y="315" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m6" value="6: INSERT INTO progress_reports (status=PENDING)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="485" y="360" as="sourcePoint"/>
-                        <mxPoint x="935" y="360" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m7" value="7: INSERT INTO notifications (gv_id, type=NEW_REPORT)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="485" y="400" as="sourcePoint"/>
-                        <mxPoint x="935" y="400" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m8" value="8: return 201 Created" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="485" y="440" as="sourcePoint"/>
-                        <mxPoint x="105" y="440" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m9" value="9: Nhận thông báo báo cáo mới" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="485" y="485" as="sourcePoint"/>
-                        <mxPoint x="1145" y="485" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m10" value="10: PUT /api/progress-reports/:id/review {status, comment}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1145" y="530" as="sourcePoint"/>
-                        <mxPoint x="485" y="530" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m11" value="11: UPDATE reports SET status=APPROVED; INSERT comments" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="485" y="570" as="sourcePoint"/>
-                        <mxPoint x="935" y="570" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s3m12" value="12: Thông báo kết quả duyệt đến SV" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="485" y="615" as="sourcePoint"/>
-                        <mxPoint x="105" y="615" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram id="seq4" name="SD4: Lập Sprint">
-        <mxGraphModel dx="1268" dy="668" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="850" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="t" value="SEQUENCE DIAGRAM 4: Lập kế hoạch Sprint Agile" style="text;html=1;align=center;fontSize=15;fontStyle=1;fillColor=#FFFFFF;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="10" width="900" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="260" y="55" width="100" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#FFFFFF;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="450" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="680" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_gv" value="Giảng Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="910" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="95" as="sourcePoint"/>
-                        <mxPoint x="115" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="310" y="95" as="sourcePoint"/>
-                        <mxPoint x="310" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="4" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="95" as="sourcePoint"/>
-                        <mxPoint x="505" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="5" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="740" y="95" as="sourcePoint"/>
-                        <mxPoint x="740" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="6" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="965" y="95" as="sourcePoint"/>
-                        <mxPoint x="965" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m1" value="1: Điền thông tin Sprint (tên, ngày BĐ, kết thúc, mục tiêu)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="145" as="sourcePoint"/>
-                        <mxPoint x="310" y="145" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m2" value="2: POST /api/sprints {project_id, name, start_date, end_date, goals}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="310" y="190" as="sourcePoint"/>
-                        <mxPoint x="505" y="190" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m3" value="3: verifyToken() → kiểm tra quyền SV trong project" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="235" as="sourcePoint"/>
-                        <mxPoint x="740" y="235" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m4" value="4: Kiểm tra Sprint overlap (ngày trùng?)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#FFFFFF;strokeColor=#d6b656;" parent="1" vertex="1">
-                    <mxGeometry x="545" y="263" width="200" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="s4m5" value="5: INSERT INTO sprints (status=PLANNED)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="310" as="sourcePoint"/>
-                        <mxPoint x="740" y="310" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m6" value="6: return {sprint_id, ...}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="740" y="350" as="sourcePoint"/>
-                        <mxPoint x="505" y="350" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m7" value="7: Thông báo GV về Sprint mới" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="390" as="sourcePoint"/>
-                        <mxPoint x="965" y="390" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m8" value="8: return 201 + sprint data" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="430" as="sourcePoint"/>
-                        <mxPoint x="115" y="430" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m9" value="9: GV xem &amp; comment Sprint (POST /api/sprints/:id/comments)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="965" y="480" as="sourcePoint"/>
-                        <mxPoint x="505" y="480" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m10" value="10: INSERT INTO sprint_comments" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="520" as="sourcePoint"/>
-                        <mxPoint x="740" y="520" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s4m11" value="11: Thông báo comment mới đến SV" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="565" as="sourcePoint"/>
-                        <mxPoint x="115" y="565" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram id="seq5" name="SD5: Đặt lịch hẹn">
-        <mxGraphModel dx="1078" dy="568" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="850" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="t" value="SEQUENCE DIAGRAM 5: Đặt lịch hẹn (Booking)" style="text;html=1;align=center;fontSize=15;fontStyle=1;fillColor=#FFFFFF;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="10" width="800" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="250" y="55" width="100" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#FFFFFF;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="440" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="660" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_gv" value="Giảng Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="890" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="95" as="sourcePoint"/>
-                        <mxPoint x="115" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="95" as="sourcePoint"/>
-                        <mxPoint x="300" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="4" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="95" as="sourcePoint"/>
-                        <mxPoint x="495" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="5" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="720" y="95" as="sourcePoint"/>
-                        <mxPoint x="720" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="6" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="945" y="95" as="sourcePoint"/>
-                        <mxPoint x="945" y="810" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m1" value="1: POST /api/scheduling/slots {date, time, topic, gv_id}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="945" y="140" as="sourcePoint"/>
-                        <mxPoint x="495" y="140" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m2" value="2: INSERT INTO meeting_slots (status=AVAILABLE)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="180" as="sourcePoint"/>
-                        <mxPoint x="720" y="180" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m3" value="3: return slot_id" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="720" y="215" as="sourcePoint"/>
-                        <mxPoint x="945" y="215" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m4" value="4: GET /api/scheduling/slots?gv_id=..." style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="265" as="sourcePoint"/>
-                        <mxPoint x="495" y="265" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m5" value="5: return available slots[]" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="305" as="sourcePoint"/>
-                        <mxPoint x="115" y="305" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m6" value="6: POST /api/scheduling/bookings {slot_id, sv_id, purpose}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="350" as="sourcePoint"/>
-                        <mxPoint x="495" y="350" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m7" value="7: Kiểm tra slot còn trống?" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="390" as="sourcePoint"/>
-                        <mxPoint x="720" y="390" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m8" value="8: INSERT INTO bookings (status=PENDING)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="430" as="sourcePoint"/>
-                        <mxPoint x="720" y="430" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m9" value="9: Thông báo GV về booking mới" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="470" as="sourcePoint"/>
-                        <mxPoint x="945" y="470" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m10" value="10: PUT /api/scheduling/bookings/:id {status=CONFIRMED}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="945" y="515" as="sourcePoint"/>
-                        <mxPoint x="495" y="515" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m11" value="11: UPDATE bookings SET status=CONFIRMED; UPDATE slots SET status=BOOKED" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="560" as="sourcePoint"/>
-                        <mxPoint x="720" y="560" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s5m12" value="12: Thông báo xác nhận lịch hẹn đến SV" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="605" as="sourcePoint"/>
-                        <mxPoint x="115" y="605" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram id="seq6" name="SD6: Phân công Phản biện">
-        <mxGraphModel dx="1078" dy="568" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="800" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="t" value="SEQUENCE DIAGRAM 6: Phân công Giảng viên Phản biện" style="text;html=1;align=center;fontSize=15;fontStyle=1;fillColor=#FFFFFF;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="10" width="850" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_adm" value="Admin" style="rounded=1;fillColor=#FFFFFF;strokeColor=#d79b00;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="55" width="100" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="250" y="55" width="100" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#FFFFFF;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="440" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="660" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_gv" value="GV Phản biện" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="880" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="110" y="95" as="sourcePoint"/>
-                        <mxPoint x="110" y="770" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="95" as="sourcePoint"/>
-                        <mxPoint x="300" y="770" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="4" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="95" as="sourcePoint"/>
-                        <mxPoint x="495" y="770" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="5" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="720" y="95" as="sourcePoint"/>
-                        <mxPoint x="720" y="770" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="6" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="940" y="95" as="sourcePoint"/>
-                        <mxPoint x="940" y="770" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m1" value="1: Xem danh sách đồ án chờ phân công (GET /api/projects?status=IN_PROGRESS)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="110" y="145" as="sourcePoint"/>
-                        <mxPoint x="495" y="145" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m2" value="2: SELECT projects + teacher_specializations" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="185" as="sourcePoint"/>
-                        <mxPoint x="720" y="185" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m3" value="3: return projects + available reviewers" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="720" y="225" as="sourcePoint"/>
-                        <mxPoint x="110" y="225" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m4" value="4: PUT /api/projects/:id/assign-reviewer {reviewer_id}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="110" y="275" as="sourcePoint"/>
-                        <mxPoint x="495" y="275" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m5" value="5: Kiểm tra conflict (GV đã là GVHD?)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#FFFFFF;strokeColor=#d6b656;" parent="1" vertex="1">
-                    <mxGeometry x="505" y="303" width="215" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="s6m6" value="6: UPDATE projects SET reviewer_id = reviewer_id" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="350" as="sourcePoint"/>
-                        <mxPoint x="720" y="350" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m7" value="7: INSERT INTO notifications (teacher_id, type=ASSIGNED_REVIEWER)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="390" as="sourcePoint"/>
-                        <mxPoint x="720" y="390" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m8" value="8: return 200 OK" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="430" as="sourcePoint"/>
-                        <mxPoint x="110" y="430" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m9" value="9: Nhận thông báo phân công phản biện" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="475" as="sourcePoint"/>
-                        <mxPoint x="940" y="475" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m10" value="10: PUT /api/evaluations/reviewer {score} → chấm điểm" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="940" y="520" as="sourcePoint"/>
-                        <mxPoint x="495" y="520" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s6m11" value="11: UPDATE projects SET reviewer_score" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="495" y="560" as="sourcePoint"/>
-                        <mxPoint x="720" y="560" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram id="seq7" name="SD7: AI Chatbot">
-        <mxGraphModel dx="1078" dy="568" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="800" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="t" value="SEQUENCE DIAGRAM 7: Sử dụng AI Chatbot (Groq Llama 3.3)" style="text;html=1;align=center;fontSize=15;fontStyle=1;fillColor=#FFFFFF;" parent="1" vertex="1">
-                    <mxGeometry x="150" y="10" width="850" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#FFFFFF;strokeColor=#6c8ebf;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="60" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="250" y="55" width="100" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_server" value="Server /api/ai" style="rounded=1;fillColor=#FFFFFF;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="440" y="55" width="130" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="680" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_groq" value="Groq API (Llama 3.3)" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="880" y="55" width="160" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="95" as="sourcePoint"/>
-                        <mxPoint x="115" y="760" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="95" as="sourcePoint"/>
-                        <mxPoint x="300" y="760" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="4" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="95" as="sourcePoint"/>
-                        <mxPoint x="505" y="760" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="5" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="735" y="95" as="sourcePoint"/>
-                        <mxPoint x="735" y="760" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="6" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="960" y="95" as="sourcePoint"/>
-                        <mxPoint x="960" y="760" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m1" value="1: Nhập câu hỏi vào chat box" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="115" y="145" as="sourcePoint"/>
-                        <mxPoint x="300" y="145" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m2" value="2: POST /api/ai/chat {message, role}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="190" as="sourcePoint"/>
-                        <mxPoint x="505" y="190" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m3" value="3: verifyToken() → lấy user role" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="235" as="sourcePoint"/>
-                        <mxPoint x="735" y="235" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m4" value="4: Lấy lịch sử hội thoại gần nhất" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="275" as="sourcePoint"/>
-                        <mxPoint x="735" y="275" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m5" value="5: Xây dựng system prompt (STUDENT_PROMPT / TEACHER_PROMPT)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#FFFFFF;strokeColor=#d6b656;" parent="1" vertex="1">
-                    <mxGeometry x="410" y="303" width="300" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="s7m6" value="6: POST https://api.groq.com/v1/chat/completions {model: llama-3.3-70b, messages}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="350" as="sourcePoint"/>
-                        <mxPoint x="960" y="350" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m7" value="7: return AI response (stream/full)" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="960" y="395" as="sourcePoint"/>
-                        <mxPoint x="505" y="395" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m8" value="8: Lưu Q&amp;A vào chat history" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="435" as="sourcePoint"/>
-                        <mxPoint x="735" y="435" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m9" value="9: return {response, usage}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="505" y="475" as="sourcePoint"/>
-                        <mxPoint x="300" y="475" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s7m10" value="10: Render AI response (Markdown)" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="300" y="515" as="sourcePoint"/>
-                        <mxPoint x="115" y="515" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
-    <diagram id="seq8" name="SD8: Chấm điểm">
-        <mxGraphModel dx="1540" dy="811" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="880" math="0" shadow="0">
-            <root>
-                <mxCell id="0"/>
-                <mxCell id="1" parent="0"/>
-                <mxCell id="t" value="SEQUENCE DIAGRAM 8: Chấm điểm &amp; Tổng hợp kết quả Đồ án" style="text;html=1;align=center;fontSize=15;fontStyle=1;fillColor=#FFFFFF;" parent="1" vertex="1">
-                    <mxGeometry x="200" y="10" width="900" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_gvsv" value="GV Hướng dẫn" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="30" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_gvpb" value="GV Phản biện" style="rounded=1;fillColor=#FFFFFF;strokeColor=#82b366;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="230" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#FFFFFF;strokeColor=#d6b656;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="440" y="55" width="100" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#FFFFFF;strokeColor=#b85450;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="630" y="55" width="110" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#FFFFFF;strokeColor=#9673a6;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="850" y="55" width="120" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="p_adm" value="Admin" style="rounded=1;fillColor=#FFFFFF;strokeColor=#d79b00;fontStyle=1;" parent="1" vertex="1">
-                    <mxGeometry x="1090" y="55" width="100" height="40" as="geometry"/>
-                </mxCell>
-                <mxCell id="2" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="90" y="95" as="sourcePoint"/>
-                        <mxPoint x="90" y="840" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="3" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="290" y="95" as="sourcePoint"/>
-                        <mxPoint x="290" y="840" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="4" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="490" y="95" as="sourcePoint"/>
-                        <mxPoint x="490" y="840" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="5" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="685" y="95" as="sourcePoint"/>
-                        <mxPoint x="685" y="840" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="6" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="910" y="95" as="sourcePoint"/>
-                        <mxPoint x="910" y="840" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="7" style="endArrow=none;dashed=1;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1140" y="95" as="sourcePoint"/>
-                        <mxPoint x="1140" y="840" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m1" value="1: PUT /api/evaluations/supervisor {project_id, score}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="90" y="145" as="sourcePoint"/>
-                        <mxPoint x="685" y="145" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m2" value="2: UPDATE projects SET supervisor_score" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="685" y="185" as="sourcePoint"/>
-                        <mxPoint x="910" y="185" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m3" value="3: PUT /api/evaluations/reviewer {project_id, score}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="290" y="235" as="sourcePoint"/>
-                        <mxPoint x="685" y="235" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m4" value="4: UPDATE projects SET reviewer_score" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="685" y="275" as="sourcePoint"/>
-                        <mxPoint x="910" y="275" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m5" value="5: PUT /api/evaluations/council {project_id, council_score}" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1140" y="325" as="sourcePoint"/>
-                        <mxPoint x="685" y="325" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m6" value="6: UPDATE projects SET council_score" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="685" y="365" as="sourcePoint"/>
-                        <mxPoint x="910" y="365" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m7" value="7: POST /api/projects/:id/finalize-grades" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1140" y="410" as="sourcePoint"/>
-                        <mxPoint x="685" y="410" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m8" value="8: Tính finalScore = (sup*0.4 + rev*0.3 + council*0.3)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#FFFFFF;strokeColor=#d6b656;" parent="1" vertex="1">
-                    <mxGeometry x="595" y="438" width="285" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="s8m9" value="9: Xếp loại: A(≥8.5), B(7-8.4), C(5.5-6.9), D(4-5.4), F(&lt;4)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#FFFFFF;strokeColor=#d6b656;" parent="1" vertex="1">
-                    <mxGeometry x="595" y="476" width="285" height="30" as="geometry"/>
-                </mxCell>
-                <mxCell id="s8m10" value="10: UPDATE projects SET final_score, grade, status=COMPLETED" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="685" y="525" as="sourcePoint"/>
-                        <mxPoint x="910" y="525" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m11" value="11: Gửi thông báo kết quả đến SV/GV" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="685" y="565" as="sourcePoint"/>
-                        <mxPoint x="490" y="565" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m12" value="12: Lưu trữ đồ án (POST /api/archive)" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="1140" y="615" as="sourcePoint"/>
-                        <mxPoint x="685" y="615" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m13" value="13: INSERT INTO project_archive" style="endArrow=block;endFill=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="685" y="660" as="sourcePoint"/>
-                        <mxPoint x="910" y="660" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-                <mxCell id="s8m14" value="14: return 200 OK - Đồ án đã lưu trữ" style="endArrow=block;endFill=1;dashed=1;fontSize=11;fillColor=#FFFFFF;" parent="1" edge="1">
-                    <mxGeometry relative="1" as="geometry">
-                        <mxPoint x="685" y="700" as="sourcePoint"/>
-                        <mxPoint x="1140" y="700" as="targetPoint"/>
-                    </mxGeometry>
-                </mxCell>
-            </root>
-        </mxGraphModel>
-    </diagram>
+<mxfile host="Electron" version="21.0.0">
+
+  <!-- SEQ 1: ĐĂNG NHẬP -->
+  <diagram id="seq1" name="SD1: Đăng nhập">
+    <mxGraphModel pageWidth="1400" pageHeight="900">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="t" value="SEQUENCE DIAGRAM 1: Đăng nhập hệ thống" style="text;html=1;align=center;fontSize=15;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="10" width="900" height="30" as="geometry"/></mxCell>
+        <!-- Participants -->
+        <mxCell id="p_user" value="Người dùng" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_client" value="Client (React/Flutter)" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="260" y="55" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_server" value="Server (Express.js)" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="490" y="55" width="150" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_firebase" value="Firebase Auth" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="720" y="55" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_db" value="MySQL Database" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="940" y="55" width="140" height="40" as="geometry"/></mxCell>
+        <!-- Lifelines -->
+        <mxCell id="ll1" style="endArrow=none;dashed=1;strokeColor=#6c8ebf;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="120" y="95" as="sourcePoint"/><mxPoint x="120" y="780" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ll2" style="endArrow=none;dashed=1;strokeColor=#82b366;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="95" as="sourcePoint"/><mxPoint x="335" y="780" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ll3" style="endArrow=none;dashed=1;strokeColor=#b85450;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="565" y="95" as="sourcePoint"/><mxPoint x="565" y="780" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ll4" style="endArrow=none;dashed=1;strokeColor=#d79b00;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="785" y="95" as="sourcePoint"/><mxPoint x="785" y="780" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="ll5" style="endArrow=none;dashed=1;strokeColor=#9673a6;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1010" y="95" as="sourcePoint"/><mxPoint x="1010" y="780" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Messages -->
+        <mxCell id="m1" value="1: Nhập email + mật khẩu" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="120" y="145" as="sourcePoint"/><mxPoint x="335" y="145" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m2" value="2: POST /api/auth/login {email, password}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="195" as="sourcePoint"/><mxPoint x="565" y="195" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m3" value="3: verifyIdToken(firebaseToken)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="565" y="240" as="sourcePoint"/><mxPoint x="785" y="240" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m4" value="4: return UserRecord {uid}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="785" y="280" as="sourcePoint"/><mxPoint x="565" y="280" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m5" value="5: SELECT user WHERE firebase_uid = uid" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="565" y="325" as="sourcePoint"/><mxPoint x="1010" y="325" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m6" value="6: return {user_id, role, name, ...}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1010" y="365" as="sourcePoint"/><mxPoint x="565" y="365" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m7" value="7: sign JWT token (user_id, role)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="473" y="393" width="185" height="30" as="geometry"/></mxCell>
+        <mxCell id="m8" value="8: return {token, user profile}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="565" y="440" as="sourcePoint"/><mxPoint x="335" y="440" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="m9" value="9: Lưu token vào localStorage / secureStorage" style="endArrow=none;dashed=0;fontSize=11;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1"><mxGeometry x="243" y="468" width="185" height="35" as="geometry"/></mxCell>
+        <mxCell id="m10" value="10: Điều hướng đến Dashboard (theo role)" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="520" as="sourcePoint"/><mxPoint x="120" y="520" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Alt fragment: Login failed -->
+        <mxCell id="alt_box" value="alt [Nếu đăng nhập thất bại]" style="swimlane;startSize=25;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;fontSize=11;" vertex="1" parent="1"><mxGeometry x="220" y="555" width="680" height="80" as="geometry"/></mxCell>
+        <mxCell id="alt_m1" value="11: return 401 Unauthorized" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="565" y="600" as="sourcePoint"/><mxPoint x="335" y="600" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="alt_m2" value="12: Hiển thị thông báo lỗi" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="335" y="615" as="sourcePoint"/><mxPoint x="120" y="615" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- SEQ 2: ĐĂNG KÝ ĐỀ TÀI -->
+  <diagram id="seq2" name="SD2: Đăng ký Đề tài">
+    <mxGraphModel pageWidth="1400" pageHeight="900">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="t" value="SEQUENCE DIAGRAM 2: Đăng ký Đề tài" style="text;html=1;align=center;fontSize=15;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="10" width="900" height="30" as="geometry"/></mxCell>
+        <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_client" value="Client (React)" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="250" y="55" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_server" value="Server (Express)" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="470" y="55" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="710" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_gv" value="Giảng Viên" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="930" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <!-- Lifelines -->
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="95" as="sourcePoint"/><mxPoint x="115" y="820" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="315" y="95" as="sourcePoint"/><mxPoint x="315" y="820" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="95" as="sourcePoint"/><mxPoint x="540" y="820" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="770" y="95" as="sourcePoint"/><mxPoint x="770" y="820" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="985" y="95" as="sourcePoint"/><mxPoint x="985" y="820" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Messages -->
+        <mxCell id="s2m1" value="1: Xem danh sách đề tài (GET /api/topics)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="145" as="sourcePoint"/><mxPoint x="540" y="145" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m2" value="2: SELECT topics WHERE status=APPROVED" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="185" as="sourcePoint"/><mxPoint x="770" y="185" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m3" value="3: return topics[]" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="770" y="220" as="sourcePoint"/><mxPoint x="540" y="220" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m4" value="4: return topic list" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="255" as="sourcePoint"/><mxPoint x="115" y="255" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m5" value="5: Chọn đề tài + POST /api/topics/:id/register" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="300" as="sourcePoint"/><mxPoint x="540" y="300" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m6" value="6: Kiểm tra SV đã đăng ký chưa" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="340" as="sourcePoint"/><mxPoint x="770" y="340" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m7" value="7: INSERT INTO topic_proposals (sv_id, topic_id, status=PENDING)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="380" as="sourcePoint"/><mxPoint x="770" y="380" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m8" value="8: INSERT INTO notifications (gv_id, message)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="420" as="sourcePoint"/><mxPoint x="770" y="420" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m9" value="9: Nhận thông báo SV đăng ký đề tài" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="460" as="sourcePoint"/><mxPoint x="985" y="460" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m10" value="10: Duyệt / Từ chối (PUT /api/topics/:id/approve)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="985" y="510" as="sourcePoint"/><mxPoint x="540" y="510" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m11" value="11: UPDATE proposals SET status = APPROVED/REJECTED" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="550" as="sourcePoint"/><mxPoint x="770" y="550" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s2m12" value="12: Thông báo kết quả đến SV" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="540" y="590" as="sourcePoint"/><mxPoint x="115" y="590" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- SEQ 3: NỘP BÁO CÁO TIẾN ĐỘ -->
+  <diagram id="seq3" name="SD3: Nộp báo cáo tiến độ">
+    <mxGraphModel pageWidth="1400" pageHeight="900">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="t" value="SEQUENCE DIAGRAM 3: Nộp &amp; Duyệt Báo cáo Tiến độ" style="text;html=1;align=center;fontSize=15;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="10" width="900" height="30" as="geometry"/></mxCell>
+        <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="50" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="240" y="55" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="430" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_storage" value="Firebase Storage" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="640" y="55" width="140" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="880" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_gv" value="Giảng Viên" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1090" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <!-- Lifelines -->
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="105" y="95" as="sourcePoint"/><mxPoint x="105" y="830" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="290" y="95" as="sourcePoint"/><mxPoint x="290" y="830" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="485" y="95" as="sourcePoint"/><mxPoint x="485" y="830" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="710" y="95" as="sourcePoint"/><mxPoint x="710" y="830" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="935" y="95" as="sourcePoint"/><mxPoint x="935" y="830" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1145" y="95" as="sourcePoint"/><mxPoint x="1145" y="830" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Messages -->
+        <mxCell id="s3m1" value="1: Điền form báo cáo + chọn file" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="105" y="145" as="sourcePoint"/><mxPoint x="290" y="145" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m2" value="2: Upload file to Firebase Storage" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="290" y="190" as="sourcePoint"/><mxPoint x="710" y="190" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m3" value="3: return downloadURL" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="710" y="230" as="sourcePoint"/><mxPoint x="290" y="230" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m4" value="4: POST /api/progress-reports {content, file_url, sprint_id}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="290" y="275" as="sourcePoint"/><mxPoint x="485" y="275" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m5" value="5: Kiểm tra deadline Sprint" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="485" y="315" as="sourcePoint"/><mxPoint x="935" y="315" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m6" value="6: INSERT INTO progress_reports (status=PENDING)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="485" y="360" as="sourcePoint"/><mxPoint x="935" y="360" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m7" value="7: INSERT INTO notifications (gv_id, type=NEW_REPORT)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="485" y="400" as="sourcePoint"/><mxPoint x="935" y="400" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m8" value="8: return 201 Created" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="485" y="440" as="sourcePoint"/><mxPoint x="105" y="440" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m9" value="9: Nhận thông báo báo cáo mới" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="485" y="485" as="sourcePoint"/><mxPoint x="1145" y="485" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m10" value="10: PUT /api/progress-reports/:id/review {status, comment}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1145" y="530" as="sourcePoint"/><mxPoint x="485" y="530" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m11" value="11: UPDATE reports SET status=APPROVED; INSERT comments" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="485" y="570" as="sourcePoint"/><mxPoint x="935" y="570" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s3m12" value="12: Thông báo kết quả duyệt đến SV" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="485" y="615" as="sourcePoint"/><mxPoint x="105" y="615" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- SEQ 4: LẬP SPRINT -->
+  <diagram id="seq4" name="SD4: Lập Sprint">
+    <mxGraphModel pageWidth="1400" pageHeight="850">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="t" value="SEQUENCE DIAGRAM 4: Lập kế hoạch Sprint Agile" style="text;html=1;align=center;fontSize=15;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="10" width="900" height="30" as="geometry"/></mxCell>
+        <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="260" y="55" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="450" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="680" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_gv" value="Giảng Viên" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="910" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <!-- Lifelines -->
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="95" as="sourcePoint"/><mxPoint x="115" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="310" y="95" as="sourcePoint"/><mxPoint x="310" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="95" as="sourcePoint"/><mxPoint x="505" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="740" y="95" as="sourcePoint"/><mxPoint x="740" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="965" y="95" as="sourcePoint"/><mxPoint x="965" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Messages -->
+        <mxCell id="s4m1" value="1: Điền thông tin Sprint (tên, ngày BĐ, kết thúc, mục tiêu)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="145" as="sourcePoint"/><mxPoint x="310" y="145" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m2" value="2: POST /api/sprints {project_id, name, start_date, end_date, goals}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="310" y="190" as="sourcePoint"/><mxPoint x="505" y="190" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m3" value="3: verifyToken() → kiểm tra quyền SV trong project" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="235" as="sourcePoint"/><mxPoint x="740" y="235" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m4" value="4: Kiểm tra Sprint overlap (ngày trùng?)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="545" y="263" width="200" height="30" as="geometry"/></mxCell>
+        <mxCell id="s4m5" value="5: INSERT INTO sprints (status=PLANNED)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="310" as="sourcePoint"/><mxPoint x="740" y="310" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m6" value="6: return {sprint_id, ...}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="740" y="350" as="sourcePoint"/><mxPoint x="505" y="350" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m7" value="7: Thông báo GV về Sprint mới" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="390" as="sourcePoint"/><mxPoint x="965" y="390" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m8" value="8: return 201 + sprint data" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="430" as="sourcePoint"/><mxPoint x="115" y="430" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m9" value="9: GV xem &amp; comment Sprint (POST /api/sprints/:id/comments)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="965" y="480" as="sourcePoint"/><mxPoint x="505" y="480" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m10" value="10: INSERT INTO sprint_comments" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="520" as="sourcePoint"/><mxPoint x="740" y="520" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s4m11" value="11: Thông báo comment mới đến SV" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="565" as="sourcePoint"/><mxPoint x="115" y="565" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- SEQ 5: ĐẶT LỊCH HẸN -->
+  <diagram id="seq5" name="SD5: Đặt lịch hẹn">
+    <mxGraphModel pageWidth="1300" pageHeight="850">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="t" value="SEQUENCE DIAGRAM 5: Đặt lịch hẹn (Booking)" style="text;html=1;align=center;fontSize=15;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="10" width="800" height="30" as="geometry"/></mxCell>
+        <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="250" y="55" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="440" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="660" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_gv" value="Giảng Viên" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="890" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <!-- Lifelines -->
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="95" as="sourcePoint"/><mxPoint x="115" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="95" as="sourcePoint"/><mxPoint x="300" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="95" as="sourcePoint"/><mxPoint x="495" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="720" y="95" as="sourcePoint"/><mxPoint x="720" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="945" y="95" as="sourcePoint"/><mxPoint x="945" y="810" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- GV creates slot first -->
+        <mxCell id="s5m1" value="1: POST /api/scheduling/slots {date, time, topic, gv_id}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="945" y="140" as="sourcePoint"/><mxPoint x="495" y="140" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m2" value="2: INSERT INTO meeting_slots (status=AVAILABLE)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="180" as="sourcePoint"/><mxPoint x="720" y="180" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m3" value="3: return slot_id" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="720" y="215" as="sourcePoint"/><mxPoint x="945" y="215" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m4" value="4: GET /api/scheduling/slots?gv_id=..." style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="265" as="sourcePoint"/><mxPoint x="495" y="265" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m5" value="5: return available slots[]" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="305" as="sourcePoint"/><mxPoint x="115" y="305" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m6" value="6: POST /api/scheduling/bookings {slot_id, sv_id, purpose}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="350" as="sourcePoint"/><mxPoint x="495" y="350" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m7" value="7: Kiểm tra slot còn trống?" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="390" as="sourcePoint"/><mxPoint x="720" y="390" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m8" value="8: INSERT INTO bookings (status=PENDING)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="430" as="sourcePoint"/><mxPoint x="720" y="430" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m9" value="9: Thông báo GV về booking mới" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="470" as="sourcePoint"/><mxPoint x="945" y="470" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m10" value="10: PUT /api/scheduling/bookings/:id {status=CONFIRMED}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="945" y="515" as="sourcePoint"/><mxPoint x="495" y="515" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m11" value="11: UPDATE bookings SET status=CONFIRMED; UPDATE slots SET status=BOOKED" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="560" as="sourcePoint"/><mxPoint x="720" y="560" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s5m12" value="12: Thông báo xác nhận lịch hẹn đến SV" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="605" as="sourcePoint"/><mxPoint x="115" y="605" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- SEQ 6: PHÂN CÔNG GV PHẢN BIỆN -->
+  <diagram id="seq6" name="SD6: Phân công Phản biện">
+    <mxGraphModel pageWidth="1300" pageHeight="800">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="t" value="SEQUENCE DIAGRAM 6: Phân công Giảng viên Phản biện" style="text;html=1;align=center;fontSize=15;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="10" width="850" height="30" as="geometry"/></mxCell>
+        <mxCell id="p_adm" value="Admin" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="55" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="250" y="55" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="440" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="660" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_gv" value="GV Phản biện" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="880" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <!-- Lifelines -->
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="110" y="95" as="sourcePoint"/><mxPoint x="110" y="770" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="95" as="sourcePoint"/><mxPoint x="300" y="770" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="95" as="sourcePoint"/><mxPoint x="495" y="770" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="720" y="95" as="sourcePoint"/><mxPoint x="720" y="770" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="940" y="95" as="sourcePoint"/><mxPoint x="940" y="770" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Messages -->
+        <mxCell id="s6m1" value="1: Xem danh sách đồ án chờ phân công (GET /api/projects?status=IN_PROGRESS)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="110" y="145" as="sourcePoint"/><mxPoint x="495" y="145" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m2" value="2: SELECT projects + teacher_specializations" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="185" as="sourcePoint"/><mxPoint x="720" y="185" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m3" value="3: return projects + available reviewers" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="720" y="225" as="sourcePoint"/><mxPoint x="110" y="225" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m4" value="4: PUT /api/projects/:id/assign-reviewer {reviewer_id}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="110" y="275" as="sourcePoint"/><mxPoint x="495" y="275" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m5" value="5: Kiểm tra conflict (GV đã là GVHD?)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="505" y="303" width="215" height="30" as="geometry"/></mxCell>
+        <mxCell id="s6m6" value="6: UPDATE projects SET reviewer_id = reviewer_id" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="350" as="sourcePoint"/><mxPoint x="720" y="350" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m7" value="7: INSERT INTO notifications (teacher_id, type=ASSIGNED_REVIEWER)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="390" as="sourcePoint"/><mxPoint x="720" y="390" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m8" value="8: return 200 OK" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="430" as="sourcePoint"/><mxPoint x="110" y="430" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m9" value="9: Nhận thông báo phân công phản biện" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="475" as="sourcePoint"/><mxPoint x="940" y="475" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m10" value="10: PUT /api/evaluations/reviewer {score} → chấm điểm" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="940" y="520" as="sourcePoint"/><mxPoint x="495" y="520" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s6m11" value="11: UPDATE projects SET reviewer_score" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="495" y="560" as="sourcePoint"/><mxPoint x="720" y="560" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- SEQ 7: AI CHATBOT -->
+  <diagram id="seq7" name="SD7: AI Chatbot">
+    <mxGraphModel pageWidth="1200" pageHeight="800">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="t" value="SEQUENCE DIAGRAM 7: Sử dụng AI Chatbot (Groq Llama 3.3)" style="text;html=1;align=center;fontSize=15;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="150" y="10" width="850" height="30" as="geometry"/></mxCell>
+        <mxCell id="p_sv" value="Sinh Viên" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="60" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="250" y="55" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_server" value="Server /api/ai" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="440" y="55" width="130" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="680" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_groq" value="Groq API (Llama 3.3)" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="880" y="55" width="160" height="40" as="geometry"/></mxCell>
+        <!-- Lifelines -->
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="95" as="sourcePoint"/><mxPoint x="115" y="760" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="95" as="sourcePoint"/><mxPoint x="300" y="760" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="95" as="sourcePoint"/><mxPoint x="505" y="760" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="735" y="95" as="sourcePoint"/><mxPoint x="735" y="760" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="960" y="95" as="sourcePoint"/><mxPoint x="960" y="760" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Messages -->
+        <mxCell id="s7m1" value="1: Nhập câu hỏi vào chat box" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="115" y="145" as="sourcePoint"/><mxPoint x="300" y="145" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s7m2" value="2: POST /api/ai/chat {message, role}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="190" as="sourcePoint"/><mxPoint x="505" y="190" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s7m3" value="3: verifyToken() → lấy user role" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="235" as="sourcePoint"/><mxPoint x="735" y="235" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s7m4" value="4: Lấy lịch sử hội thoại gần nhất" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="275" as="sourcePoint"/><mxPoint x="735" y="275" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s7m5" value="5: Xây dựng system prompt (STUDENT_PROMPT / TEACHER_PROMPT)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="410" y="303" width="300" height="30" as="geometry"/></mxCell>
+        <mxCell id="s7m6" value="6: POST https://api.groq.com/v1/chat/completions {model: llama-3.3-70b, messages}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="350" as="sourcePoint"/><mxPoint x="960" y="350" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s7m7" value="7: return AI response (stream/full)" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="960" y="395" as="sourcePoint"/><mxPoint x="505" y="395" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s7m8" value="8: Lưu Q&amp;A vào chat history" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="435" as="sourcePoint"/><mxPoint x="735" y="435" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s7m9" value="9: return {response, usage}" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="505" y="475" as="sourcePoint"/><mxPoint x="300" y="475" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s7m10" value="10: Render AI response (Markdown)" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="300" y="515" as="sourcePoint"/><mxPoint x="115" y="515" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <!-- SEQ 8: CHẤM ĐIỂM & TỔNG HỢP KẾT QUẢ -->
+  <diagram id="seq8" name="SD8: Chấm điểm">
+    <mxGraphModel pageWidth="1400" pageHeight="880">
+      <root>
+        <mxCell id="0"/><mxCell id="1" parent="0"/>
+        <mxCell id="t" value="SEQUENCE DIAGRAM 8: Chấm điểm &amp; Tổng hợp kết quả Đồ án" style="text;html=1;align=center;fontSize=15;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="200" y="10" width="900" height="30" as="geometry"/></mxCell>
+        <mxCell id="p_gvsv" value="GV Hướng dẫn" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="30" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_gvpb" value="GV Phản biện" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="230" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_client" value="Client" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="440" y="55" width="100" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_server" value="Server" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="630" y="55" width="110" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_db" value="MySQL DB" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="850" y="55" width="120" height="40" as="geometry"/></mxCell>
+        <mxCell id="p_adm" value="Admin" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" vertex="1" parent="1"><mxGeometry x="1090" y="55" width="100" height="40" as="geometry"/></mxCell>
+        <!-- Lifelines -->
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="90" y="95" as="sourcePoint"/><mxPoint x="90" y="840" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="290" y="95" as="sourcePoint"/><mxPoint x="290" y="840" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="490" y="95" as="sourcePoint"/><mxPoint x="490" y="840" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="685" y="95" as="sourcePoint"/><mxPoint x="685" y="840" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="910" y="95" as="sourcePoint"/><mxPoint x="910" y="840" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell style="endArrow=none;dashed=1;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1140" y="95" as="sourcePoint"/><mxPoint x="1140" y="840" as="targetPoint"/></mxGeometry></mxCell>
+        <!-- Messages -->
+        <mxCell id="s8m1" value="1: PUT /api/evaluations/supervisor {project_id, score}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="90" y="145" as="sourcePoint"/><mxPoint x="685" y="145" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m2" value="2: UPDATE projects SET supervisor_score" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="685" y="185" as="sourcePoint"/><mxPoint x="910" y="185" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m3" value="3: PUT /api/evaluations/reviewer {project_id, score}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="290" y="235" as="sourcePoint"/><mxPoint x="685" y="235" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m4" value="4: UPDATE projects SET reviewer_score" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="685" y="275" as="sourcePoint"/><mxPoint x="910" y="275" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m5" value="5: PUT /api/evaluations/council {project_id, council_score}" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1140" y="325" as="sourcePoint"/><mxPoint x="685" y="325" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m6" value="6: UPDATE projects SET council_score" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="685" y="365" as="sourcePoint"/><mxPoint x="910" y="365" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m7" value="7: POST /api/projects/:id/finalize-grades" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1140" y="410" as="sourcePoint"/><mxPoint x="685" y="410" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m8" value="8: Tính finalScore = (sup*0.4 + rev*0.3 + council*0.3)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="595" y="438" width="285" height="30" as="geometry"/></mxCell>
+        <mxCell id="s8m9" value="9: Xếp loại: A(≥8.5), B(7-8.4), C(5.5-6.9), D(4-5.4), F(&lt;4)" style="endArrow=none;dashed=0;fontSize=11;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1"><mxGeometry x="595" y="476" width="285" height="30" as="geometry"/></mxCell>
+        <mxCell id="s8m10" value="10: UPDATE projects SET final_score, grade, status=COMPLETED" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="685" y="525" as="sourcePoint"/><mxPoint x="910" y="525" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m11" value="11: Gửi thông báo kết quả đến SV/GV" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="685" y="565" as="sourcePoint"/><mxPoint x="490" y="565" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m12" value="12: Lưu trữ đồ án (POST /api/archive)" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="1140" y="615" as="sourcePoint"/><mxPoint x="685" y="615" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m13" value="13: INSERT INTO project_archive" style="endArrow=block;endFill=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="685" y="660" as="sourcePoint"/><mxPoint x="910" y="660" as="targetPoint"/></mxGeometry></mxCell>
+        <mxCell id="s8m14" value="14: return 200 OK - Đồ án đã lưu trữ" style="endArrow=block;endFill=1;dashed=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="685" y="700" as="sourcePoint"/><mxPoint x="1140" y="700" as="targetPoint"/></mxGeometry></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
 </mxfile>
