@@ -62,6 +62,33 @@ app.get('/health', (req, res) => {
     });
 });
 
+// TEMPORARY: Test email SMTP connection
+app.get('/api/test-email', async (req, res) => {
+    try {
+        const nodemailer = (await import('nodemailer')).default;
+        const transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com',
+            port: 587,
+            secure: false,
+            auth: {
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_APP_PASSWORD,
+            },
+            connectionTimeout: 10000,
+        });
+        await transporter.verify();
+        const info = await transporter.sendMail({
+            from: `"Test" <${process.env.EMAIL_USER}>`,
+            to: process.env.EMAIL_USER,
+            subject: '✅ SMTP Test từ Railway',
+            text: 'Email SMTP đang hoạt động bình thường!',
+        });
+        res.json({ success: true, message: 'SMTP OK', messageId: info.messageId, emailUser: process.env.EMAIL_USER });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message, code: error.code });
+    }
+});
+
 // TEMPORARY: Public DB setup endpoint
 app.get('/api/setup-db', async (req, res) => {
     try {
