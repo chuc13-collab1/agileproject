@@ -357,7 +357,7 @@ const TeacherProjectDetail: React.FC = () => {
                                     }}
                                         onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-1px)'}
                                         onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-                                        onClick={() => doc.file_url && window.open(doc.file_url, '_blank')}
+                                        onClick={() => doc.url && window.open(doc.url, '_blank')}
                                     >
                                         Tải xuống
                                     </button>
