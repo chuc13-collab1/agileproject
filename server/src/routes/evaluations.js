@@ -103,12 +103,12 @@ router.post('/projects/:projectId/evaluate', async (req, res, next) => {
         if (project.length > 0) {
             const { supervisor_score, reviewer_score, council_score } = project[0];
 
-            if (supervisor_score && reviewer_score) {
+            if (supervisor_score !== null && reviewer_score !== null) {
                 // Formula: supervisor*0.4 + reviewer*0.2 + council*0.4
-                let finalScore = supervisor_score * 0.4 + reviewer_score * 0.2;
+                let finalScore = (parseFloat(supervisor_score) * 0.4) + (parseFloat(reviewer_score) * 0.2);
 
-                if (council_score) {
-                    finalScore += council_score * 0.4;
+                if (council_score !== null) {
+                    finalScore += parseFloat(council_score) * 0.4;
                 }
 
                 finalScore = parseFloat(finalScore.toFixed(2));

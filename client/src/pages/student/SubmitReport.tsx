@@ -70,6 +70,12 @@ const SubmitReport: React.FC = () => {
             submitData.append('content', formData.content);
 
             if (formData.attachments) {
+                // Thêm kiểm tra kích thước file (100MB = 100 * 1024 * 1024 bytes)
+                if (formData.attachments.size > 100 * 1024 * 1024) {
+                    alert('Kích thước file quá lón, vui lòng tải lên file dưới 100MB!');
+                    setSubmitting(false);
+                    return;
+                }
                 submitData.append('file', formData.attachments);
             }
 
@@ -229,7 +235,7 @@ const SubmitReport: React.FC = () => {
                                 accept=".pdf,.doc,.docx,.zip"
                             />
                             <div style={{ fontSize: '0.75rem', color: '#64748b', marginTop: '0.25rem' }}>
-                                Chấp nhận: PDF, DOC, DOCX, ZIP (tối đa 10MB)
+                                Chấp nhận: PDF, DOC, DOCX, ZIP (tối đa 100MB)
                             </div>
                         </div>
 

@@ -30,6 +30,7 @@ const TeacherProgressTracking: React.FC = () => {
     const [rating, setRating] = useState(5);
     const [newStatus, setNewStatus] = useState<'approved' | 'revision_needed'>('approved');
     const [submitting, setSubmitting] = useState(false);
+    const [generatingAI, setGeneratingAI] = useState(false);
 
     useEffect(() => {
         fetchReports();
@@ -112,6 +113,42 @@ const TeacherProgressTracking: React.FC = () => {
             alert('Có lỗi xảy ra khi gửi nhận xét');
         } finally {
             setSubmitting(false);
+        }
+    };
+
+    const handleAIGenerateComment = async () => {
+        if (!selectedReport) return;
+        
+        if (!auth.currentUser) {
+            alert('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.');
+            return;
+        }
+
+        try {
+            setGeneratingAI(true);
+            const token = await auth.currentUser.getIdToken();
+            const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/ai/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    role: 'teacher',
+                    message: `Dựa trên nội dung báo cáo sau của sinh viên: "${selectedReport.content}". Hãy tóm tắt, sau đó gợi ý giúp tôi một đoạn nhận xét chuyên nghiệp, khách quan và mang tính xây dựng để phản hồi cho sinh viên. Độ dài khoảng 3-4 câu.`
+                })
+            });
+            const data = await response.json();
+            if (data.success && data.data.reply) {
+                setCommentText(data.data.reply);
+            } else {
+                alert('Không thể tạo gợi ý AI: ' + (data.message || 'Lỗi không xác định'));
+            }
+        } catch (error) {
+            console.error('AI Error:', error);
+            alert('Có lỗi xảy ra khi gọi trợ lý AI');
+        } finally {
+            setGeneratingAI(false);
         }
     };
 
@@ -387,7 +424,30 @@ const TeacherProgressTracking: React.FC = () => {
                                 </div>
 
                                 <div className={styles.commentForm}>
-                                    <h3>💬 Nhận xét</h3>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                                        <h3 style={{ margin: 0 }}>💬 Nhận xét</h3>
+                                        <button 
+                                            onClick={handleAIGenerateComment}
+                                            disabled={generatingAI}
+                                            style={{
+                                                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                                                color: 'white',
+                                                border: 'none',
+                                                padding: '0.5rem 1rem',
+                                                borderRadius: '0.5rem',
+                                                fontWeight: '600',
+                                                cursor: generatingAI ? 'not-allowed' : 'pointer',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '0.5rem',
+                                                opacity: generatingAI ? 0.7 : 1,
+                                                transition: 'all 0.2s',
+                                                boxShadow: '0 2px 4px rgba(16, 185, 129, 0.3)'
+                                            }}
+                                        >
+                                            {generatingAI ? '⏳ Đang suy nghĩ...' : '✨ Trợ lý AI Gợi ý'}
+                                        </button>
+                                    </div>
 
                                     <div className={styles.ratingSection}>
                                         <label>Đánh giá: </label>
