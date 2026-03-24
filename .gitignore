@@ -13,3 +13,8 @@ firestore-debug.log
 
 # Ignore diagrams
 diagrams/
+
+# Ignore documentation and backups
+presentation_script.docx
+railway_database_backup.sql
+agile_project_management.sql
