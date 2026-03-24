@@ -11,6 +11,7 @@ const MyProject: React.FC = () => {
     const { user } = useAuth();
     const [project, setProject] = useState<Project | null>(null);
     const [loading, setLoading] = useState(true);
+    const [submittingProject, setSubmittingProject] = useState(false);
 
     useEffect(() => {
         if (user) loadProject();
@@ -26,6 +27,25 @@ const MyProject: React.FC = () => {
             console.error('Failed to load project:', error);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleSubmitProject = async () => {
+        if (!project) return;
+        if (!window.confirm('Bạn có chắc chắn muốn nộp đồ án cuối kỳ? Sau khi nộp, bạn sẽ không thể thao tác thêm ở Sprints và chờ Giảng viên đánh giá.')) {
+            return;
+        }
+
+        try {
+            setSubmittingProject(true);
+            await projectService.updateProject(project.id, { status: 'submitted' });
+            alert('Nộp đồ án lên Giảng viên thành công! Vui lòng theo dõi lịch bảo vệ sắp tới.');
+            loadProject();
+        } catch (error) {
+            console.error('Lỗi khi nộp đồ án:', error);
+            alert('Có lỗi xảy ra khi nộp đồ án.');
+        } finally {
+            setSubmittingProject(false);
         }
     };
 
@@ -180,6 +200,24 @@ const MyProject: React.FC = () => {
                             📁 Quản Lý Tài Liệu
                         </button>
                     </div>
+
+                    {/* Submit Final Project */}
+                    {project.status === 'in_progress' && (
+                        <div style={{ marginTop: '2rem', padding: '1.5rem', background: '#fef3c7', borderRadius: '0.5rem', border: '1px solid #fcd34d', textAlign: 'center' }}>
+                            <h3 style={{ color: '#b45309', marginBottom: '0.5rem' }}>🎯 Hoàn Thành Đồ Án</h3>
+                            <p style={{ color: '#92400e', marginBottom: '1rem', fontSize: '0.875rem' }}>
+                                Khi nhóm bạn đã hoàn tất 100% các Sprints và Nộp đầy đủ Source code, Slide Báo cáo, hãy bấm nút dưới đây để kết thúc thực hiện đồ án, chuyển trạng thái cho Giảng viên hướng dẫn duyệt chốt bảo vệ.
+                            </p>
+                            <button
+                                onClick={handleSubmitProject}
+                                disabled={submittingProject}
+                                className={styles.button}
+                                style={{ background: '#f59e0b', color: 'white', fontWeight: 'bold', padding: '0.75rem 2rem' }}
+                            >
+                                {submittingProject ? '⏳ Đang xử lý...' : '🏁 NỘP ĐỒ ÁN CUỐI KỲ'}
+                            </button>
+                        </div>
+                    )}
                 </div>
 
                 {/* Project Score (if available) */}
